@@ -1,0 +1,69 @@
+from django.db import models
+
+class HeroSection(models.Model):
+    title = models.CharField(max_length=255)
+    subtitle = models.TextField(blank=True)
+    description = models.TextField(blank=True, null=True, default='Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste.')
+    button_text = models.CharField(max_length=50, default="Оставить заявку")
+    updated_at = models.DateTimeField(auto_now=True)
+    image = models.ImageField(upload_to='hero_images/')
+
+    def __str__(self):
+        return "Hero Section Content"
+
+
+class HeaderSection(models.Model):
+    logo_text = models.CharField(max_length=100, default='Agentúra Závodský s.r.o.')
+    nav_services = models.CharField(max_length=50, default='Služby')
+    nav_why = models.CharField(max_length=50, default='Prečo práve my?')
+    nav_contact = models.CharField(max_length=50, default='Kontakt')
+    button_text = models.CharField(max_length=50, default='Zanechajte žiadosť')
+    updated_at = models.DateTimeField(auto_now=True)
+    images = models.ImageField(upload_to='logo/')
+
+    def __str__(self):
+        return "Header Content"
+
+
+class FooterInfo(models.Model):
+    about_title = models.CharField(max_length=100, default="Agentúra Závodský")
+    about_description = models.TextField()
+    contact_email = models.EmailField()
+    contact_phone = models.CharField(max_length=30)
+    contact_address = models.CharField(max_length=255)
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "Footer Info"
+    
+
+class CompanyInfo(models.Model):
+    name = models.CharField(max_length=255)
+    ico = models.CharField("IČO", max_length=20, blank=True)
+    dic = models.CharField("DIČ", max_length=20, blank=True)
+    address = models.CharField(max_length=255)
+    phone = models.CharField(max_length=30)
+    email = models.EmailField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Informácie o firme"
+        verbose_name_plural = "Informácie o firme"
+
+    def __str__(self):
+        return self.name
+    
+    
+
+
+
+class ContactRequest(models.Model):
+    name = models.CharField(max_length=255)
+    contact = models.CharField(max_length=255)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.contact})"
