@@ -10,6 +10,7 @@ test/
 
 # Recommended template: Node.gitignore
 
+
 node_modules/
 dist/
 npm-debug.log
@@ -150,6 +151,8 @@ celerybeat.pid
 
 # Environments
 .env
+.env.*
+.env.prod
 .venv
 env/
 venv/
@@ -216,6 +219,6 @@ pip-selfcheck.json
 
 # Local History for Visual Studio Code
 .history/
-
+Dockerfile.prod
 
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Vue,Vuejs,macOS,Python,Django,VirtualEnv,VisualStudioCode,.env

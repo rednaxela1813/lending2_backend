@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Ждём, пока база будет доступна
 echo "⏳ Ожидание базы данных..."
 until nc -z db 5432; do
   echo "⏱️ Ждём PostgreSQL (db:5432)..."
@@ -13,5 +12,10 @@ python manage.py migrate --noinput
 echo "📂 Собираем статические файлы..."
 python manage.py collectstatic --noinput
 
-echo "🚀 Запускаем Gunicorn..."
-exec gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+if [ "$ENV" = "production" ]; then
+  echo "🚀 Запускаем Gunicorn (production)..."
+  exec gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+else
+  echo "🚀 Запускаем Django dev server..."
+  exec python manage.py runserver 0.0.0.0:8000
+fi
