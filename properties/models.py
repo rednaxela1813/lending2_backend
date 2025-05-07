@@ -7,7 +7,7 @@ class Property(models.Model):
     PROPERTY_TYPES = [
         ('office', 'Kancelária'),
         ('address', 'Sydlo'),
-        ('billboard', 'Bilboard'),
+        ('billboard', 'Billboard'),
     ]
 
     public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
