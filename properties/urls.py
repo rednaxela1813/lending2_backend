@@ -8,3 +8,4 @@ urlpatterns = [
     path('<uuid:public_id>/', PropertyDetailAPIView.as_view(), name='property-detail'),
     path('', PropertyListAPIView.as_view(), name='property-list'),
 ]
+#comment test
