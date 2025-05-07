@@ -64,3 +64,7 @@ LOGGING = {
         "level": "INFO",
     },
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://my-work.deilmann.sk"
+]
