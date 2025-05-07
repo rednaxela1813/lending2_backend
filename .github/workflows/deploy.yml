@@ -3,7 +3,7 @@ name: 🚀 Deploy to VPS
 on:
   push:
     branches:
-      - main  # ВАЖНО: деплой будет запускаться только из main
+      - main  # Деплой запускается только при пуше в main
 
 jobs:
   deploy:
@@ -13,7 +13,7 @@ jobs:
       - name: 🧾 Checkout code
         uses: actions/checkout@v3
 
-      - name: �� Deploy via SSH
+      - name: 🚀 Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -21,6 +21,6 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
           script: |
-            cd /home/alex/myproject/lending2_backend
-            bash deploy.sh
+            echo "🔧 Запускаем скрипт деплоя на сервере..."
+            bash /home/alex/myproject/deploy.sh
 
