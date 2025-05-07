@@ -21,6 +21,7 @@ DATABASES = {
     }
 }
 
+#
 # Статические файлы
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
