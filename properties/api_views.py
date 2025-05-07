@@ -32,3 +32,4 @@ class BillboardListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return Property.objects.filter(type='billboard')
+# comment
