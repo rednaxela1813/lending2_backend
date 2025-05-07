@@ -34,6 +34,9 @@ SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
+# Позволяем Django понимать, что nginx уже использует HTTPS
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 # Бот Telegram (если используется)
 TELEGRAM_BOT_TOKEN = config("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = config("TELEGRAM_CHAT_ID")
