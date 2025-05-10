@@ -12,6 +12,7 @@ urlpatterns = [
         
         # сюда же можно другие api-части
     ])),
+    path('api/orders/', include('orders.urls')),
 ]
 
 if settings.DEBUG:
