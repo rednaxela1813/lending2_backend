@@ -6,7 +6,7 @@ class HeroSection(models.Model):
     description = models.TextField(blank=True, null=True, default='Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste.')
     button_text = models.CharField(max_length=50, default="Оставить заявку")
     updated_at = models.DateTimeField(auto_now=True)
-    image = models.ImageField(upload_to='hero_images/')
+    image = models.ImageField(upload_to='hero_images/', blank=True, null=True)
 
     def __str__(self):
         return "Hero Section Content"
