@@ -5,6 +5,7 @@ class HeroSection(models.Model):
     subtitle = models.TextField(blank=True)
     description = models.TextField(blank=True, null=True, default='Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste.')
     button_text = models.CharField(max_length=50, default="Оставить заявку")
+    right_colon_text = models.CharField(max_length=50, default="Zanechajte žiadosť", blank=True, null=True)   
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to='hero_images/', blank=True, null=True)
 
