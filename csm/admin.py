@@ -4,7 +4,7 @@ from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo
 
 @admin.register(HeroSection)
 class HeroSectionAdmin(admin.ModelAdmin):
-    list_display = ('title', 'updated_at')
+    list_display = ('title', 'updated_at', 'button_text', 'right_colon_text')
 
 @admin.register(HeaderSection)
 class HeaderSectionAdmin(admin.ModelAdmin):

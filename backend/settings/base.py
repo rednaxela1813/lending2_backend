@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'csm',
     'contact',
     'properties',
+    'orders',
 ]
 
 MIDDLEWARE = [
