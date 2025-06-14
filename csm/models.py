@@ -68,3 +68,31 @@ class ContactRequest(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.contact})"
+
+
+
+class SiteTheme(models.Model):
+    name = models.CharField(max_length=100, default="Default")
+
+    primary_color = models.CharField(max_length=20, default="#7e22ce")
+    primary_hover = models.CharField(max_length=20, default="#6b21a8")
+
+    secondary_color = models.CharField(max_length=20, default="#1f2937")
+    secondary_hover = models.CharField(max_length=20, default="#374151")
+
+    background_color = models.CharField(max_length=20, default="#111827")
+    text_color = models.CharField(max_length=20, default="#ffffff")
+
+    border_color = models.CharField(max_length=20, default="#374151", blank=True)
+    muted_text_color = models.CharField(max_length=20, default="#9ca3af", blank=True)
+
+    is_active = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = "Site Theme"
+        verbose_name_plural = "Site Themes"
+        
+        

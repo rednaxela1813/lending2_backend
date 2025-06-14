@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo
+from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, SiteTheme
+from .forms import SiteThemeForm
 
 
 @admin.register(HeroSection)
@@ -9,6 +10,14 @@ class HeroSectionAdmin(admin.ModelAdmin):
 @admin.register(HeaderSection)
 class HeaderSectionAdmin(admin.ModelAdmin):
     list_display = ('logo_text', 'nav_services', 'nav_why', 'nav_contact', 'button_text', 'updated_at')
+    
+    
+
+        
+
+@admin.register(SiteTheme)
+class SiteThemeAdmin(admin.ModelAdmin):
+    form = SiteThemeForm
     
 
 admin.site.register(FooterInfo)

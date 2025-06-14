@@ -1,5 +1,5 @@
 from django.urls import path
-from .api_views import HeroSectionView, HeaderSectionView, FooterInfoView, CompanyInfoView,  ContactRequestView
+from .api_views import HeroSectionView, HeaderSectionView, FooterInfoView, CompanyInfoView,  ContactRequestView, ActiveThemeAPIView
 
 
 urlpatterns = [
@@ -9,4 +9,5 @@ urlpatterns = [
     path('company-info/', CompanyInfoView.as_view(), name='company-info'),
     # path("send/", ContactFormView.as_view(), name="contact-send"),
     path('contact/', ContactRequestView.as_view(), name='contact-form'),
+    path('theme/', ActiveThemeAPIView.as_view(), name='active-theme'),
 ]

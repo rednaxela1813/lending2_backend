@@ -11,7 +11,7 @@ ALLOWED_ORIGINS = config("ALLOWED_ORIGINS", default="", cast=lambda v: [s.strip(
 
 
 INSTALLED_APPS = [
-    'grappelli',
+  #  'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

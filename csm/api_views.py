@@ -1,9 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo
-from .serializers import HeroSectionSerializer, HeaderSectionSerializer, FooterInfoSerializer, CompanyInfoSerializer, ContactRequestSerializer
+from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, SiteTheme
+from .serializers import HeroSectionSerializer, HeaderSectionSerializer, FooterInfoSerializer, CompanyInfoSerializer, ContactRequestSerializer, SiteThemeSerializer
 from rest_framework.generics import RetrieveAPIView
 from core.utils.telegram import send_telegram_message
+from rest_framework import status
 
 
 from django.conf import settings
@@ -128,3 +129,13 @@ class ContactRequestView(APIView):
             return JsonResponse({"error": "Failed to send message"}, status=500)
 
         return JsonResponse({"success": "Message sent"})
+    
+    
+
+
+class ActiveThemeAPIView(APIView):
+    def get(self, request):
+        theme = SiteTheme.objects.filter(is_active=True).first()
+        if theme:
+            return Response(SiteThemeSerializer(theme).data)
+        return Response({'detail': 'No active theme found'}, status=status.HTTP_404_NOT_FOUND)

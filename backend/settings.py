@@ -38,7 +38,7 @@ CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS").split(",")
 # Application definition
 
 INSTALLED_APPS = [
-    'grappelli',
+   # 'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

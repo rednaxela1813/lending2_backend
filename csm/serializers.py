@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, ContactRequest
+from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, ContactRequest, SiteTheme
 
 class HeroSectionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,3 +29,23 @@ class ContactRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactRequest
         fields = ['name', 'contact', 'message']
+        
+        
+# core/csm/serializers.py
+
+class SiteThemeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SiteTheme
+        fields = [
+            'primary_color',
+            'primary_hover',
+            'secondary_color',
+            'secondary_hover',
+            'background_color',
+            'text_color',
+            'border_color',
+            'muted_text_color'
+        ]
+
+        
+    
