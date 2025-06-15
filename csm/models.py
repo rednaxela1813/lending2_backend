@@ -82,6 +82,9 @@ class SiteTheme(models.Model):
 
     background_color = models.CharField(max_length=20, default="#111827")
     text_color = models.CharField(max_length=20, default="#ffffff")
+    
+    secondary_background_color = models.CharField(max_length=20, default="#f3f4f6", blank=True)
+    secondary_text_color = models.CharField(max_length=20, default="#111827", blank=True)
 
     border_color = models.CharField(max_length=20, default="#374151", blank=True)
     muted_text_color = models.CharField(max_length=20, default="#9ca3af", blank=True)
