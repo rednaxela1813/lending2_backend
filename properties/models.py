@@ -12,8 +12,9 @@ class Property(models.Model):
 
     public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=255)
-    type = models.CharField(max_length=20, choices=PROPERTY_TYPES)
+    type = models.CharField(max_length=20, choices=PROPERTY_TYPES)    
     description = models.TextField(blank=True)
+    list_details = models.JSONField(blank=True, default=list, help_text="Detaily pre zobrazenie v zozname")
     summary = models.CharField(max_length=255, blank=True, help_text="Krátky popis")
     location = models.CharField(max_length=255, blank=True)
     iframe = models.TextField(blank=True, help_text="HTML iframe  Google Maps")
