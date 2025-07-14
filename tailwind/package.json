@@ -1,0 +1,14 @@
+{
+  "name": "tailwind",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "node --max-old-space-size=2048 ./node_modules/.bin/tailwindcss -i ./input.css -o ../static/css/style.css --minify",
+    "dev": "node --max-old-space-size=2048 ./node_modules/.bin/tailwindcss -i ./input.css -o ../static/css/style.css --watch"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.3.5"
+  }
+}

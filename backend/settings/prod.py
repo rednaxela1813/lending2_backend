@@ -21,6 +21,8 @@ DATABASES = {
     }
 }
 
+TIME_ZONE = 'Europe/Bratislava'
+
 #
 # Статические файлы
 STATIC_URL = '/static/'

@@ -1,0 +1,58 @@
+{% extends 'csm/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="mt-10 min-h-screen bg-body px-4 py-36 text-text">
+  <div class="container mx-auto max-w-6xl">
+    <h2 class="mb-12 text-center text-4xl font-bold text-primary">Kancelárske priestory</h2>
+
+    <div class="grid gap-8 md:grid-cols-2">
+      {% for office in properties %}
+      <div class="flex flex-col overflow-hidden rounded-xl border border-primary bg-secondary shadow-lg">
+        <img
+          src="{% if office.images.all|length %}{{ office.images.first.image.url }}{% else %}{% static 'images/default-office.jpg' %}{% endif %}"
+          alt="{{ office.name }}"
+          class="h-56 w-full object-cover"
+        />
+
+        <div class="flex h-full flex-col justify-between p-6">
+          <div>
+            <h3 class="mb-2 text-2xl font-semibold">{{ office.name }}</h3>
+            <p class="mb-4 text-sm text-text">{{ office.summary }}</p>
+            <a
+              href="{% url 'property_detail' office.public_id %}#map"
+              class="font-bold text-primary hover:text-primary-hover hover:underline"
+            >
+              {{ office.location }}
+            </a>
+          </div>
+
+          <div class="mt-6 flex flex-wrap gap-2">
+            <a
+              href="{% url 'property_detail' office.public_id %}"
+              class="w-30 justify-center rounded-full bg-primary px-4 py-2 text-center font-bold text-white transition duration-200 hover:bg-primary-hover"
+            >
+              Viac podrobností
+            </a>
+
+            <a
+              href="/#services"
+              class="w-30 justify-center rounded-full bg-primary px-4 py-2 text-center font-bold text-white transition duration-200 hover:bg-primary-hover"
+            >
+              ← Späť
+            </a>
+
+            <a
+              href="/#hero"
+              class="w-30 justify-center rounded-full bg-primary px-4 py-2 text-center font-bold text-white transition duration-200 hover:bg-primary-hover"
+            >
+              ↑ Späť na začiatok
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

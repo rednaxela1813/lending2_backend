@@ -1,0 +1,46 @@
+{% load static %}
+<header class="fixed top-0 left-0 z-50 w-full h-[96px] bg-navbar text-text border-b border-border shadow">
+  <nav class="container mx-auto flex items-center justify-between h-full px-6">
+
+    <!-- Логотип -->
+    <a href="#hero" class="flex items-center gap-4 transition hover:opacity-80">
+      <img src="{% static 'images/Logo3.png' %}" alt="Závodský logo" class="h-[72px] scale-110" />
+    </a>
+
+    <!-- Кнопка-бургер -->
+    <button onclick="toggleMobileMenu()" class="md:hidden text-text focus:outline-none" aria-label="Toggle navigation">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+
+    <!-- Десктоп-меню -->
+    <ul class="hidden md:flex items-center gap-8 text-xl font-medium">
+      <li><a href="#services" class="transition hover:text-hover">{{ header.nav_services|default:"Služby" }}</a></li>
+      <li><a href="#why" class="transition hover:text-hover">{{ header.nav_why|default:"Prečo práve my" }}</a></li>
+      <li><a href="#contact" class="transition hover:text-hover">{{ header.nav_contact|default:"Kontakt" }}</a></li>
+    </ul>
+
+    <!-- Кнопка на десктопе -->
+    <a href="#contact" class="hidden md:inline-flex items-center rounded-full bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary-hover transition duration-200">
+      {{ header.button_text|default:"Zanechajte žiadosť" }}
+    </a>
+  </nav>
+
+  <!-- Мобильное меню -->
+  <div id="mobile-menu" class="hidden flex-col gap-4 p-4 md:hidden bg-navbar text-text border-t border-border">
+    <a href="#services" class="py-2 transition hover:text-hover block">{{ header.nav_services|default:"Služby" }}</a>
+    <a href="#why" class="py-2 transition hover:text-hover block">{{ header.nav_why|default:"Prečo práve my" }}</a>
+    <a href="#contact" class="py-2 transition hover:text-hover block">{{ header.nav_contact|default:"Kontakt" }}</a>
+    <a href="#contact" class="mt-2 inline-block w-full rounded-full bg-primary px-4 py-2 text-center text-white font-medium hover:bg-primary-hover">
+      {{ header.button_text|default:"Zanechajte žiadosť" }}
+    </a>
+  </div>
+</header>
+
+<script>
+function toggleMobileMenu() {
+  const menu = document.getElementById("mobile-menu");
+  menu.classList.toggle("hidden");
+}
+</script>

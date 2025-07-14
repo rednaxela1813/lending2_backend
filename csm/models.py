@@ -99,3 +99,29 @@ class SiteTheme(models.Model):
         verbose_name_plural = "Site Themes"
         
         
+        
+class FrontendTheme(models.Model):
+    name = models.CharField(max_length=100, default="Default")
+
+    # Фон
+    navbar_background = models.CharField(max_length=20, default="#ffffff")
+    body_background = models.CharField(max_length=20, default="#f9fafb")
+    footer_background = models.CharField(max_length=20, default="#f1f5f9")
+
+    # Текст
+    text_color = models.CharField(max_length=20, default="#111827")
+    text_hover_color = models.CharField(max_length=20, default="#1e40af")
+
+    # Границы
+    border_color = models.CharField(max_length=20, default="#d1d5db")
+    border_hover_color = models.CharField(max_length=20, default="#9ca3af")
+
+    # Основной цвет (например, для кнопок)
+    primary_color = models.CharField(max_length=20, default="#2563eb")
+    primary_hover_color = models.CharField(max_length=20, default="#1d4ed8")
+
+    # Активация
+    is_active = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name

@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 from django.utils.html import format_html
 
+
 class Property(models.Model):
     PROPERTY_TYPES = [
         ('office', 'Kancelária'),

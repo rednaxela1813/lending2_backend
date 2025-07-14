@@ -22,7 +22,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
 #  'ratelimit',
-
+    
+    
     'core',
     'accounting',
     'csm',
@@ -39,6 +40,9 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    
+    
+    
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -48,7 +52,8 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
+
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -63,3 +68,5 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 AUTH_USER_MODEL = "accounting.CustomUser"
+
+

@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, SiteTheme
-from .forms import SiteThemeForm
+from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, SiteTheme, FrontendTheme
+from .forms import SiteThemeForm, FrontendThemeForm
 
 
 @admin.register(HeroSection)
@@ -13,6 +13,10 @@ class HeaderSectionAdmin(admin.ModelAdmin):
     
     
 
+
+@admin.register(FrontendTheme)
+class FrontendThemeAdmin(admin.ModelAdmin):
+    form = FrontendThemeForm
         
 
 @admin.register(SiteTheme)
