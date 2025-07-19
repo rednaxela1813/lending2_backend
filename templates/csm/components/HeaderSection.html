@@ -1,9 +1,9 @@
 {% load static %}
-<header class="fixed top-0 left-0 z-50 w-full h-[96px] bg-navbar text-text border-b border-border shadow">
+<header class="fixed top-0 left-0 z-50 w-full h-[96px] bg-gray-900 text-yellow-100 border-b border-border shadow">
   <nav class="container mx-auto flex items-center justify-between h-full px-6">
 
     <!-- Логотип -->
-    <a href="#hero" class="flex items-center gap-4 transition hover:opacity-80">
+    <a href="{% url 'homepage' %}#hero" class="flex items-center gap-4 transition hover:opacity-80">
       <img src="{% static 'images/Logo3.png' %}" alt="Závodský logo" class="h-[72px] scale-110" />
     </a>
 
@@ -15,24 +15,25 @@
     </button>
 
     <!-- Десктоп-меню -->
-    <ul class="hidden md:flex items-center gap-8 text-xl font-medium">
-      <li><a href="#services" class="transition hover:text-hover">{{ header.nav_services|default:"Služby" }}</a></li>
-      <li><a href="#why" class="transition hover:text-hover">{{ header.nav_why|default:"Prečo práve my" }}</a></li>
-      <li><a href="#contact" class="transition hover:text-hover">{{ header.nav_contact|default:"Kontakt" }}</a></li>
+    <ul class="hidden md:flex items-center gap-8 text-xl text-yellow-100 font-medium">
+      <li><a href="{% url 'homepage' %}#services" class="transition hover:text-orange-500">{{ header.nav_services|default:"Služby" }}</a></li>
+      <li><a href="{% url 'homepage' %}#why" class="transition hover:text-orange-500">{{ header.nav_why|default:"Prečo práve my" }}</a></li>
+      <li><a href="{% url 'homepage' %}#contact" class="transition hover:text-orange-500">{{ header.nav_contact|default:"Kontakt" }}</a></li>
     </ul>
 
     <!-- Кнопка на десктопе -->
-    <a href="#contact" class="hidden md:inline-flex items-center rounded-full bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary-hover transition duration-200">
+    <a href="{% url 'homepage' %}#contact" class="hidden md:inline-flex items-center rounded-full bg-orange-400 px-5 py-2 text-sm font-medium text-white hover:bg-orange-500 transition duration-200">
       {{ header.button_text|default:"Zanechajte žiadosť" }}
     </a>
   </nav>
 
   <!-- Мобильное меню -->
-  <div id="mobile-menu" class="hidden flex-col gap-4 p-4 md:hidden bg-navbar text-text border-t border-border">
-    <a href="#services" class="py-2 transition hover:text-hover block">{{ header.nav_services|default:"Služby" }}</a>
-    <a href="#why" class="py-2 transition hover:text-hover block">{{ header.nav_why|default:"Prečo práve my" }}</a>
-    <a href="#contact" class="py-2 transition hover:text-hover block">{{ header.nav_contact|default:"Kontakt" }}</a>
-    <a href="#contact" class="mt-2 inline-block w-full rounded-full bg-primary px-4 py-2 text-center text-white font-medium hover:bg-primary-hover">
+  <div id="mobile-menu"
+       class="hidden fixed top-[96px] left-0 w-full bg-gray-900 text-text border-t border-border z-[60] flex-col gap-4 p-4 md:hidden">
+    <a href="{% url 'homepage' %}#services" class="py-2 transition hover:text-hover block">{{ header.nav_services|default:"Služby" }}</a>
+    <a href="{% url 'homepage' %}#why" class="py-2 transition hover:text-hover block">{{ header.nav_why|default:"Prečo práve my" }}</a>
+    <a href="{% url 'homepage' %}#contact" class="py-2 transition hover:text-hover block">{{ header.nav_contact|default:"Kontakt" }}</a>
+    <a href="{% url 'homepage' %}#contact" class="mt-2 inline-block w-full rounded-full bg-orange-400 px-4 py-2 text-center text-white font-medium hover:bg-orange-500">
       {{ header.button_text|default:"Zanechajte žiadosť" }}
     </a>
   </div>

@@ -1,5 +1,5 @@
 {% load static %}
-<section id="hero" class="pt-[112px] pb-24 px-4 bg-body   text-text relative overflow-hidden z-10">
+<section id="hero" class="pt-[130px]  pb-24 px-4 bg-gray-900   text-yellow-100 relative overflow-hidden z-10">
 
   {% if hero_section.image %}
       <img src="{{ hero_section.image.url }}" alt="{{ hero_section.title }}" class="pointer-events-none absolute bottom-0 right-0 z-0 hidden w-[600px] rounded-l-3xl object-cover opacity-70 md:block" />
@@ -8,11 +8,11 @@
    <!-- Только на мобильных -->
 <div class="fixed bottom-6 right-6 z-50 block md:hidden">
   {% if is_working_hours %}
-    <a href="tel:+421123456789" class="rounded-full bg-primary px-4 py-3 text-white shadow-lg hover:bg-primary-hover transition">
+    <a href="tel:+421123456789" class="rounded-full bg-orange-500 px-4 py-3 text-white shadow-lg hover:bg-primary-hover transition">
       Zavolať
     </a>
   {% else %}
-    <a href="#contact" class="rounded-full bg-primary px-4 py-3 text-white shadow-lg hover:bg-primary-hover transition">
+    <a href="#contact" class="rounded-full bg-orange-500 px-4 py-3 text-white shadow-lg hover:bg-primary-hover transition">
       Napíšte nám
     </a>
   {% endif %}
@@ -20,10 +20,10 @@
     
 
   <div class="container relative z-10 mx-auto max-w-6xl md:pr-[390px]">
-    <div class="rounded-2xl border border-border bg-navbar/10 backdrop-blur-sm shadow-lg p-10">
+    <div class="rounded-2xl border border-border bg-navbar/10 backdrop-blur-sm shadow-lg p-10 ">
       <div class="flex flex-col md:flex-row gap-10 items-center">
         <div class="flex-1 text-center md:text-left">
-          <h1 class="mb-6 text-4xl font-extrabold leading-tight text-primary md:text-5xl">
+          <h1 class="mb-6 text-4xl font-extrabold leading-tight text-orange-400 md:text-5xl">
             {{ hero_section.title|default:"Agentúra pre integrované riešenia" }}
             <br class="hidden md:block" />
             <span class="mt-2 block text-xl text-text md:text-2xl">
@@ -37,14 +37,14 @@
 
           <div class="flex justify-center md:justify-start">
             <a href="#contact"
-               class="rounded-full bg-primary px-6 py-3 text-lg font-semibold text-white hover:bg-primary-hover transition-colors duration-200">
+               class="rounded-full bg-orange-400 px-6 py-3 text-lg font-semibold text-yellow-200 hover:bg-orange-500 transition-colors duration-200">
               {{ hero_section.button_text|default:"Zanechajte žiadosť" }}
             </a>
           </div>
         </div>
 
         <div class="hidden md:flex flex-1 items-center justify-center">
-          <div class="h-48 w-48 rounded-full bg-primary p-4 text-white font-bold text-center flex items-center justify-center shadow-inner">
+          <div class="h-48 w-48 rounded-full bg-orange-400 p-4 text-white font-bold text-center flex items-center justify-center shadow-inner">
             <span class="break-words">{{ hero_section.right_colon_text|default:"Test" }}</span>
           </div>
         </div>

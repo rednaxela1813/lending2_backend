@@ -22,6 +22,7 @@ DATABASES = {
 }
 
 TIME_ZONE = 'Europe/Bratislava'
+USE_TZ = True
 
 #
 # Статические файлы

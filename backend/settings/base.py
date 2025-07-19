@@ -22,7 +22,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
 #  'ratelimit',
-    
+    'tailwind',
+    'theme',
+    'widget_tweaks',
     
     'core',
     'accounting',
@@ -31,6 +33,9 @@ INSTALLED_APPS = [
     'properties',
     'orders',
 ]
+
+TAILWIND_APP_NAME = 'theme'
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

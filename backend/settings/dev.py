@@ -8,6 +8,15 @@ DEBUG = True
 CORS_ALLOW_ALL_ORIGINS = config("CORS_ALLOW_ALL_ORIGINS", default=True, cast=bool)
 
 
+if DEBUG:
+    # Add django_browser_reload only in DEBUG mode
+    INSTALLED_APPS += ['django_browser_reload']
+    
+    MIDDLEWARE += [
+        "django_browser_reload.middleware.BrowserReloadMiddleware",
+    ]
+    
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

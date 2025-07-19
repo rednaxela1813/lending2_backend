@@ -16,6 +16,9 @@ if [ "$ENV" = "production" ]; then
   echo "🚀 Запускаем Gunicorn (production)..."
   exec gunicorn backend.wsgi:application --bind 0.0.0.0:8000
 else
-  echo "🚀 Запускаем Django dev server..."
+  echo "🚀 Запускаем Django dev server + Tailwind watcher..."
+  # запустить tailwind watcher в фоне
+  python manage.py tailwind start &
+  # запустить Django dev server
   exec python manage.py runserver 0.0.0.0:8000
 fi

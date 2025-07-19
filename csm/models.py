@@ -71,32 +71,32 @@ class ContactRequest(models.Model):
 
 
 
-class SiteTheme(models.Model):
-    name = models.CharField(max_length=100, default="Default")
+# class SiteTheme(models.Model):
+#     name = models.CharField(max_length=100, default="Default")
 
-    primary_color = models.CharField(max_length=20, default="#7e22ce")
-    primary_hover = models.CharField(max_length=20, default="#6b21a8")
+#     primary_color = models.CharField(max_length=20, default="#7e22ce")
+#     primary_hover = models.CharField(max_length=20, default="#6b21a8")
 
-    secondary_color = models.CharField(max_length=20, default="#1f2937")
-    secondary_hover = models.CharField(max_length=20, default="#374151")
+#     secondary_color = models.CharField(max_length=20, default="#1f2937")
+#     secondary_hover = models.CharField(max_length=20, default="#374151")
 
-    background_color = models.CharField(max_length=20, default="#111827")
-    text_color = models.CharField(max_length=20, default="#ffffff")
+#     background_color = models.CharField(max_length=20, default="#111827")
+#     text_color = models.CharField(max_length=20, default="#ffffff")
     
-    secondary_background_color = models.CharField(max_length=20, default="#f3f4f6", blank=True)
-    secondary_text_color = models.CharField(max_length=20, default="#111827", blank=True)
+#     secondary_background_color = models.CharField(max_length=20, default="#f3f4f6", blank=True)
+#     secondary_text_color = models.CharField(max_length=20, default="#111827", blank=True)
 
-    border_color = models.CharField(max_length=20, default="#374151", blank=True)
-    muted_text_color = models.CharField(max_length=20, default="#9ca3af", blank=True)
+#     border_color = models.CharField(max_length=20, default="#374151", blank=True)
+#     muted_text_color = models.CharField(max_length=20, default="#9ca3af", blank=True)
 
-    is_active = models.BooleanField(default=False)
+#     is_active = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
     
-    class Meta:
-        verbose_name = "Site Theme"
-        verbose_name_plural = "Site Themes"
+#     class Meta:
+#         verbose_name = "Site Theme"
+#         verbose_name_plural = "Site Themes"
         
         
         

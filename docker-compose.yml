@@ -18,16 +18,16 @@ services:
       - db
 
 
-  tailwind:
-    image: node:18
-    working_dir: /app
-    volumes:
-      - ./tailwind:/app
-      - ./static:/static
-      - ./templates:/app/backend_templates:ro
-      
+  # tailwind:
+  #   image: node:18
+  #   working_dir: /app
+  #   volumes:
+  #     - ./tailwind:/app
+  #     - ./static:/static
+  #     - ./templates:/app/backend_templates:ro
+
           
-    command: sh -c "npm install && npm run build"
+  #   command: sh -c "npm install && npm run build"
     
 
 

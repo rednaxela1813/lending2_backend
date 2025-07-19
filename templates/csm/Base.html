@@ -1,4 +1,4 @@
-{% load static %}
+{% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="sk">
 <head>
@@ -6,8 +6,9 @@
   <title>{{ company.name }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  {% tailwind_css %}
 
+  <!-- Dynamic CSS variables for theme colors -->
   <style>
     :root {
       --navbar-bg: {{ theme_color.navbar_background }};
@@ -23,74 +24,47 @@
       --primary-color: {{ theme_color.primary_color }};
       --primary-hover-color: {{ theme_color.primary_hover_color }};
     }
-
-    /* background */
-    .bg-body {
-      background-color: var(--body-bg);
-    }
-
-    .bg-navbar {
-      background-color: var(--navbar-bg);
-    }
-
-    .bg-footer {
-      background-color: var(--footer-bg);
-    }
-
-    /* text */
-    .text-text {
-      color: var(--text-color);
-    }
-
-    .hover\:text-hover:hover {
-      color: var(--text-hover-color);
-    }
-
-    /* borders */
-    .border-border {
-      border-color: var(--border-color);
-    }
-
-    .hover\:border-hover:hover {
-      border-color: var(--border-hover-color);
-    }
-
-    /* primary color usage */
-    .bg-primary {
-      background-color: var(--primary-color);
-    }
-
-    .hover\:bg-primary-hover:hover {
-      background-color: var(--primary-hover-color);
-    }
-
-    .text-primary {
-      color: var(--primary-color);
-    }
-
-    .hover\:text-primary:hover {
-      color: var(--primary-color);
-    }
-    .text-secondary-text {
-  color: var(--color-secondary-text);
-}
-.hover\:text-hover:hover {
-  color: var(--text-hover-color);
-}
-
-
   </style>
 </head>
 
-<body class="bg-body text-text">
+<body class="bg-body text-text relative">
+
+  <!-- Main content -->
   {% block content %}{% endblock %}
 
- <script>
-  function toggleMobileMenu() {
-    const menu = document.getElementById("mobile-menu");
-    menu.classList.toggle("hidden");
-  }
-</script>
+  <!-- Floating Call/Message Button (mobile only) -->
+  {% if is_working_hours %}
+  <a id="call-button"
+     href="tel:+421900000000"
+     class="fixed bottom-6 right-6 z-50 rounded-full bg-green-500 bg-opacity-100 px-6 py-3 text-white text-lg shadow-lg transition hover:bg-green-600 focus:bg-green-700 active:bg-green-800 focus:outline-none">
+     📞 Zavolať
+  </a>
+{% else %}
+  <a id="call-button"
+     href="#contact"
+     class="fixed bottom-6 right-6 z-50 rounded-full bg-orange-400 bg-opacity-100 px-6 py-3 text-white text-lg shadow-lg transition hover:bg-orange-500 focus:bg-orange-600 active:bg-orange-700 focus:outline-none">
+     ✉️ Napísať nám
+  </a>
+{% endif %}
 
+
+  <!-- JavaScript -->
+  <script>
+    function toggleMobileMenu() {
+      const menu = document.getElementById("mobile-menu");
+      menu.classList.toggle("hidden");
+    }
+
+    function isMobile() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const callBtn = document.getElementById("call-button");
+      if (callBtn && !isMobile()) {
+        callBtn.classList.add("hidden");
+      }
+    });
+  </script>
 </body>
 </html>

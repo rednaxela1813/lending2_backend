@@ -1,0 +1,53 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+/* Custom classes using CSS variables */
+ .bg-body {
+  background-color: var(--body-bg);
+}
+
+.bg-navbar {
+  background-color: var(--navbar-bg);
+}
+
+.bg-footer {
+  background-color: var(--footer-bg);
+}
+
+.text-text {
+  color: var(--text-color);
+}
+
+.hover\:text-hover:hover {
+  color: var(--text-hover-color);
+}
+
+.border-border {
+  border-color: var(--border-color);
+}
+
+.hover\:border-hover:hover {
+  border-color: var(--border-hover-color);
+}
+
+.bg-primary {
+  background-color: var(--primary-color);
+}
+
+.hover\:bg-primary-hover:hover {
+  background-color: var(--primary-hover-color);
+}
+
+.text-primary {
+  color: var(--primary-color);
+}
+
+.hover\:text-primary:hover {
+  color: var(--primary-color);
+}
+
+.text-secondary-text {
+  color: var(--color-secondary-text);
+}
+
+@source "../../../**/*.{html,py,js}";

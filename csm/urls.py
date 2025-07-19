@@ -12,5 +12,6 @@ urlpatterns = [
     # path('contact/', ContactRequestView.as_view(), name='contact-form'),
     # path('theme/', ActiveThemeAPIView.as_view(), name='active-theme'),
     path('', homepage, name='homepage'),
+     
     
 ]

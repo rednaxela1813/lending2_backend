@@ -1,0 +1,144 @@
+{% extends "csm/base.html" %}
+{% load static %}
+
+{% block content %}
+
+  {% include "csm/components/HeaderSection.html" %}
+
+  <section class="pt-[112px] pb-24 px-4 bg-gray-900 text-yellow-100 relative overflow-hidden z-10">
+    <div class="container relative z-10 mx-auto max-w-6xl">
+      <div class="rounded-2xl border border-border bg-navbar/10 backdrop-blur-sm shadow-lg p-10">
+        
+        <!-- Кнопка НАЗАД для десктопа -->
+        <div class="hidden md:flex justify-end mb-6">
+          {% url 'property_list' as list_url %}
+          {% if list_url %}
+            <a
+              href="{{ list_url }}"
+              class="rounded-full bg-gray-700 px-5 py-2 text-sm font-medium text-yellow-100 hover:bg-gray-600 transition-colors duration-200"
+            >
+              ← Späť na zoznam
+            </a>
+          {% else %}
+            <button
+              onclick="history.back()"
+              class="rounded-full bg-gray-700 px-5 py-2 text-sm font-medium text-yellow-100 hover:bg-gray-600 transition-colors duration-200"
+            >
+              ← Späť na zoznam
+            </button>
+          {% endif %}
+        </div>
+
+        <!-- Название офиса -->
+        <h2 class="mb-8 text-center text-4xl font-extrabold text-primary md:text-5xl">
+          {{ property.name }}
+        </h2>
+
+        <!-- Основное изображение -->
+        <div class="mb-6">
+          <img
+            src="{% if property.images.all|length %}{{ property.images.first.image.url }}{% else %}{% static 'images/default-office.jpg' %}{% endif %}"
+            alt="{{ property.name }}"
+            class="rounded-2xl shadow-lg object-cover w-full h-96"
+          />
+        </div>
+
+        <!-- Информация о недвижимости -->
+        <div class="space-y-4">
+          <!-- Цена -->
+          <p class="text-lg">
+            {% if property.price %}
+              Cena: <span class="text-orange-400 font-semibold">{{ property.price }} €</span>
+            {% else %}
+              Cena na vyžiadanie
+            {% endif %}
+          </p>
+
+          <!-- Краткое описание -->
+          <p class="text-base">
+            {{ property.summary }}
+          </p>
+
+          <!-- Детали -->
+          {% if property.list_details|length > 0 %}
+
+          <div>
+            <h3 class="text-2xl font-bold text-yellow-100 mb-3">Detaily</h3>
+            <ul class="list-disc pl-5 text-yellow-100">
+              {% for detail in property.list_details %}
+                <li>{{ detail }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+
+          <!-- Адрес -->
+          <p class="flex items-center text-base">
+            📍 <span class="ml-2">{{ property.location }}</span>
+          </p>
+        </div>
+
+        <!-- Карта -->
+        <div class="mt-8 rounded-2xl overflow-hidden shadow-lg">
+          {% if property.map_iframe %}
+            {{ property.map_iframe|safe }}
+          {% else %}
+            <iframe
+              src="https://maps.google.com/maps?q={{ property.location|urlencode }}&t=&z=15&ie=UTF8&iwloc=&output=embed"
+              width="100%"
+              height="400"
+              frameborder="0"
+              style="border:0;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          {% endif %}
+        </div>
+
+        <!-- Кнопки действий -->
+        <div class="mt-8 flex flex-col md:flex-row gap-4">
+          <!-- Проложить маршрут -->
+          <a
+            href="https://www.google.com/maps/dir/?api=1&destination={{ property.location|urlencode }}"
+            target="_blank"
+            rel="noopener"
+            class="flex-1 rounded-full bg-orange-400 px-6 py-3 text-center font-semibold text-white transition-colors duration-200 hover:bg-orange-500"
+          >
+            🧭 Preraziť trasu
+          </a>
+
+          <!-- Контактировать -->
+          <a
+            href="{% url 'homepage' %}#contact"
+            class="flex-1 rounded-full bg-orange-400 px-6 py-3 text-center font-semibold text-white transition-colors duration-200 hover:bg-orange-500"
+          >
+            Kontaktovať nás
+          </a>
+        </div>
+
+        <!-- Кнопка НАЗАД для мобильного -->
+        <div class="mt-4 md:hidden">
+          {% if list_url %}
+            <a
+              href="{{ list_url }}"
+              class="block w-full rounded-full bg-gray-700 px-6 py-3 text-center font-semibold text-white transition-colors duration-200 hover:bg-gray-600"
+            >
+              ← Späť na zoznam
+            </a>
+          {% else %}
+            <button
+              onclick="history.back()"
+              class="block w-full rounded-full bg-gray-700 px-6 py-3 text-center font-semibold text-white transition-colors duration-200 hover:bg-gray-600"
+            >
+              ← Späť na zoznam
+            </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% include "csm/components/FooterSection.html" %}
+
+{% endblock %}
