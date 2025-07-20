@@ -8,13 +8,13 @@
       <div class="bg-gray-900 rounded-2xl border border-border p-8 text-yellow-100 hover:text-yellow-200 shadow-lg backdrop-blur-sm">
         <div class="flex h-full flex-col gap-4">
           <div class="mb-2 text-5xl">
-            <!-- Replace with real icon -->
             <svg class="w-10 h-10 mx-auto text-yellow-100" fill="none" stroke="currentColor" stroke-width="2"
                  viewBox="0 0 24 24"><path d="M3 10h18v11H3z"/><path d="M8 21v-4h8v4"/></svg>
           </div>
           <h3 class="text-2xl font-semibold">Prenájom priestorov</h3>
           <p class="text-muted mb-4">Prenájom kancelárií, obchodných a skladových priestorov</p>
-          <a href="/offices/" class="inline-block rounded-full bg-orange-400 px-5 py-2 font-medium text-white shadow-md transition-colors duration-200 hover:bg-orange-500">
+          <a href="{% url 'property_list' %}"
+             class="inline-block rounded-full bg-orange-400 px-5 py-2 font-medium text-white shadow-md transition-colors duration-200 hover:bg-orange-500">
             Viac podrobností
           </a>
         </div>
@@ -24,12 +24,13 @@
       <div class="bg-gray-900 rounded-2xl border border-border p-8 text-yellow-100 hover:text-yellow-200 shadow-lg backdrop-blur-sm">
         <div class="flex h-full flex-col gap-4">
           <div class="mb-2 text-5xl">
-            <svg class="w-10 h-10 mx-auto text-primary " fill="none" stroke="currentColor" stroke-width="2"
+            <svg class="w-10 h-10 mx-auto text-primary" fill="none" stroke="currentColor" stroke-width="2"
                  viewBox="0 0 24 24"><path d="M3 5h18v14H3z"/><path d="M3 10h18"/></svg>
           </div>
           <h3 class="text-2xl font-semibold">Virtuálne sídla spoločností</h3>
           <p class="text-muted mb-4">Spoľahlivá registrácia Vašej firmy s uvedením adresy sídla.</p>
-          <a href="{% url 'address_list' %}"  class="inline-block rounded-full bg-orange-400 px-5 py-2 font-medium text-white shadow-md transition-colors duration-200 hover:bg-orange-500">
+          <a href="{% url 'address_list' %}"
+             class="inline-block rounded-full bg-orange-400 px-5 py-2 font-medium text-white shadow-md transition-colors duration-200 hover:bg-orange-500">
             Viac podrobností
           </a>
         </div>
@@ -44,7 +45,8 @@
           </div>
           <h3 class="text-2xl font-semibold">Reklamné plochy</h3>
           <p class="text-muted mb-4">Zviditeľnite sa efektívne v atraktívnej lokalite.</p>
-          <a href="{% url 'billboard_list' %}"  class="inline-block rounded-full bg-orange-400 px-5 py-2 font-medium text-white shadow-md transition-colors duration-200 hover:bg-orange-500">
+          <a href="{% url 'billboard_list' %}"
+             class="inline-block rounded-full bg-orange-400 px-5 py-2 font-medium text-white shadow-md transition-colors duration-200 hover:bg-orange-500">
             Viac podrobností
           </a>
         </div>

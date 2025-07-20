@@ -64,12 +64,11 @@
               </div>
 
               <div class="mt-6 flex flex-wrap gap-3">
-                <a
-                  href="{% url 'property_detail' office.public_id %}"
-                  class="flex-1 rounded-full bg-orange-400 px-6 py-3 text-center font-semibold text-white transition-colors duration-200 hover:bg-orange-500"
-                >
-                  Viac podrobností
-                </a>
+                <a href="{{ office.get_absolute_url }}"
+   class="flex-1 rounded-full bg-orange-400 px-6 py-3 text-center font-semibold text-white transition-colors duration-200 hover:bg-orange-500">
+   Viac podrobností
+</a>
+
               </div>
 
               <!-- Кнопка НАЗАД для мобильной версии -->

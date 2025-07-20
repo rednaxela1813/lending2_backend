@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gallery Test</title>
+  <style>
+    body { background: #111; color: #fff; margin: 0; font-family: sans-serif; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; padding: 20px; }
+    .grid img { width: 100%; border-radius: 8px; cursor: pointer; transition: transform 0.3s; }
+    .grid img:hover { transform: scale(1.05); }
+    .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; display: none; z-index: 999; }
+    .modal img { max-width: 90vw; max-height: 90vh; border-radius: 8px; }
+    .close, .prev, .next { position: fixed; top: 20px; color: #fff; font-size: 2rem; cursor: pointer; z-index: 1000; }
+    .close { right: 20px; }
+    .prev { left: 20px; top: 50%; transform: translateY(-50%); }
+    .next { right: 20px; top: 50%; transform: translateY(-50%); }
+  </style>
+</head>
+<body>
+
+<h1 style="text-align:center;">Gallery Demo</h1>
+<div class="grid" id="gallery">
+  <img src="../../media/property_images/image00028.jpg" data-index="0">
+  <img src="../../media/property_images/image00032.jpg" data-index="1">
+  <img src="../../media/property_images/image00038.jpg" data-index="2">
+</div>
+
+<div class="modal" id="modal">
+  <span class="close" onclick="closeModal()">×</span>
+  <span class="prev" onclick="showPrev()">←</span>
+  <img id="modalImg" src="">
+  <span class="next" onclick="showNext()">→</span>
+</div>
+
+<script>
+  const images = document.querySelectorAll('#gallery img');
+  const modal = document.getElementById('modal');
+  const modalImg = document.getElementById('modalImg');
+  let currentIndex = 0;
+
+  images.forEach((img, i) => {
+    img.addEventListener('click', () => {
+      currentIndex = i;
+      modalImg.src = img.src;
+      modal.style.display = 'flex';
+    });
+  });
+
+  function closeModal() {
+    modal.style.display = 'none';
+  }
+  function showNext() {
+    currentIndex = (currentIndex + 1) % images.length;
+    modalImg.src = images[currentIndex].src;
+  }
+  function showPrev() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    modalImg.src = images[currentIndex].src;
+  }
+
+  document.addEventListener('keydown', e => {
+    if (modal.style.display === 'flex') {
+      if (e.key === 'Escape') closeModal();
+      if (e.key === 'ArrowRight') showNext();
+      if (e.key === 'ArrowLeft') showPrev();
+    }
+  });
+</script>
+
+</body>
+</html>
