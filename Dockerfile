@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     gnupg \
     ca-certificates \
+    python3-pip \
     && curl -fsSL https://deb.nodesource.com/setup_current.x | bash - \
     && apt-get install -y nodejs
 
