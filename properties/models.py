@@ -24,6 +24,11 @@ class Property(models.Model):
     iframe = models.TextField(blank=True, help_text="HTML iframe  Google Maps")
     created_at = models.DateTimeField(auto_now_add=True)
     
+    def clean(self):
+        # Удаляем width и height из iframe
+        if self.iframe:
+            self.iframe = self.iframe.replace('width="600"', '').replace('height="450"', '')
+    
     
     def get_absolute_url(self):
         if self.type == 'office':
