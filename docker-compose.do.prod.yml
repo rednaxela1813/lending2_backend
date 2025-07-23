@@ -9,7 +9,7 @@ services:
       - ./media:/app/media
       - ./staticfiles:/app/staticfiles
     ports:
-      - "8001:8000"  # Внешний порт 8001, внутри всё равно 8000
+      - "8001:8000"  # Внешний порт 8001, внутри у Django всё равно 8000
     env_file:
       - .env.do
     depends_on:
@@ -20,12 +20,9 @@ services:
     container_name: django-only-db
     env_file:
       - .env.do
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - pgdata_django_only:/var/lib/postgresql/data
 
 volumes:
   pgdata_django_only:
+

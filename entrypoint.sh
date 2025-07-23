@@ -9,16 +9,14 @@ done
 echo "✅ База доступна. Применяем миграции..."
 python manage.py migrate --noinput
 
+echo "⚡ Устанавливаем зависимости Tailwind..."
+npm install --prefix theme/static_src
+
+echo "⚡ Строим Tailwind CSS..."
+python manage.py tailwind build
+
 echo "📂 Собираем статические файлы..."
 python manage.py collectstatic --noinput
 
-if [ "$ENV" = "production" ]; then
-  echo "🚀 Запускаем Gunicorn (production)..."
-  exec gunicorn backend.wsgi:application --bind 0.0.0.0:8000
-else
-  echo "🚀 Запускаем Django dev server + Tailwind watcher..."
-  # запустить tailwind watcher в фоне
-  python manage.py tailwind start &
-  # запустить Django dev server
-  exec python manage.py runserver 0.0.0.0:8000
-fi
+echo "🚀 Запускаем Gunicorn (production)..."
+exec gunicorn backend.wsgi:application --bind 0.0.0.0:8000
