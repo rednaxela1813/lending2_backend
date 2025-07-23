@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo,  FrontendTheme
+from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo,  FrontendTheme, ServiceSection
 from .forms import  FrontendThemeForm
 
 
@@ -18,6 +18,12 @@ class HeaderSectionAdmin(admin.ModelAdmin):
 class FrontendThemeAdmin(admin.ModelAdmin):
     form = FrontendThemeForm
         
+        
+@admin.register(ServiceSection)
+class ServiceSectionAdmin(admin.ModelAdmin):
+    list_display = ('title', 'description', 'updated_at')
+    search_fields = ('title', 'description')
+    list_filter = ('updated_at',)
 
 # @admin.register(SiteTheme)
 # class SiteThemeAdmin(admin.ModelAdmin):

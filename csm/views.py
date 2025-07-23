@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, FrontendTheme
+from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, FrontendTheme, ServiceSection
 from .forms import ContactRequestForm
 from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
@@ -32,6 +32,7 @@ def homepage(request):
     footer_info = FooterInfo.objects.first()
     company_info = CompanyInfo.objects.first()
     theme_color = FrontendTheme.objects.filter(is_active=True).first()
+    nas_sluzby = ServiceSection.objects.all()
 
     # Услуги (по одному объекту каждого типа)
     services = {
@@ -99,6 +100,7 @@ def homepage(request):
         'form_failed': form_failed,
         'services': services,
         'total_services': total_services,
+        'nas_sluzby': nas_sluzby,
         'is_working_hours': is_working_hours(), 
     }
 
