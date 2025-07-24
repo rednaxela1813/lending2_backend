@@ -1,4 +1,6 @@
 {% load static %}
+{% load tz %} {# чтобы работал now.year #}
+
 <footer class="bg-gray-900 border-t border-border px-4 py-8 text-yellow-100">
   <div class="container mx-auto grid grid-cols-1 gap-8 md:grid-cols-3">
 
@@ -13,51 +15,29 @@
       </p>
     </div>
 
-   <!-- Навигация -->
-<div class="flex flex-col items-center md:items-start">
-  <h3 class="mb-3 text-lg font-semibold text-text hover:text-orange-500 transition">
-    Navigácia
-  </h3>
-  <ul class="space-y-2 text-muted">
-    <li>
-      <a href="{% url 'homepage' %}#services" class="hover:text-orange-500">
-        {{ header.nav_services|default:"Služby" }}
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'homepage' %}#why" class="hover:text-orange-500">
-        {{ header.nav_why|default:"Prečo práve my?" }}
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'homepage' %}#contact" class="hover:text-orange-500">
-        {{ header.nav_contact|default:"Kontakt" }}
-      </a>
-    </li>
-    <li>
-      <a href="#top" class="hover:text-orange-500">↑ Hore</a>
-    </li>
-  </ul>
-</div>
-
+    <!-- Навигация -->
+    <div class="flex flex-col items-center md:items-start">
+      <h3 class="mb-3 text-lg font-semibold text-text hover:text-orange-500 transition">Navigácia</h3>
+      <ul class="space-y-2 text-muted">
+        <li><a href="{% url 'homepage' %}#services" class="hover:text-orange-500">{{ header.nav_services|default:"Služby" }}</a></li>
+        <li><a href="{% url 'homepage' %}#why" class="hover:text-orange-500">{{ header.nav_why|default:"Prečo práve my?" }}</a></li>
+        <li><a href="{% url 'homepage' %}#contact" class="hover:text-orange-500">{{ header.nav_contact|default:"Kontakt" }}</a></li>
+        <li><a href="#top" class="hover:text-orange-500">↑ Hore</a></li>
+      </ul>
+    </div>
 
     <!-- Контакты -->
     <div class="flex flex-col items-center md:items-start">
-      <h3 class="mb-3 text-lg font-semibold text-text hover:text-orange-500 transition">
-        Kontakt
-      </h3>
+      <h3 class="mb-3 text-lg font-semibold text-text hover:text-orange-500 transition">Kontakt</h3>
       <p class="text-muted">
-  📍 {% if footer_info %}{{ footer_info.contact_address }}{% elif company_info %}{{ company_info.address }}{% else %}Hlavná 123, Bratislava{% endif %}<br>
-  📞 <a href="tel:{% if footer_info %}{{ footer_info.contact_phone }}{% elif company_info %}{{ company_info.phone }}{% else %}+421900000000{% endif %}"
-         class="hover:text-orange-500">
-       {% if footer_info %}{{ footer_info.contact_phone }}{% elif company_info %}{{ company_info.phone }}{% else %}+421 900 000 000{% endif %}
-  </a><br>
-  ✉️ <a href="mailto:{% if footer_info %}{{ footer_info.contact_email }}{% elif company_info %}{{ company_info.email }}{% else %}info@firma.sk{% endif %}"
-         class="hover:text-orange-500">
-       {% if footer_info %}{{ footer_info.contact_email }}{% elif company_info %}{{ company_info.email }}{% else %}info@firma.sk{% endif %}
-  </a>
-</p>
-
+        📍 {{ COMPANY_ADDRESS|default:"" }}<br>
+        📞 <a href="tel:{{ COMPANY_PHONE|default:"" }}" class="hover:text-orange-500">
+             {{ COMPANY_PHONE|default:"" }}
+        </a><br>
+        ✉️ <a href="mailto:{{ COMPANY_EMAIL|default:"" }}" class="hover:text-orange-500">
+             {{ COMPANY_EMAIL|default:"" }}
+        </a>
+      </p>
       <div class="mt-4 flex gap-3">
         <a href="#contact" class="rounded-full px-4 py-2 text-yellow-100 font-medium hover:text-orange-500 transition">
           Kontaktovať nás
@@ -67,8 +47,16 @@
 
   </div>
 
+  <!-- Юридические ссылки -->
+  <div class="mt-6 flex flex-wrap justify-center gap-4 text-sm text-muted">
+    <a href="{% url 'privacy' %}" class="hover:text-orange-500">Ochrana osobných údajov</a>
+    <a href="{% url 'operator' %}" class="hover:text-orange-500">Prevádzkovateľ</a>
+    <a href="{% url 'copyright' %}" class="hover:text-orange-500">Autorské práva</a>
+    <a href="{% url 'terms' %}" class="hover:text-orange-500">Podmienky používania</a>
+  </div>
+
   <!-- Линия и копирайт -->
-  <div class="mt-8 border-t border-border pt-4 text-center text-sm text-muted">
+  <div class="mt-4 border-t border-border pt-4 text-center text-sm text-muted">
     © {{ company_info.name }} {{ now.year }}. Všetky práva vyhradené.
   </div>
 </footer>

@@ -1,6 +1,7 @@
 from django.urls import path
 #from .api_views import HeroSectionView, HeaderSectionView, FooterInfoView, CompanyInfoView,  ContactRequestView, ActiveThemeAPIView
 from .views import homepage
+from django.views.generic import TemplateView
 
 
 urlpatterns = [
@@ -12,6 +13,10 @@ urlpatterns = [
     # path('contact/', ContactRequestView.as_view(), name='contact-form'),
     # path('theme/', ActiveThemeAPIView.as_view(), name='active-theme'),
     path('', homepage, name='homepage'),
+    path("zasady-ochrany-osobnych-udajov/", TemplateView.as_view(template_name="legal/privacy.html"), name="privacy"),
+    path("prevadzkovatel/", TemplateView.as_view(template_name="legal/operator.html"), name="operator"),
+    path("autorske-prava/", TemplateView.as_view(template_name="legal/copyright.html"), name="copyright"),
+    path("podmienky-pouzivania/", TemplateView.as_view(template_name="legal/terms.html"), name="terms"),
      
     
 ]

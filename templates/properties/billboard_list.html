@@ -1,90 +1,87 @@
-{% extends "csm/base.html" %}
-{% load static %}
+{% extends "csm/base.html" %} {% load static %} {% block content %} {% include
+"csm/components/HeaderSection.html" %}
 
-{% block content %}
+<section
+  class="pt-[112px] pb-24 px-4 bg-gray-900 text-yellow-100 relative overflow-hidden z-10"
+>
+  <div class="container relative z-10 mx-auto max-w-6xl">
+    <div
+      class="rounded-2xl border border-border bg-navbar/10 backdrop-blur-sm shadow-lg p-10"
+    >
+      <h2 class="mb-12 text-4xl font-bold text-text hover:text-hover">
+        Prenájom reklamných plôch
+      </h2>
 
-  {% include "csm/components/HeaderSection.html" %}
-
-  <section class="pt-[112px] pb-24 px-4 bg-gray-900 text-yellow-100 relative overflow-hidden z-10">
-    <div class="container relative z-10 mx-auto max-w-6xl">
-      <div class="rounded-2xl border border-border bg-navbar/10 backdrop-blur-sm shadow-lg p-10">
-        <h2 class="mb-12 text-4xl font-bold text-text hover:text-hover">
-          Prenájom reklamných plôch
-        </h2>
-
-
-        <!-- Кнопка НАЗАД для десктопа -->
-        <div class="hidden md:flex justify-end mb-6">
-          <button onclick="history.back()"
-            class="rounded-full bg-gray-700 px-6 py-2 text-sm font-medium text-yellow-100 hover:bg-gray-600 transition-colors duration-200">
-            ← Späť
-          </button>
-        </div>
-
-        <div
-          class="grid gap-8
-            {% if properties|length == 1 %}
-              grid-cols-1
-            {% elif properties|length == 2 %}
-              grid-cols-1 sm:grid-cols-2
-            {% else %}
-              grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
-            {% endif %}
-          "
+      <!-- BACK button for desktop-->
+      <div class="hidden md:flex justify-end mb-6">
+        <button
+          onclick="history.back()"
+          class="rounded-full bg-gray-700 px-6 py-2 text-sm font-medium text-yellow-100 hover:bg-gray-600 transition-colors duration-200"
         >
-          {% for office in properties %}
-          <div class="flex flex-col overflow-hidden rounded-2xl border border-yellow-100 bg-gray-900 shadow-lg transition duration-300 hover:shadow-xl hover:scale-[1.02]">
-            <!-- Изображение -->
-            <img
-              src="{% if office.images.all|length %}{{ office.images.first.image.url }}{% else %}{% static 'images/default-office.jpg' %}{% endif %}"
-              alt="{{ office.name }}"
-              class="h-56 w-full object-cover"
-            />
+          ← Späť
+        </button>
+      </div>
 
-            <!-- Контент карточки -->
-            <div class="flex flex-col justify-between p-6">
-              <div>
-                <h3 class="mb-3 text-2xl font-bold text-yellow-100 hover:text-yellow-200 transition-colors duration-200">
-                  {{ office.name }}
-                </h3>
+      <div
+        class="grid gap-8 {% if properties|length == 1 %} grid-cols-1 {% elif properties|length == 2 %} grid-cols-1 sm:grid-cols-2 {% else %} grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 {% endif %}"
+      >
+        {% for office in properties %}
+        <div
+          class="flex flex-col overflow-hidden rounded-2xl border border-yellow-100 bg-gray-900 shadow-lg transition duration-300 hover:shadow-xl hover:scale-[1.02]"
+        >
+          <!-- Image -->
+          <img
+            src="{% if office.images.all|length %}{{ office.images.first.image.url }}{% else %}{% static 'images/default-office.jpg' %}{% endif %}"
+            alt="{{ office.name }}"
+            class="h-56 w-full object-cover"
+          />
 
-                <p class="mb-4 text-base text-yellow-100 hover:text-yellow-200 transition-colors duration-200">
-                  {% if office.price %}
-                    Cena: <span class="text-orange-400">{{ office.price }} €</span>
-                  {% else %}
-                    Cena na vyžiadanie
-                  {% endif %}
-                  {{ office.summary }}
-                </p>
+          <!-- Card content -->
+          <div class="flex flex-col justify-between p-6">
+            <div>
+              <h3
+                class="mb-3 text-2xl font-bold text-yellow-100 hover:text-yellow-200 transition-colors duration-200"
+              >
+                {{ office.name }}
+              </h3>
 
-                <p class="font-medium text-yellow-100">
-                 📍 {{ office.location }}
-                </p>
+              <p
+                class="mb-4 text-base text-yellow-100 hover:text-yellow-200 transition-colors duration-200"
+              >
+                {% if office.price %} Cena:
+                <span class="text-orange-400">{{ office.price }} €</span>
+                {% else %} Cena na vyžiadanie {% endif %} {{ office.summary }}
+              </p>
 
-              </div>
+              <p class="font-medium text-yellow-100">
+                📍 {{ office.location }}
+              </p>
+            </div>
 
-              <div class="mt-6 flex flex-wrap gap-3">
-                <a href="{{ office.get_absolute_url }}"
-   class="flex-1 rounded-full bg-orange-400 px-6 py-3 text-center font-semibold text-white transition-colors duration-200 hover:bg-orange-500">
-   Viac podrobností
-</a>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <a
+                href="{{ office.get_absolute_url }}"
+                class="flex-1 rounded-full bg-orange-400 px-6 py-3 text-center font-semibold text-white transition-colors duration-200 hover:bg-orange-500"
+              >
+                Viac podrobností
+              </a>
+            </div>
 
-              </div>
-
-              <!-- Кнопка НАЗАД для мобильной версии -->
-              <div class="mt-4 flex md:hidden">
-                <button onclick="history.back()"
-                  class="flex-1 rounded-full bg-gray-700 px-6 py-2 text-sm font-medium text-yellow-100 hover:bg-gray-600 transition-colors duration-200">
-                  ← Späť
-                </button>
-              </div>
+            <!-- Кнопка НАЗАД для мобильной версии -->
+            <div class="mt-4 flex md:hidden">
+              <button
+                onclick="history.back()"
+                class="flex-1 rounded-full bg-gray-700 px-6 py-2 text-sm font-medium text-yellow-100 hover:bg-gray-600 transition-colors duration-200"
+              >
+                ← Späť
+              </button>
             </div>
           </div>
-          {% endfor %}
         </div>
+        {% endfor %}
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  {% include "csm/components/FooterSection.html" %}
-{% endblock %}
+{% include "csm/components/FooterSection.html" %} {% endblock %}

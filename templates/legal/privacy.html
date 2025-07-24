@@ -1,0 +1,31 @@
+{% extends "csm/base.html" %}
+{% block content %}
+<div class="max-w-3xl mx-auto p-8 text-lg leading-relaxed text-white">
+  <h1 class="text-2xl font-bold mb-4">Ochrana osobných údajov</h1>
+  <p>Tento webový portál bol vytvorený spoločnosťou <strong>{{ COMPANY_NAME }}</strong> výhradne na testovacie účely.</p>
+  <p>Nepoužívame cookies, nezhromažďujeme a ani nespracovávame žiadne osobné údaje návštevníkov.</p>
+  <p>V prípade otázok: <a href="mailto:{{ COMPANY_EMAIL }}" class="text-blue-600 underline">{{ COMPANY_EMAIL }}</a></p>
+  
+  
+</div>
+
+<!-- Кнопки навигации -->
+
+
+<!-- Кнопки навигации -->
+
+
+<div class="mt-12 flex flex-row gap-10 justify-center">
+  <a href="javascript:history.back()"
+     class="w-max inline-block rounded-full bg-orange-400 px-6 py-2 font-medium text-white shadow-md transition-colors duration-200 hover:bg-orange-500">
+    ← Späť
+  </a>
+  <a href="{% url 'homepage' %}"
+     class="w-max inline-block rounded-full bg-orange-400 px-6 py-2 font-medium text-white shadow-md transition-colors duration-200 hover:bg-orange-500">
+    ⤒ Domov
+  </a>
+</div>
+
+
+
+{% endblock %}

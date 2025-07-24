@@ -29,7 +29,7 @@
   <div class="container mx-auto max-w-6xl">
     <div class="rounded-2xl border border-border bg-navbar/10 p-10 shadow-lg">
       
-      <!-- Кнопка НАЗАД для десктопа -->
+      <!-- BACK button for desktop -->
       <div class="hidden md:flex justify-end mb-6">
         <button onclick="history.back()"
           class="rounded-full bg-gray-700 px-6 py-2 text-sm font-medium text-yellow-100 hover:bg-gray-600 transition-colors duration-200">
@@ -37,17 +37,17 @@
         </button>
       </div>
       
-      <!-- Название -->
+      <!-- Name -->
       <h2 class="text-center text-4xl font-extrabold text-primary mb-8">{{ property.name }}</h2>
 
-      <!-- Основное изображение -->
+      <!-- Main image -->
       <div class="mb-6">
         <img src="{% if property.images.all|length %}{{ property.images.first.image.url }}{% else %}{% static 'images/default-office.jpg' %}{% endif %}"
              alt="{{ property.name }}"
              class="rounded-2xl shadow-lg object-cover w-full h-96">
       </div>
 
-      <!-- Галерея -->
+      <!-- Gallery -->
       {% if property.type != "legal_address" and property.images.all|length > 1 %}
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
         {% for img in property.images.all %}
@@ -60,9 +60,9 @@
       </div>
       {% endif %}
 
-<!-- Карта с локацией -->
+<!-- Map with location -->
 <div class="mt-8">
-  <h3 class="text-2xl font-bold mb-4 text-center text-yellow-100">📍 Местоположение</h3>
+  <h3 class="text-2xl font-bold mb-4 text-center text-yellow-100">📍 Location</h3>
   <div class="w-full rounded-2xl overflow-hidden shadow-lg">
   {% if property.iframe %}
     <div class="relative" style="padding-bottom: 56.25%; height: 0; overflow: hidden;">
@@ -70,7 +70,7 @@
     </div>
   {% else %}
     <div class="p-6 text-center text-gray-400">
-      Адрес не указан. Карта недоступна.
+      Address not specified. Map unavailable.
     </div>
   {% endif %}
 </div>
@@ -90,33 +90,33 @@
 
 
 
-      <!-- Кнопки внизу -->
+      <!-- Buttons at the bottom -->
       <div class="flex flex-col md:flex-row justify-center gap-4 mt-8">
         {% if property.latitude and property.longitude %}
   <a href="https://www.google.com/maps/dir/?api=1&destination={{ property.latitude }},{{ property.longitude }}"
      target="_blank"
      class="inline-flex items-center justify-center rounded-full bg-yellow-500 px-6 py-3 text-white text-lg font-medium hover:bg-yellow-600 transition-colors duration-200">
-    📍 Проложить маршрут
+    📍 Získať trasu
   </a>
 {% elif property.location %}
   <a href="https://www.google.com/maps/dir/?api=1&destination={{ property.location|urlencode }}"
      target="_blank"
      class="inline-flex items-center justify-center rounded-full bg-orange-400 px-6 py-3 text-white text-lg font-medium hover:bg-orange-500 transition-colors duration-200">
-    📍 Проложить маршрут
+    📍 Získať trasu
   </a>
 {% else %}
   <button disabled
           class="inline-flex items-center justify-center rounded-full bg-gray-500 px-6 py-3 text-white text-lg font-medium">
-    📍 Адрес недоступен
+    📍 Adresa nedostupná
   </button>
 {% endif %}
 
-<!-- Кнопка на десктопе -->
+<!-- BACK button for desktop -->
     <a href="{% url 'homepage' %}#contact" class="hidden md:inline-flex items-center rounded-full bg-orange-400 px-5 py-2 text-sm font-medium text-white hover:bg-orange-500 transition duration-200">
       {{ header.button_text|default:"Zanechajte žiadosť" }}
     </a>
   </nav>
-  <!-- Кнопка для мобильного -->
+  <!-- BACK button for mobile -->
 <a href="{% url 'homepage' %}#contact"
    class="md:hidden inline-flex w-full items-center justify-center rounded-full bg-orange-400 px-5 py-3 text-base font-medium text-white hover:bg-orange-500 transition duration-200">
   {{ header.button_text|default:"Zanechajte žiadosť" }}
@@ -125,7 +125,7 @@
 
         <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
                 class="inline-flex items-center justify-center rounded-full bg-gray-700 px-6 py-3 text-white text-lg font-medium hover:bg-gray-600 transition-colors duration-200">
-          ⬆️ Вернуться к началу
+          ⬆️ Späť na začiatok
         </button>
       </div>
 
@@ -137,18 +137,18 @@
        class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50"
        @click.self="close()">
     <div class="relative max-w-[90vw] max-h-[90vh]">
-      <!-- Текущее фото -->
+      <!-- Current photo -->
       <img :src="images[currentIndex]"
            alt=""
            class="rounded-lg shadow-lg object-contain w-full h-full transition-transform duration-300">
       
-      <!-- Закрыть -->
+      <!-- Close -->
       <button @click="close()"
               class="absolute top-4 right-4 text-white text-4xl leading-none hover:text-gray-300">
         &times;
       </button>
 
-      <!-- Навигация -->
+      <!-- Navigation -->
       <button @click="prev()"
               class="absolute left-4 top-1/2 -translate-y-1/2 text-white text-3xl px-3 hover:text-gray-300">
         &#10094;
