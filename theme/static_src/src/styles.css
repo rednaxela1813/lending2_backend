@@ -51,3 +51,4 @@
 }
 
 @source "../../../**/*.{html,py,js}";
+@source "../../../wagtail_pages/home_page.html";
