@@ -6,7 +6,7 @@
   {% endif %}
 
    <!-- Только на мобильных -->
-<div class="fixed bottom-6 right-6 z-50 block md:hidden">
+<!-- <div class="fixed bottom-6 right-6 z-50 block md:hidden">
   {% if is_working_hours %}
     <a href="tel:{{ company_info.phone }}" class="rounded-full bg-green-400 px-4 py-3 text-white shadow-lg hover:bg-green-500 transition">
       Zavolať
@@ -16,7 +16,9 @@
       Napíšte nám
     </a>
   {% endif %}
-</div>
+</div> -->
+<!-- Floating Call/Message Button (mobile only) -->
+  {% include "partials/floating_button.html" %}
     
 
   <div class="container relative z-10 mx-auto max-w-6xl md:pr-[390px]">
