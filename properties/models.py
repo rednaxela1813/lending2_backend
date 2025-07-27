@@ -87,3 +87,78 @@ class PropertyImage(models.Model):
 
         # Сохраняем снова, чтобы обновить путь к файлу в БД
         super().save(update_fields=['image'])
+
+
+# properties/models.py
+
+class OfficeUnit(models.Model):
+    STATUS_CHOICES = [
+        ('available', 'Voľné'),
+        ('occupied', 'Obsadené'),
+    ]
+
+    property = models.ForeignKey(
+        Property,
+        on_delete=models.CASCADE,
+        related_name='office_units',
+        limit_choices_to={'type': 'office'},  # Ограничим только офисами
+    )
+    floor = models.IntegerField(help_text="Číslo poschodia (napr. 0 = prízemie, 1 = prvé poschodie)")
+    unit_number = models.CharField(max_length=50, help_text="Číslo kancelárie alebo identifikátor")
+    area_sqm = models.FloatField(help_text="Rozloha v m²")
+    price_per_month = models.DecimalField(max_digits=10, decimal_places=2, help_text="Cena za mesiac (€)")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='available')
+    description = models.TextField(blank=True)
+
+    class Meta:
+        unique_together = ('property', 'floor', 'unit_number')
+        ordering = ['floor', 'unit_number']
+
+    def __str__(self):
+        return f"{self.property.name} – Poschodie {self.floor}, Kancelária {self.unit_number}"
+
+
+
+# properties/models.py
+
+class OfficeUnitImage(models.Model):
+    office_unit = models.ForeignKey(
+        'OfficeUnit',
+        on_delete=models.CASCADE,
+        related_name='images'
+    )
+    image = models.ImageField(upload_to='office_unit_images/')
+    description = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return f"Obrázok kancelárie {self.office_unit}"
+
+    def preview(self):
+        if self.image:
+            return format_html(
+                '<img src="{}" style="max-height: 100px; border-radius: 8px; box-shadow: 0 0 5px #ccc;" />',
+                self.image.url
+            )
+        return "(bez obrázka)"
+
+    preview.short_description = "Náhľad"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        img_path = self.image.path
+        img = Image.open(img_path)
+
+        # Уменьшаем изображение
+        max_size = (1600, 1200)
+        img.thumbnail(max_size, Image.LANCZOS)
+
+        # Сохраняем как webp
+        webp_path = os.path.splitext(img_path)[0] + '.webp'
+        img.save(webp_path, 'WEBP', quality=80)
+
+        if img_path != webp_path and os.path.exists(img_path):
+            os.remove(img_path)
+
+        self.image.name = os.path.splitext(self.image.name)[0] + '.webp'
+        super().save(update_fields=['image'])

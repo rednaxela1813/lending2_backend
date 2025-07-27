@@ -1,10 +1,11 @@
 from django.urls import path
-from .views import  PropertyListView, PropertyDetailView, AddressListView, BillboardListView
+from .views import  PropertyListView, PropertyDetailView, AddressListView, BillboardListView, OfficeUnitDetailView
 
 
 urlpatterns = [
     path('offices/', PropertyListView.as_view(), name='property_list'),
     path('offices/<uuid:public_id>/', PropertyDetailView.as_view(), name='office_detail'),
+    path('offices/unit/<int:unit_id>/', OfficeUnitDetailView.as_view(), name='office_unit_detail'),
 
     path('addresses/', AddressListView.as_view(), name='address_list'),
     path('addresses/<uuid:public_id>/', PropertyDetailView.as_view(), name='address_detail'),

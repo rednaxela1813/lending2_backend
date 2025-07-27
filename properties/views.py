@@ -1,6 +1,8 @@
 from django.views.generic import ListView, DetailView
-from .models import Property
-#from django.views.generic.base import TemplateView
+from .models import Property, OfficeUnit
+from django.shortcuts import get_object_or_404, render
+from django.views import View
+
 
 
 class PropertyListView(ListView):
@@ -13,13 +15,30 @@ class PropertyListView(ListView):
     
     
 
-class PropertyDetailView(DetailView):
-    model = Property
-    template_name = 'properties/property_detail.html'
-    slug_field = 'public_id'
-    slug_url_kwarg = 'public_id'
-    context_object_name = 'property'
-    
+class PropertyDetailView(View):
+    def get(self, request, public_id):
+        property = get_object_or_404(Property, public_id=public_id)
+
+        if property.type == 'office' and property.office_units.exists():
+            # Показываем список помещений по этажам
+            return render(request, 'properties/office_units_list.html', {
+                'property': property,
+                'office_units': property.office_units.all()
+            })
+
+        # Старое поведение
+        return render(request, 'properties/property_detail.html', {
+            'property': property
+        })
+        
+        
+class OfficeUnitDetailView(DetailView):
+    model = OfficeUnit
+    template_name = 'properties/office_unit_detail.html'
+    context_object_name = 'unit'
+    pk_url_kwarg = 'unit_id' 
+
+
 
 
 # class HomePageView(TemplateView):

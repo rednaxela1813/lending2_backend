@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Property, PropertyImage
+from .models import Property, PropertyImage, OfficeUnit, OfficeUnitImage
 from django.utils.html import format_html
 
 
@@ -24,3 +24,24 @@ class PropertyImageInline(admin.TabularInline):
 class PropertyAdmin(admin.ModelAdmin):
     inlines = [PropertyImageInline]
     list_display = ('name', 'type', 'location', 'created_at')
+    
+
+
+# properties/admin.py
+from .models import OfficeUnit, OfficeUnitImage
+
+
+class OfficeUnitImageInline(admin.TabularInline):
+    model = OfficeUnitImage
+    extra = 1
+    readonly_fields = ('preview',)
+    fields = ('image', 'description', 'preview')
+
+
+@admin.register(OfficeUnit)
+class OfficeUnitAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'floor', 'unit_number', 'area_sqm', 'price_per_month', 'status')
+    list_filter = ('property', 'status', 'floor')
+    search_fields = ('unit_number', 'property__name')
+    ordering = ('floor', 'unit_number')
+    inlines = [OfficeUnitImageInline]
