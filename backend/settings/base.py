@@ -38,7 +38,7 @@ INSTALLED_APPS = [
 
 TAILWIND_APP_NAME = 'theme'
 
-WAGTAIL_SITE_NAME = "Pizzalino CMS"
+
 
 
 
