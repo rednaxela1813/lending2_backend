@@ -10,6 +10,7 @@ class EmailSettings(models.Model):
     email_host_user = models.EmailField(help_text="SMTP server username")
     email_host_password = models.CharField(max_length=255, help_text="SMTP server password")
     use_tls = models.BooleanField(default=True, help_text="Use TLS for email connection")
+    use_ssl = models.BooleanField(default=False, blank=True, null=True, help_text="Use SSL for email connection")
     gdpr_compliant = models.BooleanField(default=False)
     
     updated = models.DateTimeField(auto_now=True)
