@@ -1,11 +1,20 @@
 {% extends "csm/base.html" %}
-
+{% load widget_tweaks %}
 
 {% block content %}
   {% include "csm/components/HeaderSection.html" %}
   {% include "csm/components/HeroSection.html" %}
   {% include "csm/components/ServiceSection.html" %}
   {% include "csm/components/WhyMe.html" %}
-  {% include "csm/components/ContactForm.html" %}
+
+  {% if show_form %}
+    {% include "contact_form/contact_form.html" %}
+  {% else %}
+    <section id="kontakt" class="bg-yellow-100 text-black px-6 py-12 text-center">
+      <p class="text-xl font-semibold">Formulár nie je momentálne dostupný.</p>
+      <p class="text-lg mt-2">Zavolajte nám: <strong>{{ phone_number }}</strong></p>
+    </section>
+  {% endif %}
+
   {% include "csm/components/FooterSection.html" %}
 {% endblock %}

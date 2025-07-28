@@ -84,6 +84,9 @@
       </div>
     </div>
   </section>
+   {% if property_type == "billboard" %}
+  {% include "csm/components/AdServicesSection.html" %}
+{% endif %}
 
   {% include "csm/components/FooterSection.html" %}
 {% endblock %}

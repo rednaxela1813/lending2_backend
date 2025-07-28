@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'theme',
     'widget_tweaks',
     
+    'contact_form',
     'core',
     'accounting',
     'csm',
