@@ -10,11 +10,12 @@
   {% if show_form %}
     {% include "contact_form/contact_form.html" %}
   {% else %}
-    <section id="kontakt" class="bg-yellow-100 text-black px-6 py-12 text-center">
-      <p class="text-xl font-semibold">Formulár nie je momentálne dostupný.</p>
-      <p class="text-lg mt-2">Zavolajte nám: <strong>{{ phone_number }}</strong></p>
+    <section id="kontakt" class="bg-gray-900  px-6 py-12 text-center">
+      <p class="text-xl text-orange-500 font-semibold">Formulár nie je momentálne dostupný.</p>
+      <p class="text-lg text-orange-500 mt-2">Zavolajte nám: <strong>{{ COMPANY_PHONE }}</strong></p>
     </section>
   {% endif %}
 
   {% include "csm/components/FooterSection.html" %}
 {% endblock %}
+

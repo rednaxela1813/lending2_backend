@@ -8,7 +8,7 @@ def contact_view(request):
     email_config = EmailSettings.objects.first()
     if not email_config or not email_config.gdpr_compliant:
         return render(request, "contact_form/phone_only.html", {
-            "phone_number": "+421 900 123 456"
+            "phone_number": "{{ COMPANY_PHONE }}"  # Можно вынести в CompanyInfo
         })
 
     if request.method == "POST":
