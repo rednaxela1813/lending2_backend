@@ -6,12 +6,12 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     
-    path("admin/", admin.site.urls),
+    path("pon_ka/", admin.site.urls),
     path('', include('csm.urls')),
     path('', include('properties.urls')),
     path("kontakt/", include("contact_form.urls")),
 
-
+ 
     path("__reload__/", include("django_browser_reload.urls")),
     # path('api/csm/', include([...]))
 ]
