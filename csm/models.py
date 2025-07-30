@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 class HeroSection(models.Model):
     title = models.CharField(max_length=255)
@@ -70,13 +71,35 @@ class ContactRequest(models.Model):
         return f"{self.name} ({self.contact})"
     
 
+
+
+
+
+
 class ServiceSection(models.Model):
-    title = models.CharField(max_length=100, default="Naše služby")
-    description = models.TextField(blank=True, null=True, default="Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste.")
+    SERVICE_TYPES = [
+        ('office', 'Kancelária'),
+        ('address', 'Sídlo firmy'),
+        ('billboard', 'Billboard'),
+    ]
+
+    title = models.CharField(max_length=255, default="Naše služby")
+    description = models.TextField(blank=True, null=True, default="Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste."    )
+    icon_svg = models.TextField(blank=True)  # если нужно
+    type = models.CharField(max_length=20, choices=SERVICE_TYPES)  # 🔥 теперь есть
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def get_list_url(self):
+        url_map = {
+            'office': 'property_list',   # <-- ты используешь это имя!
+            'address': 'address_list',
+            'billboard': 'billboard_list',
+        }
+        return reverse(url_map.get(self.type, 'homepage'))  # fallback на главную
 
     def __str__(self):
-        return "Service Section Content"
+        return self.title
+
 
 
 class FrontendTheme(models.Model):

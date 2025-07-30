@@ -24,6 +24,7 @@ def homepage(request):
     company_info = CompanyInfo.objects.first()
     theme_color = FrontendTheme.objects.filter(is_active=True).first()
     nas_sluzby = ServiceSection.objects.all()
+    phone_number = company_info.phone if company_info else None
 
     services = {
         'office': Property.objects.filter(type='office').first(),
@@ -58,7 +59,7 @@ def homepage(request):
         'is_working_hours': is_working_hours(),
         'show_form': show_form,
         'form': form,
-        'phone_number': '+421 947 914 542',  # Можно вынести в CompanyInfo
+        'phone_number': phone_number,  # Можно вынести в CompanyInfo
     }
 
     return render(request, 'csm/index.html', context)

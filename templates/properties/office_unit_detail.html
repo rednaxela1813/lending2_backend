@@ -54,7 +54,23 @@
       </div>
       {% endif %}
 
-      <!-- Данные -->
+      <!-- Описание -->
+      {% if unit.description %}
+        <div class="prose prose-invert mb-6 text-lg">
+          {{ unit.description|linebreaks }}
+        </div>
+      {% endif %}
+
+      <!-- Детальный список -->
+      {% if unit.list_details %}
+        <ul class="list-disc pl-6 text-lg text-yellow-100 space-y-1 mb-8">
+          {% for item in unit.list_details.splitlines %}
+            <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <!-- Характеристики -->
       <div class="text-lg space-y-2 mb-8">
         <p><strong>Rozloha:</strong> {{ unit.area_sqm }} m²</p>
         <p><strong>Cena:</strong> {{ unit.price_per_month }} € / mesiac</p>
@@ -78,6 +94,18 @@
            class="inline-flex items-center justify-center rounded-full bg-orange-400 px-6 py-3 text-white text-lg font-medium hover:bg-orange-500 transition duration-200">
           Zanechajte žiadosť
         </a>
+      </div>
+
+      <!-- Локация + карта -->
+      <div class="mt-12">
+        <h3 class="text-2xl font-bold mb-4 text-primary">Lokalita</h3>
+        <p class="text-lg mb-4">
+          Šípová 1, Nitra – Polyfunkčný objekt v blízkosti OBI a OC MAX. Výborná dostupnosť, MHD v pešej vzdialenosti.
+        </p>
+        <iframe
+          class="w-full h-64 rounded-lg border-0 shadow"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2663.4933980154384!2d18.085000!3d48.312222!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x476b3edcffc4dc6b%3A0xe8a2c285e388b8a5!2s%C5%A0%C3%ADpov%C3%A1%201%2C%20949%2001%20Nitra%2C%20Slovakia!5e0!3m2!1ssk!2ssk!4v1690834638041!5m2!1ssk!2ssk"
+          allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
 
     </div>

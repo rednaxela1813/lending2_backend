@@ -31,12 +31,9 @@ class Property(models.Model):
     
     
     def get_absolute_url(self):
-        if self.type == 'office':
-            return reverse('office_detail', kwargs={'public_id': self.public_id})
-        elif self.type == 'address':
-            return reverse('address_detail', kwargs={'public_id': self.public_id})
-        elif self.type == 'billboard':
-            return reverse('billboard_detail', kwargs={'public_id': self.public_id})
+        return reverse('property_detail', kwargs={'public_id': self.public_id})
+
+
         
 
     def __str__(self):

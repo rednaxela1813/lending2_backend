@@ -60,7 +60,7 @@
         {{ form.consent }}
         <label for="{{ form.consent.id_for_label }}" class="text-muted text-sm leading-snug">
           Súhlasím so spracovaním osobných údajov v súlade s
-          <a href="#" class="ml-1 text-primary hover:underline">Zásady ochrany osobných údajov</a>.
+          <a href="{% url 'privacy' %}" class="ml-1 text-primary hover:underline">Zásady ochrany osobných údajov</a>.
         </label>
       </div>
       {% if form.consent.errors %}
