@@ -64,5 +64,5 @@ class BillboardListView(ListView):
     context_object_name = 'properties'
 
     def get_queryset(self):
-        return Property.objects.filter(type__slug='billboard')
+        return Property.objects.filter(type__slug='billboards')
 
