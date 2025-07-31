@@ -63,7 +63,7 @@
       <!-- Description block -->
       {% if property.description %}
       <div class="mt-8 mb-8">
-        <h3 class="text-2xl font-bold mb-4 text-yellow-100">📄 Description</h3>
+        <h3 class="text-2xl font-bold mb-4 text-yellow-100">📄 Description</h3> <!-- TODO change Description for Slovak-->
         <p class="text-base text-yellow-100 whitespace-pre-line">
           {{ property.description }}
         </p>
@@ -73,7 +73,7 @@
       <!-- List details block -->
       {% if property.list_details %}
       <div class="mt-8 mb-8">
-        <h3 class="text-2xl font-bold mb-4 text-yellow-100">🔹 Details</h3>
+        <h3 class="text-2xl font-bold mb-4 text-yellow-100">🔹 Details</h3> <!-- TODO change Details for Slovak -->
         <ul class="list-disc list-inside space-y-2">
           {% for item in property.list_details %}
             <li>{{ item }}</li>
