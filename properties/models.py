@@ -27,7 +27,7 @@ class Property(models.Model):
     name = models.CharField(max_length=255)
     type = models.ForeignKey(PropertyType, on_delete=models.PROTECT, related_name='properties')    
     description = models.TextField(blank=True)
-    list_details = models.JSONField(blank=True, default=list, help_text="Detaily pre zobrazenie v zozname")
+    list_details = models.JSONField(max_length=1044, blank=True, default=list, help_text="Detaily pre zobrazenie v zozname")
     summary = models.CharField(max_length=255, blank=True, help_text="Krátky popis")
     location = models.CharField(max_length=255, blank=True)
     iframe = models.TextField(blank=True, help_text="HTML iframe  Google Maps")
