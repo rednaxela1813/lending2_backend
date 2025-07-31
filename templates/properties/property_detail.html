@@ -60,68 +60,83 @@
       </div>
       {% endif %}
 
-<!-- Map with location -->
-<div class="mt-8">
-  <h3 class="text-2xl font-bold mb-4 text-center text-yellow-100">📍 Location</h3>
-  <div class="w-full rounded-2xl overflow-hidden shadow-lg">
-  {% if property.iframe %}
-    <div class="relative" style="padding-bottom: 56.25%; height: 0; overflow: hidden;">
-      {{ property.iframe|safe }}
-    </div>
-  {% else %}
-    <div class="p-6 text-center text-gray-400">
-      Address not specified. Map unavailable.
-    </div>
-  {% endif %}
-</div>
+      <!-- Description block -->
+      {% if property.description %}
+      <div class="mt-8 mb-8">
+        <h3 class="text-2xl font-bold mb-4 text-yellow-100">📄 Description</h3>
+        <p class="text-base text-yellow-100 whitespace-pre-line">
+          {{ property.description }}
+        </p>
+      </div>
+      {% endif %}
 
-<style>
-  .relative iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-</style>
+      <!-- List details block -->
+      {% if property.list_details %}
+      <div class="mt-8 mb-8">
+        <h3 class="text-2xl font-bold mb-4 text-yellow-100">🔹 Details</h3>
+        <ul class="list-disc list-inside space-y-2">
+          {% for item in property.list_details %}
+            <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
 
+      <!-- Map with location -->
+      <div class="mt-8">
+        <h3 class="text-2xl font-bold mb-4 text-center text-yellow-100">📍 Location</h3>
+        <div class="w-full rounded-2xl overflow-hidden shadow-lg">
+        {% if property.iframe %}
+          <div class="relative" style="padding-bottom: 56.25%; height: 0; overflow: hidden;">
+            {{ property.iframe|safe }}
+          </div>
+        {% else %}
+          <div class="p-6 text-center text-gray-400">
+            Address not specified. Map unavailable.
+          </div>
+        {% endif %}
+        </div>
+      </div>
 
-</div>
-
-
+      <style>
+        .relative iframe {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+      </style>
 
       <!-- Buttons at the bottom -->
       <div class="flex flex-col md:flex-row justify-center gap-4 mt-8">
         {% if property.latitude and property.longitude %}
-  <a href="https://www.google.com/maps/dir/?api=1&destination={{ property.latitude }},{{ property.longitude }}"
-     target="_blank"
-     class="inline-flex items-center justify-center rounded-full bg-yellow-500 px-6 py-3 text-white text-lg font-medium hover:bg-yellow-600 transition-colors duration-200">
-    📍 Získať trasu
-  </a>
-{% elif property.location %}
-  <a href="https://www.google.com/maps/dir/?api=1&destination={{ property.location|urlencode }}"
-     target="_blank"
-     class="inline-flex items-center justify-center rounded-full bg-orange-400 px-6 py-3 text-white text-lg font-medium hover:bg-orange-500 transition-colors duration-200">
-    📍 Získať trasu
-  </a>
-{% else %}
-  <button disabled
-          class="inline-flex items-center justify-center rounded-full bg-gray-500 px-6 py-3 text-white text-lg font-medium">
-    📍 Adresa nedostupná
-  </button>
-{% endif %}
+          <a href="https://www.google.com/maps/dir/?api=1&destination={{ property.latitude }},{{ property.longitude }}"
+             target="_blank"
+             class="inline-flex items-center justify-center rounded-full bg-yellow-500 px-6 py-3 text-white text-lg font-medium hover:bg-yellow-600 transition-colors duration-200">
+            📍 Získať trasu
+          </a>
+        {% elif property.location %}
+          <a href="https://www.google.com/maps/dir/?api=1&destination={{ property.location|urlencode }}"
+             target="_blank"
+             class="inline-flex items-center justify-center rounded-full bg-orange-400 px-6 py-3 text-white text-lg font-medium hover:bg-orange-500 transition-colors duration-200">
+            📍 Získať trasu
+          </a>
+        {% else %}
+          <button disabled
+                  class="inline-flex items-center justify-center rounded-full bg-gray-500 px-6 py-3 text-white text-lg font-medium">
+            📍 Adresa nedostupná
+          </button>
+        {% endif %}
 
-<!-- BACK button for desktop -->
-    <a href="{% url 'homepage' %}#contact" class="hidden md:inline-flex items-center rounded-full bg-orange-400 px-5 py-2 text-sm font-medium text-white hover:bg-orange-500 transition duration-200">
-      {{ header.button_text|default:"Zanechajte žiadosť" }}
-    </a>
-  </nav>
-  <!-- BACK button for mobile -->
-<a href="{% url 'homepage' %}#contact"
-   class="md:hidden inline-flex w-full items-center justify-center rounded-full bg-orange-400 px-5 py-3 text-base font-medium text-white hover:bg-orange-500 transition duration-200">
-  {{ header.button_text|default:"Zanechajte žiadosť" }}
-</a>
-
+        <!-- Contact buttons -->
+        <a href="{% url 'homepage' %}#contact" class="hidden md:inline-flex items-center rounded-full bg-orange-400 px-5 py-2 text-sm font-medium text-white hover:bg-orange-500 transition duration-200">
+          {{ header.button_text|default:"Zanechajte žiadosť" }}
+        </a>
+        <a href="{% url 'homepage' %}#contact"
+           class="md:hidden inline-flex w-full items-center justify-center rounded-full bg-orange-400 px-5 py-3 text-base font-medium text-white hover:bg-orange-500 transition duration-200">
+          {{ header.button_text|default:"Zanechajte žiadosť" }}
+        </a>
 
         <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
                 class="inline-flex items-center justify-center rounded-full bg-gray-700 px-6 py-3 text-white text-lg font-medium hover:bg-gray-600 transition-colors duration-200">
