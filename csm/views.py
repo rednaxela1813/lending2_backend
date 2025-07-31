@@ -3,6 +3,8 @@ from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, Fronten
 from properties.models import Property
 from datetime import datetime
 import pytz
+from django.urls import reverse
+from django.views.generic import ListView
 
 # импорт модели из contact_form
 from contact_form.models import EmailSettings
@@ -27,9 +29,9 @@ def homepage(request):
     phone_number = company_info.phone if company_info else None
 
     services = {
-        'office': Property.objects.filter(type='office').first(),
-        'address': Property.objects.filter(type='address').first(),
-        'billboard': Property.objects.filter(type='billboard').first(),
+        'office': Property.objects.filter(type__slug='office').first(),
+        'address': Property.objects.filter(type__slug='address').first(),
+        'billboard': Property.objects.filter(type__slug='billboard').first(),
     }
     total_services = sum(1 for s in services.values() if s)
 
@@ -63,3 +65,13 @@ def homepage(request):
     }
 
     return render(request, 'csm/index.html', context)
+
+
+class ServicesListView(ListView):
+    model = Property  # или как у тебя теперь называется
+    template_name = 'csm/components/ServiceSection.html'
+    context_object_name = 'services'
+
+    def get_queryset(self):
+        service_type = self.kwargs['service_type']
+        return self.model.objects.filter(type__slug=service_type)

@@ -23,7 +23,7 @@ class OfficeListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         # Фильтруем Property по типу 'office'
-        return Property.objects.filter(type='office')
+        return Property.objects.filter(type__slug='office')
 
 
 

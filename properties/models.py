@@ -7,16 +7,25 @@ from PIL import Image
 from django.urls import reverse
 
 
+
+class PropertyType(models.Model):
+    type_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    slug = models.SlugField(unique=True)
+    name = models.CharField(max_length=100)
+    icon_svg = models.TextField(blank=True)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+    
+
+
 class Property(models.Model):
-    PROPERTY_TYPES = [
-        ('office', 'Kancelária'),
-        ('address', 'Sydlo'),
-        ('billboard', 'Billboard'),
-    ]
+    
 
     public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=255)
-    type = models.CharField(max_length=20, choices=PROPERTY_TYPES)    
+    type = models.ForeignKey(PropertyType, on_delete=models.PROTECT, related_name='properties')    
     description = models.TextField(blank=True)
     list_details = models.JSONField(blank=True, default=list, help_text="Detaily pre zobrazenie v zozname")
     summary = models.CharField(max_length=255, blank=True, help_text="Krátky popis")
@@ -37,7 +46,8 @@ class Property(models.Model):
         
 
     def __str__(self):
-        return f"{self.get_type_display()}: {self.name}"
+        return f"{self.type}: {self.name}"  
+
     
     
 
@@ -95,11 +105,10 @@ class OfficeUnit(models.Model):
     ]
 
     property = models.ForeignKey(
-        Property,
-        on_delete=models.CASCADE,
-        related_name='office_units',
-        limit_choices_to={'type': 'office'},  # Ограничим только офисами
-    )
+    Property,
+    on_delete=models.CASCADE,
+    related_name='office_units',
+)
     floor = models.IntegerField(help_text="Číslo poschodia (napr. 0 = prízemie, 1 = prvé poschodie)")
     unit_number = models.CharField(max_length=50, help_text="Číslo kancelárie alebo identifikátor")
     area_sqm = models.FloatField(help_text="Rozloha v m²")
@@ -159,3 +168,6 @@ class OfficeUnitImage(models.Model):
 
         self.image.name = os.path.splitext(self.image.name)[0] + '.webp'
         super().save(update_fields=['image'])
+
+
+

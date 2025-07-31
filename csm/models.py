@@ -1,5 +1,8 @@
 from django.db import models
 from django.urls import reverse
+from properties.models import PropertyType
+import uuid
+
 
 class HeroSection(models.Model):
     title = models.CharField(max_length=255)
@@ -77,25 +80,20 @@ class ContactRequest(models.Model):
 
 
 class ServiceSection(models.Model):
-    SERVICE_TYPES = [
-        ('office', 'Kancelária'),
-        ('address', 'Sídlo firmy'),
-        ('billboard', 'Billboard'),
-    ]
+    
 
     title = models.CharField(max_length=255, default="Naše služby")
     description = models.TextField(blank=True, null=True, default="Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste."    )
     icon_svg = models.TextField(blank=True)  # если нужно
-    type = models.CharField(max_length=20, choices=SERVICE_TYPES)  # 🔥 теперь есть
+    property_type = models.ForeignKey(PropertyType, on_delete=models.SET_NULL, null=True, blank=True)  # 🔥 теперь есть
     updated_at = models.DateTimeField(auto_now=True)
     
+    
     def get_list_url(self):
-        url_map = {
-            'office': 'property_list',   # <-- ты используешь это имя!
-            'address': 'address_list',
-            'billboard': 'billboard_list',
-        }
-        return reverse(url_map.get(self.type, 'homepage'))  # fallback на главную
+        if self.property_type:
+            return reverse('property_list', kwargs={'type': self.property_type.slug})
+        return None
+
 
     def __str__(self):
         return self.title

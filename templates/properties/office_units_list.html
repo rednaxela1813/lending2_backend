@@ -6,7 +6,14 @@
       <h2 class="text-center text-4xl font-extrabold text-primary mb-8">
         {{ property.name }} – dostupné kancelárie
       </h2>
-
+       <!-- BACK button for desktop -->
+        <div class="hidden md:flex justify-end mb-6">
+          <button onclick="history.back()"
+            class="rounded-full bg-gray-700 px-6 py-2 text-sm font-medium text-yellow-100 hover:bg-gray-600 transition-colors duration-200">
+            ← Späť
+          </button>
+        </div>
+        
       <!-- Краткое описание и адрес -->
       <div class="text-center mb-6">
         <p class="text-lg text-yellow-100">{{ property.summary }}</p>

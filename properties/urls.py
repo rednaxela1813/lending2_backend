@@ -6,6 +6,8 @@ urlpatterns = [
     
     path('properties/<uuid:public_id>/', PropertyDetailView.as_view(), name='property_detail'),
     
+
+
     path('offices/', PropertyListView.as_view(), name='property_list'),
     #path('offices/<uuid:public_id>/', PropertyDetailView.as_view(), name='office_detail'),
     path('offices/unit/<int:unit_id>/', OfficeUnitDetailView.as_view(), name='office_unit_detail'),

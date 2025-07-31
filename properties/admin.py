@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Property, PropertyImage, OfficeUnit, OfficeUnitImage
+from .models import Property, PropertyImage, OfficeUnit, OfficeUnitImage, PropertyType
 from django.utils.html import format_html
 
 
@@ -45,3 +45,16 @@ class OfficeUnitAdmin(admin.ModelAdmin):
     search_fields = ('unit_number', 'property__name')
     ordering = ('floor', 'unit_number')
     inlines = [OfficeUnitImageInline]
+    
+    
+@admin.register(PropertyType)
+class PropertyTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug')
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ('name', 'slug')
+    ordering = ('name',)
+    
+    
+    
+    
+    

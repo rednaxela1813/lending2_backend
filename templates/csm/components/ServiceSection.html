@@ -14,10 +14,10 @@
             <h3 class="text-2xl font-semibold">{{ sluzba.title }}</h3>
             <p class="text-muted mb-4">{{ sluzba.description }}</p>
 
-            {% if sluzba.get_list_url %}
-              <a href="{{ sluzba.get_list_url }}"
+            {% if sluzba.property_type %}
+              <a href="{{ sluzba.property_type }}"
                  class="inline-block rounded-full bg-orange-400 px-5 py-2 font-medium text-white shadow-md transition-colors duration-200 hover:bg-orange-500">
-                Viac podrobností
+                Viac podrobností {{ sluzba.property_type }}
               </a>
             {% else %}
               <span class="text-sm text-red-400">Nie je k dispozícii</span>

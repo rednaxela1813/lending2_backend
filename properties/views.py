@@ -11,15 +11,14 @@ class PropertyListView(ListView):
     context_object_name = 'properties'
     
     def get_queryset(self):
-        return Property.objects.filter(type='office')
-    
-    
+        return Property.objects.filter(type__slug='offices')
+
 
 class PropertyDetailView(View):
     def get(self, request, public_id):
         property = get_object_or_404(Property, public_id=public_id)
 
-        if property.type == 'office' and property.office_units.exists():
+        if property.type.slug == 'offices' and property.office_units.exists():
             # Показываем список помещений по этажам
             return render(request, 'properties/office_units_list.html', {
                 'property': property,
@@ -55,7 +54,7 @@ class AddressListView(ListView):
     context_object_name = 'properties'
 
     def get_queryset(self):
-        return Property.objects.filter(type='address')
+        return Property.objects.filter(type__slug='address')
     
     
     
@@ -65,5 +64,5 @@ class BillboardListView(ListView):
     context_object_name = 'properties'
 
     def get_queryset(self):
-        return Property.objects.filter(type='billboard')
+        return Property.objects.filter(type__slug='billboard')
 
