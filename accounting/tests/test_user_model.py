@@ -1,6 +1,7 @@
 import pytest
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError, transaction
+from django.urls import reverse
 
 pytestmark = pytest.mark.django_db
 
@@ -16,14 +17,13 @@ def test_create_user_minimal_ok():
     assert u.email == "user@example.com"
     assert u.is_active is True
     assert u.is_staff is False
-    # пароль захеширован, но check_password работает
     assert u.password != "pass1234"
-    assert u.check_password("pass1234") is True
+    assert u.check_password("pass1234")
 
 def test_email_normalized_on_create_user():
     User = get_user_model()
     u = User.objects.create_user(email="USER@EXAMPLE.COM", password="x")
-    # BaseUserManager.normalize_email(…) приводит к нижнему регистру доменную часть
+    # BaseUserManager.normalize_email — домен в нижний регистр, локальная часть без изменений
     assert u.email == "USER@example.com"
 
 def test_create_user_requires_email():
@@ -50,18 +50,23 @@ def test_create_superuser_ok_and_flags_forced_true():
     su = User.objects.create_superuser(email="admin@example.com", password="root")
     assert su.is_staff is True
     assert su.is_superuser is True
-    assert su.check_password("root") is True
+    assert su.check_password("root")
 
 def test_create_superuser_requires_is_staff_true():
     User = get_user_model()
     with pytest.raises(ValueError, match="is_staff=True"):
-        User.objects.create_superuser(
-            email="a@example.com", password="x", is_staff=False
-        )
+        User.objects.create_superuser(email="a@example.com", password="x", is_staff=False)
 
 def test_create_superuser_requires_is_superuser_true():
     User = get_user_model()
     with pytest.raises(ValueError, match="is_superuser=True"):
-        User.objects.create_superuser(
-            email="b@example.com", password="x", is_superuser=False
-        )
+        User.objects.create_superuser(email="b@example.com", password="x", is_superuser=False)
+
+
+
+def test_can_login_with_email(client):
+    User = get_user_model()
+    u = User.objects.create_user(email="login@example.com", password="pass1234")
+    resp = client.post(reverse("login"), {"username": u.email, "password": "pass1234"})
+    # При успешном логине LoginView делает 302
+    assert resp.status_code == 302

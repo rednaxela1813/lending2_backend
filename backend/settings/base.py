@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'contact',
     'properties',
     'orders',
+    'dashboard',
 ]
 
 TAILWIND_APP_NAME = 'theme'
@@ -95,3 +96,8 @@ LOGGING = {
         },
     }
 }
+
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "dashboard:home"
+
+LOGOUT_REDIRECT_URL = "/"
