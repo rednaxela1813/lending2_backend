@@ -9,29 +9,41 @@
   {% tailwind_css %}
 
   <!-- Dynamic CSS variables for theme colors -->
-  <style>
-    :root {
-      --navbar-bg: {{ theme_color.navbar_background }};
-      --body-bg: {{ theme_color.body_background }};
-      --footer-bg: {{ theme_color.footer_background }};
+    <style>
+  :root {
+    --navbar-bg: {{ theme_color.navbar_background }};
+    --body-bg: {{ theme_color.body_background }};
+    --footer-bg: {{ theme_color.footer_background }};
 
-      --text-color: {{ theme_color.text_color }};
-      --text-hover-color: {{ theme_color.text_hover_color }};
+    --text-color: {{ theme_color.text_color }};
+    --text-hover-color: {{ theme_color.text_hover_color }};
 
-      --border-color: {{ theme_color.border_color }};
-      --border-hover-color: {{ theme_color.border_hover_color }};
+    --border-color: {{ theme_color.border_color }};
+    --border-hover-color: {{ theme_color.border_hover_color }};
 
-      --primary-color: {{ theme_color.primary_color }};
-      --primary-hover-color: {{ theme_color.primary_hover_color }};
-    }
-  </style>
+    --primary-color: {{ theme_color.primary_color }};
+    --primary-hover-color: {{ theme_color.primary_hover_color }};
+
+    /* Безопасные подстановки (fallback-ы) */
+    {% firstof theme_color.card_background '#ffffff' as card_bg %}
+    {% firstof theme_color.card_text_color theme_color.text_color '#222222' as card_text %}
+
+    --card-bg: {{ card_bg }};
+    --card-text: {{ card_text }};
+  }
+</style>
+
+
+
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body class="bg-body text-text relative">
 
   <!-- Main content -->
-  {% block content %}{% endblock %}
+  <main class="{% block content_class %}{% endblock %}">
+    {% block content %}{% endblock %}
+  </main>
 
   <!-- Floating Call/Message Button (mobile only) -->
   {% include "partials/floating_button.html" %}

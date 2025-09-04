@@ -1,23 +1,38 @@
 {% extends "csm/base.html" %}
 {% load widget_tweaks %}
+
+{% block content_class %}py-10{% endblock %}
+
 {% block content %}
-<div class="max-w-md mx-auto mt-10 bg-white shadow-xl rounded-xl p-8">
+<div class="max-w-md mx-auto rounded-xl shadow-xl p-8
+            bg-[var(--card-bg)] text-[var(--card-text)] opacity-100
+            border border-[var(--border-color)]">
   <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+
   <form method="post" class="space-y-4">
     {% csrf_token %}
     {{ form.non_field_errors }}
     <div>
       <label class="block text-sm font-medium mb-1">Email</label>
-      {{ form.username|add_class:"w-full border rounded-lg px-3 py-2" }}
+      {{ form.username|add_class:"w-full border rounded-lg px-3 py-2 border-[var(--border-color)] bg-transparent text-[var(--card-text)]" }}
     </div>
     <div>
       <label class="block text-sm font-medium mb-1">Password</label>
-      {{ form.password|add_class:"w-full border rounded-lg px-3 py-2" }}
+      {{ form.password|add_class:"w-full border rounded-lg px-3 py-2 border-[var(--border-color)] bg-transparent text-[var(--card-text)]" }}
     </div>
-    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg">Sign in</button>
+
+    <button type="submit"
+            class="w-full py-2 rounded-lg font-semibold
+                   bg-[var(--primary-color)] hover:bg-[var(--primary-hover-color)]
+                   text-white">
+      Sign in
+    </button>
   </form>
+
   <p class="mt-4 text-sm text-center">
-    <a href="{% url 'password_reset' %}" class="text-blue-600 hover:underline">Forgot password?</a>
+    <a href="{% url 'password_reset' %}" class="hover:underline text-[var(--text-hover-color)]">
+      Forgot password?
+    </a>
   </p>
 </div>
 {% endblock %}
