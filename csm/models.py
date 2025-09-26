@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from properties.models import PropertyType
 import uuid
+from django.urls import NoReverseMatch
 
 
 class HeroSection(models.Model):
@@ -91,7 +92,14 @@ class ServiceSection(models.Model):
     
     def get_list_url(self):
         if self.property_type:
-            return reverse('property_list', kwargs={'type': self.property_type.slug})
+            slug = self.property_type.slug
+            try:
+                # если есть роут с параметром
+                return reverse('property_list', kwargs={'type': slug})
+            except NoReverseMatch:
+                # fallback: базовый путь + ?type=slug
+                base = reverse('property_list')
+                return f"{base}?type={slug}"
         return None
 
 

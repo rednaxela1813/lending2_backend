@@ -15,7 +15,9 @@ urlpatterns = [
     #path("__reload__/", include("django_browser_reload.urls")),
     # path('api/csm/', include([...]))
     path("accounts/", include("django.contrib.auth.urls")),
-     path("dashboard/", include("dashboard.urls", namespace="dashboard")),
+    path("dashboard/", include("dashboard.urls", namespace="dashboard")),
+    path("api/", include("orders.urls")),
+     
 ]
 
 

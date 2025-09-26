@@ -24,7 +24,7 @@
     --primary-color: {{ theme_color.primary_color }};
     --primary-hover-color: {{ theme_color.primary_hover_color }};
 
-    /* Безопасные подстановки (fallback-ы) */
+    /* Безопасные подстановки (fallback-s) */
     {% firstof theme_color.card_background '#ffffff' as card_bg %}
     {% firstof theme_color.card_text_color theme_color.text_color '#222222' as card_text %}
 

@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'core',
     'accounting',
     'csm',
-    'contact',
+    
     'properties',
     'orders',
     'dashboard',
@@ -101,3 +101,6 @@ LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard:home"
 
 LOGOUT_REDIRECT_URL = "/"
+
+
+REQUIRE_VERIFIED_EMAIL_FOR_ORDER = True
