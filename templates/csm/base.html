@@ -1,79 +1,166 @@
 {% load static tailwind_tags %}
-<!DOCTYPE html>
-<html lang="sk">
+<!doctype html>
+<html lang="en" class="h-full">
 <head>
-  <meta charset="UTF-8">
-  <title>{{ company.name }}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}DEILMANN Offices{% endblock %}</title>
 
+  {# Tailwind v4 от django-tailwind #}
   {% tailwind_css %}
 
-  <!-- Dynamic CSS variables for theme colors -->
-    <style>
-  :root {
-    --navbar-bg: {{ theme_color.navbar_background }};
-    --body-bg: {{ theme_color.body_background }};
-    --footer-bg: {{ theme_color.footer_background }};
+  {# Небольшой reset для сглаживания шрифтов #}
+  <style>
+    :root { color-scheme: dark; }
+    html,body { height: 100%; }
+  </style>
 
-    --text-color: {{ theme_color.text_color }};
-    --text-hover-color: {{ theme_color.text_hover_color }};
-
-    --border-color: {{ theme_color.border_color }};
-    --border-hover-color: {{ theme_color.border_hover_color }};
-
-    --primary-color: {{ theme_color.primary_color }};
-    --primary-hover-color: {{ theme_color.primary_hover_color }};
-
-    /* Безопасные подстановки (fallback-s) */
-    {% firstof theme_color.card_background '#ffffff' as card_bg %}
-    {% firstof theme_color.card_text_color theme_color.text_color '#222222' as card_text %}
-
-    --card-bg: {{ card_bg }};
-    --card-text: {{ card_text }};
-  }
-</style>
-
-
-
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  {# HTMX для лёгкой интерактивности (фильтры, инлайн-запросы) #}
+  <script defer src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
 
-<body class="bg-body text-text relative">
+<body class="min-h-dvh bg-gray-950/98 backdrop-blur-sm text-white selection:bg-white/20">
+  <!-- Top Bar -->
+  <!-- Sticky glass header -->
+<header class="sticky top-0 z-50 bg-brand-950/70 backdrop-blur border-b border-white/10">
+  <div class="navbar max-w-screen-xl h-16 mx-auto px-4">
+    <!-- left: brand + mobile menu -->
+    <div class="navbar-start">
+      <!-- mobile dropdown -->
+      <div class="dropdown">
+        <button tabindex="0" class="btn btn-ghost lg:hidden" aria-label="Open menu">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </button>
+        <ul tabindex="0"
+            class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-56">
+          <li><a href="/locations/">Locations</a></li>
+          <li>
+            <details>
+              <summary>Services</summary>
+              <ul class="p-2">
+                <li><a href="/offices/">Offices</a></li>
+                <li><a href="/billboards/">Billboards</a></li>
+                <li><a href="/legal-address/">Legal address</a></li>
+              </ul>
+            </details>
+          </li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
 
-  <!-- Main content -->
-  <main class="{% block content_class %}{% endblock %}">
-    {% block content %}{% endblock %}
-  </main>
+      <!-- brand -->
+      <a href="/" class="btn btn-ghost text-lg font-semibold">Agentura&nbsp;Zavodsky</a>
+    </div>
 
-  <!-- Floating Call/Message Button (mobile only) -->
-  {% include "partials/floating_button.html" %}
+    <!-- center: desktop nav -->
+    <nav class="navbar-center hidden lg:flex">
+      <ul class="menu menu-horizontal px-1">
+        <li><a href="/locations/">Locations</a></li>
+        <li>
+          <details>
+            <summary>Services</summary>
+            <ul class="p-2 bg-base-100 rounded-box">
+              <li><a href="/offices/">Offices</a></li>
+              <li><a href="/billboards/">Billboards</a></li>
+              <li><a href="/legal-address/">Legal address</a></li>
+            </ul>
+          </details>
+        </li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </nav>
 
-  <!-- JavaScript -->
+    <!-- right: actions -->
+    <div class="navbar-end gap-2">
+      <!-- theme toggle -->
+      <label class="swap swap-rotate">
+        <input type="checkbox" aria-label="Toggle theme"
+               onchange="document.documentElement.dataset.theme=this.checked?'light':'dark'">
+        <!-- dark icon -->
+        <svg class="swap-off size-6" viewBox="0 0 24 24" fill="none">
+          <path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1M18.4 5.6 16.3 7.7M7.7 16.3 5.6 18.4"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <!-- light icon -->
+        <svg class="swap-on size-6" viewBox="0 0 24 24" fill="none">
+          <path d="M21 12a9 9 0 1 1-9-9 6 6 0 0 0 9 9Z" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </label>
+
+      <a href="#tour" class="btn btn-primary btn-sm">Book a tour</a>
+    </div>
+  </div>
+</header>
+
+  {% block content %}{% endblock %}
+
+  <!-- Footer -->
+  <footer class="mt-24 border-t border-white/10">
+    <div class="mx-auto max-w-7xl px-4 py-10 grid gap-10 md:grid-cols-3">
+      <div>
+        <div class="font-semibold">DEILMANN Offices</div>
+        <p class="text-white/70 mt-2 text-sm">Upscale flexible offices. Month-to-month available.</p>
+      </div>
+      <div>
+        <div class="font-medium mb-3">Explore</div>
+        <ul class="space-y-2 text-white/80 text-sm">
+          <li><a href="/locations/" class="hover:text-white">Locations</a></li>
+          <li><a href="#amenities" class="hover:text-white">Amenities</a></li>
+          <li><a href="#faq" class="hover:text-white">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-medium mb-3">Contact</div>
+        <p class="text-white/80 text-sm">hello@deilmann.sk</p>
+      </div>
+    </div>
+    <div class="text-center text-xs text-white/60 py-6">© {{ now|default:"2025" }} DEILMANN</div>
+  </footer>
+
+  <!-- Simple modal anchor (#tour) -->
+  <div id="modal"
+       class="fixed inset-0 z-50 hidden items-center justify-center">
+    <div class="absolute inset-0 bg-black/60"
+         onclick="document.getElementById('modal')?.classList.add('hidden')"></div>
+    <div class="relative glass rounded-2xl p-6 w-[92vw] max-w-lg">
+      <h3 class="text-xl font-semibold">Schedule a tour</h3>
+      <form class="mt-4 grid gap-3"
+            hx-post="/api/tour/"
+            hx-swap="outerHTML"
+            hx-target="#modal">
+        <input name="name" placeholder="Full name"
+               class="px-4 py-3 rounded-lg bg-white/10 border border-white/20">
+        <input name="email" placeholder="Email"
+               class="px-4 py-3 rounded-lg bg-white/10 border border-white/20">
+        <textarea name="note" placeholder="Preferred date/time"
+               class="px-4 py-3 rounded-lg bg-white/10 border border-white/20"></textarea>
+        <div class="flex items-center gap-3 justify-end">
+          <button type="button"
+                  class="px-4 py-2 rounded-lg border border-white/20"
+                  onclick="document.getElementById('modal')?.classList.add('hidden')">Cancel</button>
+          <button class="px-5 py-2.5 rounded-lg bg-white text-brand-900 font-medium">Send</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
-    function toggleMobileMenu() {
-      const menu = document.getElementById("mobile-menu");
-      const callButton = document.getElementById("call-button");
-
-      menu.classList.toggle("hidden");
-
-      if (callButton) {
-        if (!menu.classList.contains("hidden")) {
-          callButton.classList.add("hidden");
-        } else {
-          callButton.classList.remove("hidden");
-        }
+    // открыть модалку по якорю #tour
+    function openTourIfHash() {
+      if (location.hash === '#tour') {
+        document.getElementById('modal')?.classList.remove('hidden');
       }
     }
-
-    function isMobile() {
-      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const callBtn = document.getElementById("call-button");
-      if (callBtn && !isMobile()) {
-        callBtn.classList.add("hidden");
-      }
+    window.addEventListener('hashchange', openTourIfHash);
+    openTourIfHash();
+    document.querySelectorAll('a[href="#tour"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        e.preventDefault();
+        document.getElementById('modal')?.classList.remove('hidden');
+      })
     });
   </script>
 </body>

@@ -1,0 +1,34 @@
+{% load static %}
+<div class="mx-auto max-w-7xl h-16 px-4 grid grid-cols-[auto,1fr,auto] items-center gap-4">
+  <!-- logo -->
+  <a href="/" class="flex items-center gap-2 shrink-0">
+    <span class="text-sm tracking-wide">Agentura Zavodsky s.r.o.</span>
+  </a>
+
+  <!-- nav -->
+  <nav class="hidden md:flex justify-center items-center gap-8 text-sm">
+    <a href="/locations/" class="hover:text-brand-200">Locations</a>
+    <a href="#amenities"   class="hover:text-brand-200">Amenities</a>
+    <a href="#faq"         class="hover:text-brand-200">FAQ</a>
+  </nav>
+
+  <!-- actions -->
+  <div class="flex items-center justify-end gap-3">
+    <a href="#tour"
+       class="inline-flex items-center h-9 px-4 rounded-full border border-white/30 hover:bg-white/10 text-sm">
+      Book a tour
+    </a>
+    <button class="md:hidden rounded-lg border border-white/20 px-3 py-2"
+            aria-label="Open menu"
+            onclick="document.getElementById('mnav')?.classList.toggle('hidden')">☰</button>
+  </div>
+</div>
+
+<!-- mobile nav -->
+<div id="mnav" class="md:hidden hidden border-t border-white/10">
+  <nav class="mx-auto max-w-7xl px-4 py-3 grid gap-2 text-sm">
+    <a href="/locations/" class="py-2 hover:text-brand-200">Locations</a>
+    <a href="#amenities"  class="py-2 hover:text-brand-200">Amenities</a>
+    <a href="#faq"        class="py-2 hover:text-brand-200">FAQ</a>
+  </nav>
+</div>
