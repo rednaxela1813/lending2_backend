@@ -1,0 +1,13 @@
+<!-- AMENITIES -->
+ {% load static %}
+<section id="amenities" class="mx-auto max-w-7xl px-4 py-16 lg:py-20">
+  <h2 class="text-2xl font-semibold">All-inclusive amenities</h2>
+  <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    {% for a in amenities %}
+      <div class="glass rounded-xl p-5">
+        <div class="text-lg font-medium">{{ a }}</div>
+        <p class="text-sm text-white/70 mt-1">Short supporting copy.</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>

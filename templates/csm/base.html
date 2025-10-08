@@ -1,6 +1,6 @@
 {% load static tailwind_tags %}
 <!doctype html>
-<html lang="en" class="h-full">
+<html lang="en" class="h-full" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -11,7 +11,10 @@
 
   {# Небольшой reset для сглаживания шрифтов #}
   <style>
-    :root { color-scheme: dark; }
+   
+    :root { color-scheme: light dark; }
+
+
     html,body { height: 100%; }
   </style>
 
@@ -19,82 +22,9 @@
   <script defer src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
 
-<body class="min-h-dvh bg-gray-950/98 backdrop-blur-sm text-white selection:bg-white/20">
-  <!-- Top Bar -->
-  <!-- Sticky glass header -->
-<header class="sticky top-0 z-50 bg-brand-950/70 backdrop-blur border-b border-white/10">
-  <div class="navbar max-w-screen-xl h-16 mx-auto px-4">
-    <!-- left: brand + mobile menu -->
-    <div class="navbar-start">
-      <!-- mobile dropdown -->
-      <div class="dropdown">
-        <button tabindex="0" class="btn btn-ghost lg:hidden" aria-label="Open menu">
-          <svg class="size-6" viewBox="0 0 24 24" fill="none">
-            <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2"/>
-          </svg>
-        </button>
-        <ul tabindex="0"
-            class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-56">
-          <li><a href="/locations/">Locations</a></li>
-          <li>
-            <details>
-              <summary>Services</summary>
-              <ul class="p-2">
-                <li><a href="/offices/">Offices</a></li>
-                <li><a href="/billboards/">Billboards</a></li>
-                <li><a href="/legal-address/">Legal address</a></li>
-              </ul>
-            </details>
-          </li>
-          <li><a href="#faq">FAQ</a></li>
-        </ul>
-      </div>
+<body class="min-h-dvh bg-base-100 text-base-content selection:bg-base-content/10 backdrop-blur-sm">
 
-      <!-- brand -->
-      <a href="/" class="btn btn-ghost text-lg font-semibold">Agentura&nbsp;Zavodsky</a>
-    </div>
-
-    <!-- center: desktop nav -->
-    <nav class="navbar-center hidden lg:flex">
-      <ul class="menu menu-horizontal px-1">
-        <li><a href="/locations/">Locations</a></li>
-        <li>
-          <details>
-            <summary>Services</summary>
-            <ul class="p-2 bg-base-100 rounded-box">
-              <li><a href="/offices/">Offices</a></li>
-              <li><a href="/billboards/">Billboards</a></li>
-              <li><a href="/legal-address/">Legal address</a></li>
-            </ul>
-          </details>
-        </li>
-        <li><a href="#faq">FAQ</a></li>
-      </ul>
-    </nav>
-
-    <!-- right: actions -->
-    <div class="navbar-end gap-2">
-      <!-- theme toggle -->
-      <label class="swap swap-rotate">
-        <input type="checkbox" aria-label="Toggle theme"
-               onchange="document.documentElement.dataset.theme=this.checked?'light':'dark'">
-        <!-- dark icon -->
-        <svg class="swap-off size-6" viewBox="0 0 24 24" fill="none">
-          <path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1M18.4 5.6 16.3 7.7M7.7 16.3 5.6 18.4"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
-        </svg>
-        <!-- light icon -->
-        <svg class="swap-on size-6" viewBox="0 0 24 24" fill="none">
-          <path d="M21 12a9 9 0 1 1-9-9 6 6 0 0 0 9 9Z" stroke="currentColor" stroke-width="2"/>
-        </svg>
-      </label>
-
-      <a href="#tour" class="btn btn-primary btn-sm">Book a tour</a>
-    </div>
-  </div>
-</header>
-
+  
   {% block content %}{% endblock %}
 
   <!-- Footer -->
