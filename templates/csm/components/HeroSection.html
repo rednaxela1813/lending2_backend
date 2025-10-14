@@ -37,6 +37,7 @@
             </div>
             
             <!-- Features Grid -->
+            {% for sluzba in nas_sluzby %}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 <!-- Office Spaces -->
                 <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300">
@@ -48,9 +49,10 @@
                     <h3 class="text-xl font-semibold text-white mb-3">Kancelárske priestory</h3>
                     <p class="text-blue-100">Moderné, plne vybavené kancelárie v atraktívnych lokalitách s flexibilnými podmienkami prenájmu.</p>
                 </div>
+            {% endfor %}
                 
                 <!-- Billboard Advertising -->
-                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300">
+                {% comment %} <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300">
                     <div class="w-16 h-16 bg-purple-500 rounded-lg flex items-center justify-center mx-auto mb-4">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 4v10a2 2 0 002 2h6a2 2 0 002-2V8M7 8H5a2 2 0 00-2 2v10a2 2 0 002 2h2M17 8h2a2 2 0 012 2v10a2 2 0 01-2 2h-2"></path>
@@ -70,7 +72,7 @@
                     <h3 class="text-xl font-semibold text-white mb-3">Právne adresy</h3>
                     <p class="text-blue-100">Prestížne obchodné adresy pre registráciu spoločnosti a spracovanie pošty.</p>
                 </div>
-            </div>
+            </div> {% endcomment %}
             
             <!-- Trust Indicators -->
             <div class="mt-16 pt-8 border-t border-white/20">
