@@ -1,37 +1,133 @@
-<!-- Top Bar -->
-  <!-- Sticky glass header -->
-  {% load static  %}
-<header >
-  <div class="navbar bg-base-100 shadow-sm">
-  <div class="navbar-start"></div>
-   
-  <div class="navbar-center ">
-    <a class="btn btn-ghost text-xl"><img src="{% static 'images/logo3.png' %}" alt="Logo" class="h-24" /></a>
-  </div>
-  <div class="navbar-end">
-   <label class="label cursor-pointer gap-2">
-  <span class="label-text">Synthwave</span>
-  <input type="checkbox" value="synthwave" class="toggle theme-controller" />
-</label>
+<!-- Header Section Component -->
+ {% load static %}
+<header class="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-18">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <a href="" class="flex items-center">
+                        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold text-gray-900"><img src="{% static 'images/logo3_light_theme.png' %}" alt="Logo" class="h-24"
+      /></span>
+                    </a>
+                </div>
+            </div>
 
-    <ul class="menu menu-horizontal px-1">
-      <li><a>Link</a></li>
-      <li>
-        <details>
-          <summary>Parent</summary>
-          <ul class="bg-base-100 rounded-t-none p-2">
-            <li><a>Link 1</a></li>
-            <li><a>Link 2</a></li>
-          </ul>
-        </details>
-      </li>
-    </ul>
-  </div>
-  <div class="flex-none">
-    <button class="btn btn-square btn-ghost">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-5 w-5 stroke-current"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path> </svg>
-    </button>
-  </div>
-  
-</div>
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-8 text-md">
+                <a href="#home" class="text-gray-600 hover:text-blue-600 px-3 py-2  font-medium transition-colors duration-200">
+                    Home
+                </a>
+                <div class="relative group">
+                    <button class="text-gray-600 hover:text-blue-600 px-3 py-2  font-medium transition-colors duration-200 flex items-center">
+                        Services
+                        <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <!-- Dropdown Menu -->
+                    <div class="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="py-1">
+                            <a href="#office-space" class="flex items-center px-4 py-2  text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                                <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                                Office Spaces
+                            </a>
+                            <a href="#billboards" class="flex items-center px-4 py-2  text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                                <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 4v10a2 2 0 002 2h6a2 2 0 002-2V8M7 8H5a2 2 0 00-2 2v10a2 2 0 002 2h2M17 8h2a2 2 0 012 2v10a2 2 0 01-2 2h-2"></path>
+                                </svg>
+                                Billboard Advertising
+                            </a>
+                            <a href="#legal-address" class="flex items-center px-4 py-2  text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                                <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Legal Addresses
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <a href="#about" class="text-gray-600 hover:text-blue-600 px-3 py-2  font-medium transition-colors duration-200">
+                    About
+                </a>
+                <a href="#contact" class="text-gray-600 hover:text-blue-600 px-3 py-2  font-medium transition-colors duration-200">
+                    Contact
+                </a>
+            </nav>
+
+            <!-- CTA Button -->
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="tel:+1234567890" class="text-blue-600 hover:text-blue-700 font-medium">
+                    {{ company_info.phone|default:"(123) 456-7890" }}
+                </a>
+                <a href="#quote" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg  font-medium transition-colors duration-200">
+                    Get Quote
+                </a>
+            </div>
+
+            <!-- Mobile menu button -->
+            <div class="md:hidden">
+                <button type="button" class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" id="mobile-menu-button">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div class="md:hidden hidden" id="mobile-menu">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
+            <a href="#home" class="text-gray-600 hover:text-blue-600 block px-3 py-2 text-base font-medium">
+                Home
+            </a>
+            <a href="#office-space" class="text-gray-600 hover:text-blue-600 block px-3 py-2 text-base font-medium">
+                Office Spaces
+            </a>
+            <a href="#billboards" class="text-gray-600 hover:text-blue-600 block px-3 py-2 text-base font-medium">
+                Billboard Advertising
+            </a>
+            <a href="#legal-address" class="text-gray-600 hover:text-blue-600 block px-3 py-2 text-base font-medium">
+                Legal Addresses
+            </a>
+            <a href="#about" class="text-gray-600 hover:text-blue-600 block px-3 py-2 text-base font-medium">
+                About
+            </a>
+            <a href="#contact" class="text-gray-600 hover:text-blue-600 block px-3 py-2 text-base font-medium">
+                Contact
+            </a>
+            <div class="border-t border-gray-200 pt-4 pb-3">
+                <div class="px-3 space-y-2">
+                    <a href="tel:+1234567890" class="block text-blue-600 font-medium">
+                        (123) 456-7890
+                    </a>
+                    <a href="#quote" class="block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium text-center">
+                        Get Quote
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    });
+</script>

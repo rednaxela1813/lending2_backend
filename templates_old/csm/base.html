@@ -1,0 +1,125 @@
+{% load static tailwind_tags %}
+<!doctype html>
+<html lang="en" class="h-full" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}Offices{% endblock %}</title>
+
+  {# Tailwind v4 от django-tailwind #}
+  {% tailwind_css %}
+
+  {# Небольшой reset для сглаживания шрифтов #}
+  <style>
+   
+    
+
+
+    
+    <!-- Dynamic CSS variables for theme colors -->
+    
+  :root {
+     color-scheme: light dark;
+     html,body { height: 100%; }
+    --navbar-bg: {{ theme_color.navbar_background }};
+    --body-bg: {{ theme_color.body_background }};
+    --footer-bg: {{ theme_color.footer_background }};
+
+    --text-color: {{ theme_color.text_color }};
+    --text-hover-color: {{ theme_color.text_hover_color }};
+
+    --border-color: {{ theme_color.border_color }};
+    --border-hover-color: {{ theme_color.border_hover_color }};
+
+    --primary-color: {{ theme_color.primary_color }};
+    --primary-hover-color: {{ theme_color.primary_hover_color }};
+
+    /* Безопасные подстановки (fallback-s) */
+    {% firstof theme_color.card_background '#ffffff' as card_bg %}
+    {% firstof theme_color.card_text_color theme_color.text_color '#222222' as card_text %}
+
+    --card-bg: {{ card_bg }};
+    --card-text: {{ card_text }};
+  }
+
+  </style>
+
+  {# HTMX для лёгкой интерактивности (фильтры, инлайн-запросы) #}
+  <script defer src="https://unpkg.com/htmx.org@1.9.12"></script>
+</head>
+
+<body class="bg-body text-text ">
+  
+
+
+  
+  {% block content %}{% endblock %}
+
+  <!-- Footer -->
+  <footer class="mt-24 border-t border-white/10">
+    <div class="mx-auto max-w-7xl px-4 py-10 grid gap-10 md:grid-cols-3">
+      <div>
+        <div class="font-semibold">DEILMANN Offices</div>
+        <p class="text-white/70 mt-2 text-sm">Upscale flexible offices. Month-to-month available.</p>
+      </div>
+      <div>
+        <div class="font-medium mb-3">Explore</div>
+        <ul class="space-y-2 text-white/80 text-sm">
+          <li><a href="/locations/" class="hover:text-white">Locations</a></li>
+          <li><a href="#amenities" class="hover:text-white">Amenities</a></li>
+          <li><a href="#faq" class="hover:text-white">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-medium mb-3">Contact</div>
+        <p class="text-white/80 text-sm">hello@deilmann.sk</p>
+      </div>
+    </div>
+    <div class="text-center text-xs text-white/60 py-6">© {{ now|default:"2025" }} DEILMANN</div>
+  </footer>
+
+  <!-- Simple modal anchor (#tour) -->
+  <div id="modal"
+       class="fixed inset-0 z-50 hidden items-center justify-center">
+    <div class="absolute inset-0 bg-black/60"
+         onclick="document.getElementById('modal')?.classList.add('hidden')"></div>
+    <div class="relative glass rounded-2xl p-6 w-[92vw] max-w-lg">
+      <h3 class="text-xl font-semibold">Schedule a tour</h3>
+      <form class="mt-4 grid gap-3"
+            hx-post="/api/tour/"
+            hx-swap="outerHTML"
+            hx-target="#modal">
+        <input name="name" placeholder="Full name"
+               class="px-4 py-3 rounded-lg bg-white/10 border border-white/20">
+        <input name="email" placeholder="Email"
+               class="px-4 py-3 rounded-lg bg-white/10 border border-white/20">
+        <textarea name="note" placeholder="Preferred date/time"
+               class="px-4 py-3 rounded-lg bg-white/10 border border-white/20"></textarea>
+        <div class="flex items-center gap-3 justify-end">
+          <button type="button"
+                  class="px-4 py-2 rounded-lg border border-white/20"
+                  onclick="document.getElementById('modal')?.classList.add('hidden')">Cancel</button>
+          <button class="px-5 py-2.5 rounded-lg bg-white text-brand-900 font-medium">Send</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // открыть модалку по якорю #tour
+    function openTourIfHash() {
+      if (location.hash === '#tour') {
+        document.getElementById('modal')?.classList.remove('hidden');
+      }
+    }
+    window.addEventListener('hashchange', openTourIfHash);
+    openTourIfHash();
+    document.querySelectorAll('a[href="#tour"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        e.preventDefault();
+        document.getElementById('modal')?.classList.remove('hidden');
+      })
+    });
+  </script>
+</body>
+</html>
