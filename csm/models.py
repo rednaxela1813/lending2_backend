@@ -141,3 +141,30 @@ class FrontendTheme(models.Model):
 
     def __str__(self):
         return self.name
+    
+    
+    
+class HotDealSectionModel(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    section_title = models.CharField(max_length=255, default="Horúce ponuky")
+    section_subtitle = models.CharField(max_length=255, blank=True, null=True)
+    sale_circle_text = models.CharField(max_length=50, default="Zľava")
+    sale_circle_percent = models.IntegerField(default=20)
+    title = models.CharField(max_length=255, default="Kancelárske priestory na prenájom")
+    description = models.TextField(blank=True, null=True, default="Objavte naše exkluzívne kancelárske priestory na prenájom v srdci mesta. Moderné vybavenie, flexibilné možnosti prenájmu a výhodná lokalita – všetko na jednom mieste.")
+    old_price = models.DecimalField(max_digits=10, decimal_places=2, default=500.00)
+    new_price = models.DecimalField(max_digits=10, decimal_places=2, default=400.00)
+    additional_description = models.TextField(blank=True, null=True, default="Získajte profesionálny priestor pre vaše podnikanie za zvýhodnenú cenu. Kontaktujte nás ešte dnes a využite túto jedinečnú ponuku!")
+    advertising_offer_1 = models.TextField(blank=True, null=True, default="Získajte exkluzívnu reklamnú ponuku na naše kancelárske priestory!")
+    advertising_offer_2 = models.TextField(blank=True, null=True, default="Profesionálny priestor pre vaše podnikanie za zvýhodnenú cenu.")
+    advertising_offer_3 = models.TextField(blank=True, null=True, default="Kontaktujte nás ešte dnes a využite túto jedinečnú ponuku!")
+    advertising_offer_4 = models.TextField(blank=True, null=True, default="Flexibilné možnosti prenájmu v srdci mesta.")
+    date_expiry = models.DateField(blank=True, null=True)
+    button_text = models.CharField(max_length=50, default="Zanechajte žiadosť")
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    
+    def __str__(self):
+        return f"Hot Deal Section - {self.section_title}"
+    
+    
