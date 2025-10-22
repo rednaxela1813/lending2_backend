@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, FrontendTheme, ServiceSection
+from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, FrontendTheme, ServiceSection, CarouselImage
 from properties.models import Property
 from datetime import datetime
 import pytz
@@ -27,6 +27,8 @@ def homepage(request):
     theme_color = FrontendTheme.objects.filter(is_active=True).first()
     nas_sluzby = ServiceSection.objects.all()
     phone_number = company_info.phone if company_info else None
+    # Получение изображений для карусели
+    carousel_images = CarouselImage.objects.all()
 
     services = {
         'office': Property.objects.filter(type__slug='office').first(),
@@ -62,6 +64,7 @@ def homepage(request):
         'show_form': show_form,
         'form': form,
         'phone_number': phone_number,  # Можно вынести в CompanyInfo
+        'carousel_images': carousel_images,  # Добавляем изображения в контекст
     }
 
     return render(request, 'csm/index.html', context)

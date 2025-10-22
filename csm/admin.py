@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo,  FrontendTheme, ServiceSection
+from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo,  FrontendTheme, ServiceSection, CarouselImage
 from .forms import  FrontendThemeForm
 
 
@@ -32,3 +32,4 @@ class ServiceSectionAdmin(admin.ModelAdmin):
 
 admin.site.register(FooterInfo)
 admin.site.register(CompanyInfo)
+admin.site.register(CarouselImage)

@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     
     'accounting',
     'csm',
+    'core',
     
     'properties',
     'orders',

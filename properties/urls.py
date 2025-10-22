@@ -17,5 +17,6 @@ urlpatterns = [
 
     path('billboards/', BillboardListView.as_view(), name='billboard_list'),
    # path('billboards/<uuid:public_id>/', PropertyDetailView.as_view(), name='billboard_detail'),
+   
 ]
 
