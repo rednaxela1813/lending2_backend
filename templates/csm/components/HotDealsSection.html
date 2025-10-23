@@ -1,218 +1,386 @@
 <!-- Hot Deals Section Component -->
- {% load static %}
-<section class="py-20 bg-gradient-to-br from-red-50 to-orange-50 relative overflow-hidden">
-    <!-- Background Pattern -->
-    <div class="absolute inset-0 opacity-5">
-        <svg class="w-full h-full" viewBox="0 0 100 100">
-            <pattern id="deals-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                <circle cx="10" cy="10" r="1" fill="currentColor"/>
-            </pattern>
-            <rect width="100" height="100" fill="url(#deals-pattern)"/>
+{% load static %}
+<section
+  class="py-20 bg-gradient-to-br from-red-50 to-orange-50 relative overflow-hidden"
+>
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 opacity-5">
+    <svg class="w-full h-full" viewBox="0 0 100 100">
+      <pattern
+        id="deals-pattern"
+        x="0"
+        y="0"
+        width="20"
+        height="20"
+        patternUnits="userSpaceOnUse"
+      >
+        <circle cx="10" cy="10" r="1" fill="currentColor" />
+      </pattern>
+      <rect width="100" height="100" fill="url(#deals-pattern)" />
+    </svg>
+  </div>
+  <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <div
+        class="inline-flex items-center bg-red-100 rounded-full px-6 py-2 mb-4"
+      >
+        <svg
+          class="w-5 h-5 text-red-600 mr-2"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z"
+            clip-rule="evenodd"
+          ></path>
         </svg>
+        <span class="text-red-600 font-semibold text-sm uppercase tracking-wide"
+          >Horúce ponuky</span
+        >
+      </div>
+      <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        Obmedzené časové ponuky
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Nezmeškajte tieto exkluzívne ponuky! Ušetrite veľa na prémiových kancelárskych
+        priestoroch, billboardovej reklame a právnych adresách.
+      </p>
     </div>
-
-    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <!-- Section Header -->
-        <div class="text-center mb-16">
-            <div class="inline-flex items-center bg-red-100 rounded-full px-6 py-2 mb-4">
-                <svg class="w-5 h-5 text-red-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"></path>
-                </svg>
-                <span class="text-red-600 font-semibold text-sm uppercase tracking-wide">Hot Deals</span>
-            </div>
-            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                Limited Time Offers
-            </h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                Don't miss out on these exclusive deals! Save big on premium office spaces, billboard advertising, and legal addresses.
-            </p>
+    <!-- Deals Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Deal 1: Office Space -->
+      <div
+        class="bg-white rounded-2xl shadow-xl p-8 relative transform hover:scale-105 transition-transform duration-300 border-2 border-red-200"
+      >
+        <!-- Deal Badge -->
+        <div
+          class="absolute -top-4 -right-4 {{ hot_deal.color_theme }} text-white rounded-full w-20 h-20 flex items-center justify-center transform rotate-12"
+        >
+          <div class="text-center">
+            <div class="text-sm font-bold">{{ hot_deal.sale_circle_text }}</div>
+            <div class="text-lg font-bold">{{ hot_deal.sale_circle_percent }}%</div>
+          </div>
         </div>
-
-        <!-- Deals Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Deal 1: Office Space -->
-            <div class="bg-white rounded-2xl shadow-xl p-8 relative transform hover:scale-105 transition-transform duration-300 border-2 border-red-200">
-                <!-- Deal Badge -->
-                <div class="absolute -top-4 -right-4 bg-red-500 text-white rounded-full w-20 h-20 flex items-center justify-center transform rotate-12">
-                    <div class="text-center">
-                        <div class="text-sm font-bold">SAVE</div>
-                        <div class="text-lg font-bold">130%</div>
-                    </div>
-                </div>
-                
-                <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
-                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                    </svg>
-                </div>
-                
-                <h3 class="text-2xl font-bold text-gray-900 mb-3">Premium Office Suite</h3>
-                <p class="text-gray-600 mb-4">Downtown Manhattan location with stunning city views. Fully furnished with modern amenities.</p>
-                
-                <div class="space-y-2 mb-6">
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-500 line-through">$3,500/month</span>
-                        <span class="text-3xl font-bold text-red-600">$2,450/month</span>
-                    </div>
-                    <div class="text-sm text-red-600 font-semibold">First 6 months only!</div>
-                </div>
-                
-                <ul class="space-y-2 mb-6 text-sm">
-                    <li class="flex items-center text-gray-600">
-                        <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        500 sq ft office space
-                    </li>
-                    <li class="flex items-center text-gray-600">
-                        <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        Conference room access
-                    </li>
-                    <li class="flex items-center text-gray-600">
-                        <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        Dedicated parking spot
-                    </li>
-                </ul>
-                
-                <div class="text-center">
-                    <div class="text-sm text-red-600 font-semibold mb-3">⏰ Expires in 5 days</div>
-                    <a href="#contact" class="block bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200">
-                        Claim This Deal
-                    </a>
-                </div>
-            </div>
-
-            <!-- Deal 2: Billboard Package -->
-            <div class="bg-white rounded-2xl shadow-xl p-8 relative transform hover:scale-105 transition-transform duration-300 border-2 border-purple-200">
-                <!-- Deal Badge -->
-                <div class="absolute -top-4 -right-4 bg-purple-500 text-white rounded-full w-20 h-20 flex items-center justify-center transform rotate-12">
-                    <div class="text-center">
-                        <div class="text-sm font-bold">SAVE</div>
-                        <div class="text-lg font-bold">40%</div>
-                    </div>
-                </div>
-                
-                <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
-                    <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 4v10a2 2 0 002 2h6a2 2 0 002-2V8M7 8H5a2 2 0 00-2 2v10a2 2 0 002 2h2M17 8h2a2 2 0 012 2v10a2 2 0 01-2 2h-2"></path>
-                    </svg>
-                </div>
-                
-                <h3 class="text-2xl font-bold text-gray-900 mb-3">Digital Billboard Bundle</h3>
-                <p class="text-gray-600 mb-4">Prime Times Square location with 3-month campaign. Maximum visibility guaranteed!</p>
-                
-                <div class="space-y-2 mb-6">
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-500 line-through">$15,000</span>
-                        <span class="text-3xl font-bold text-purple-600">$9,000</span>
-                    </div>
-                    <div class="text-sm text-purple-600 font-semibold">3-month campaign</div>
-                </div>
-                
-                <ul class="space-y-2 mb-6 text-sm">
-                    <li class="flex items-center text-gray-600">
-                        <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        Premium Times Square location
-                    </li>
-                    <li class="flex items-center text-gray-600">
-                        <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        Digital display technology
-                    </li>
-                    <li class="flex items-center text-gray-600">
-                        <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        Real-time analytics
-                    </li>
-                </ul>
-                
-                <div class="text-center">
-                    <div class="text-sm text-purple-600 font-semibold mb-3">⏰ Expires in 3 days</div>
-                    <a href="#contact" class="block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200">
-                        Claim This Deal
-                    </a>
-                </div>
-            </div>
-
-            <!-- Deal 3: Legal Address Package -->
-            <div class="bg-white rounded-2xl shadow-xl p-8 relative transform hover:scale-105 transition-transform duration-300 border-2 border-green-200">
-                <!-- Deal Badge -->
-                <div class="absolute -top-4 -right-4 bg-green-500 text-white rounded-full w-20 h-20 flex items-center justify-center transform rotate-12">
-                    <div class="text-center">
-                        <div class="text-sm font-bold">SAVE</div>
-                        <div class="text-lg font-bold">50%</div>
-                    </div>
-                </div>
-                
-                <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mb-6">
-                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                </div>
-                
-                <h3 class="text-2xl font-bold text-gray-900 mb-3">Legal Address Plus</h3>
-                <p class="text-gray-600 mb-4">Wall Street business address with full mail handling and virtual office services.</p>
-                
-                <div class="space-y-2 mb-6">
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-500 line-through">$200/month</span>
-                        <span class="text-3xl font-bold text-green-600">$99/month</span>
-                    </div>
-                    <div class="text-sm text-green-600 font-semibold">First year pricing!</div>
-                </div>
-                
-                <ul class="space-y-2 mb-6 text-sm">
-                    <li class="flex items-center text-gray-600">
-                        <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        Prestigious Wall Street address
-                    </li>
-                    <li class="flex items-center text-gray-600">
-                        <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        Mail forwarding service
-                    </li>
-                    <li class="flex items-center text-gray-600">
-                        <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        Phone answering service
-                    </li>
-                </ul>
-                
-                <div class="text-center">
-                    <div class="text-sm text-green-600 font-semibold mb-3">⏰ Expires in 7 days</div>
-                    <a href="#contact" class="block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200">
-                        Claim This Deal
-                    </a>
-                </div>
-            </div>
+        <div
+          class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mb-6"
+        >
+          <svg
+            class="w-8 h-8 text-blue-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+            ></path>
+          </svg>
         </div>
-
-        <!-- Bottom CTA -->
-        <div class="text-center mt-16">
-            <div class="bg-white rounded-2xl shadow-lg p-8 max-w-3xl mx-auto">
-                <h3 class="text-2xl font-bold text-gray-900 mb-4">Need a Custom Deal?</h3>
-                <p class="text-gray-600 mb-6">Looking for a specific package or have unique requirements? Our team can create a personalized offer just for you.</p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200">
-                        Request Custom Quote
-                    </a>
-                    <a href="tel:+1234567890" class="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200">
-                        Call (123) 456-7890
-                    </a>
-                </div>
-            </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-3">
+          {{ hot_deal.title }}
+        </h3>
+        <p class="text-gray-600 mb-4">
+          {{ hot_deal.description }}
+        </p>
+        <div class="space-y-2 mb-6">
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 line-through">${{ hot_deal.old_price }}/month</span>
+            <span class="text-3xl font-bold text-red-600">${{ hot_deal.new_price }}/month</span>
+          </div>
+          <div class="text-sm text-red-600 font-semibold">
+            {{ hot_deal.additional_description }}
+          </div>
         </div>
+        <ul class="space-y-2 mb-6 text-sm">
+          <li class="flex items-center text-gray-600">
+            <svg
+              class="w-4 h-4 text-green-500 mr-2"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            {{ hot_deal.promo_list.0 }}
+          </li>
+          <li class="flex items-center text-gray-600">
+            <svg
+              class="w-4 h-4 text-green-500 mr-2"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            {{ hot_deal.promo_list.1 }}
+          </li>
+          <li class="flex items-center text-gray-600">
+            <svg
+              class="w-4 h-4 text-green-500 mr-2"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            Dedicated parking spot
+          </li>
+        </ul>
+        <div class="text-center">
+          <div class="text-sm text-red-600 font-semibold mb-3">
+            ⏰ Expires in {{hot_deal.expires_in_days}} days left
+          </div>
+          <a
+            href="#contact"
+            class="block bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
+          >
+            Claim This Deal
+          </a>
+        </div>
+      </div>
+      <!-- Deal 2: Billboard Package -->
+      <div
+        class="bg-white rounded-2xl shadow-xl p-8 relative transform hover:scale-105 transition-transform duration-300 border-2 border-purple-200"
+      >
+        <!-- Deal Badge -->
+        <div
+          class="absolute -top-4 -right-4 bg-purple-500 text-white rounded-full w-20 h-20 flex items-center justify-center transform rotate-12"
+        >
+          <div class="text-center">
+            <div class="text-sm font-bold">SAVE</div>
+            <div class="text-lg font-bold">40%</div>
+          </div>
+        </div>
+        <div
+          class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center mb-6"
+        >
+          <svg
+            class="w-8 h-8 text-purple-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 4v10a2 2 0 002 2h6a2 2 0 002-2V8M7 8H5a2 2 0 00-2 2v10a2 2 0 002 2h2M17 8h2a2 2 0 012 2v10a2 2 0 01-2 2h-2"
+            ></path>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-3">
+          Digital Billboard Bundle
+        </h3>
+        <p class="text-gray-600 mb-4">
+          Prime Times Square location with 3-month campaign. Maximum visibility
+          guaranteed!
+        </p>
+        <div class="space-y-2 mb-6">
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 line-through">$15,000</span>
+            <span class="text-3xl font-bold text-purple-600">$9,000</span>
+          </div>
+          <div class="text-sm text-purple-600 font-semibold">
+            3-month campaign
+          </div>
+        </div>
+        <ul class="space-y-2 mb-6 text-sm">
+          <li class="flex items-center text-gray-600">
+            <svg
+              class="w-4 h-4 text-green-500 mr-2"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            Premium Times Square location
+          </li>
+          <li class="flex items-center text-gray-600">
+            <svg
+              class="w-4 h-4 text-green-500 mr-2"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            Digital display technology
+          </li>
+          <li class="flex items-center text-gray-600">
+            <svg
+              class="w-4 h-4 text-green-500 mr-2"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            Real-time analytics
+          </li>
+        </ul>
+        <div class="text-center">
+          <div class="text-sm text-purple-600 font-semibold mb-3">
+            ⏰ Expires in 3 days
+          </div>
+          <a
+            href="#contact"
+            class="block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
+          >
+            Claim This Deal
+          </a>
+        </div>
+      </div>
+      <!-- Deal 3: Legal Address Package -->
+      <div
+        class="bg-white rounded-2xl shadow-xl p-8 relative transform hover:scale-105 transition-transform duration-300 border-2 border-green-200"
+      >
+        <!-- Deal Badge -->
+        <div
+          class="absolute -top-4 -right-4 bg-green-500 text-white rounded-full w-20 h-20 flex items-center justify-center transform rotate-12"
+        >
+          <div class="text-center">
+            <div class="text-sm font-bold">SAVE</div>
+            <div class="text-lg font-bold">50%</div>
+          </div>
+        </div>
+        <div
+          class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mb-6"
+        >
+          <svg
+            class="w-8 h-8 text-green-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            ></path>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-3">
+          Legal Address Plus
+        </h3>
+        <p class="text-gray-600 mb-4">
+          Wall Street business address with full mail handling and virtual
+          office services.
+        </p>
+        <div class="space-y-2 mb-6">
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500 line-through">$200/month</span>
+            <span class="text-3xl font-bold text-green-600">$99/month</span>
+          </div>
+          <div class="text-sm text-green-600 font-semibold">
+            First year pricing!
+          </div>
+        </div>
+        <ul class="space-y-2 mb-6 text-sm">
+          <li class="flex items-center text-gray-600">
+            <svg
+              class="w-4 h-4 text-green-500 mr-2"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            Prestigious Wall Street address
+          </li>
+          <li class="flex items-center text-gray-600">
+            <svg
+              class="w-4 h-4 text-green-500 mr-2"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            Mail forwarding service
+          </li>
+          <li class="flex items-center text-gray-600">
+            <svg
+              class="w-4 h-4 text-green-500 mr-2"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            Phone answering service
+          </li>
+        </ul>
+        <div class="text-center">
+          <div class="text-sm text-green-600 font-semibold mb-3">
+            ⏰ Expires in 7 days
+          </div>
+          <a
+            href="#contact"
+            class="block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
+          >
+            Claim This Deal
+          </a>
+        </div>
+      </div>
     </div>
+    <!-- Bottom CTA -->
+    <div class="text-center mt-16">
+      <div class="bg-white rounded-2xl shadow-lg p-8 max-w-3xl mx-auto">
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">
+          Need a Custom Deal?
+        </h3>
+        <p class="text-gray-600 mb-6">
+          Looking for a specific package or have unique requirements? Our team
+          can create a personalized offer just for you.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#contact"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+          >
+            Request Custom Quote
+          </a>
+          <a
+            href="tel:+1234567890"
+            class="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+          >
+            Call (123) 456-7890
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

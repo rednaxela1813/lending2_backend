@@ -24,6 +24,16 @@ class PropertyImageInline(admin.TabularInline):
 class PropertyAdmin(admin.ModelAdmin):
     inlines = [PropertyImageInline]
     list_display = ('name', 'type', 'location', 'created_at')
+    search_fields = (
+        'name',
+        'location',
+        'type__name',   # поиск по связанному типу
+        # при наличии — можно раскомментировать:
+        # 'slug',
+        # 'address',
+        # 'city',
+        # 'id',
+    )
     
 
 

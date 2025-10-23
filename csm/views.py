@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
-from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, FrontendTheme, ServiceSection, CarouselImage
+from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, FrontendTheme, ServiceSection, CarouselImage, HotDealItem
 from properties.models import Property
 from datetime import datetime
+from django.utils import timezone
 import pytz
 from django.urls import reverse
 from django.views.generic import ListView
+
 
 # импорт модели из contact_form
 from contact_form.models import EmailSettings
@@ -13,10 +15,47 @@ from contact_form.utils import send_contact_email
 from django.contrib import messages
 
 
+
 def is_working_hours():
     tz = pytz.timezone('Europe/Bratislava')
     now = datetime.now(tz)
     return now.weekday() < 5 and 9 <= now.hour < 17
+
+def _build_hot_deal_context():
+    today = timezone.now().date()
+    hot_deal_section = HotDealItem.objects.filter(is_active=True).order_by('sort_order').first()
+
+    if not hot_deal_section:
+        return None
+
+    offer = hot_deal_section
+    # day expiry logic
+    expires_in_days = (offer.date_expiry - today).days if offer.date_expiry else None
+    
+    return {
+        "section_title": hot_deal_section.title or "Hot Deals",
+        "section_subtitle": hot_deal_section.additional_description,
+        "title": offer.title,
+        "description": offer.description,
+        "old_price": offer.old_price,
+        "new_price": offer.new_price,
+        "sale_circle_text": offer.badge_text,
+        "sale_circle_percent": offer.badge_percent,
+        "additional_description": offer.additional_description,
+        "promo_list": [
+            offer.promo_1,
+            offer.promo_2,
+            offer.promo_3,
+            offer.promo_4,
+        ],
+        "date_expiry": offer.date_expiry,
+        "expires_in_days": expires_in_days,   # ← для «Expires in N days»
+        "button_text": offer.button_text or "Contact us",
+        "phone_fallback": "+421 000 000 000", # если хочешь показать «Call»
+    }
+
+        
+    
 
 
 def homepage(request):
@@ -29,6 +68,8 @@ def homepage(request):
     phone_number = company_info.phone if company_info else None
     # Получение изображений для карусели
     carousel_images = CarouselImage.objects.all()
+
+    hot_deal = _build_hot_deal_context()
 
     services = {
         'office': Property.objects.filter(type__slug='office').first(),
@@ -65,6 +106,7 @@ def homepage(request):
         'form': form,
         'phone_number': phone_number,  # Можно вынести в CompanyInfo
         'carousel_images': carousel_images,  # Добавляем изображения в контекст
+        'hot_deal': hot_deal,
     }
 
     return render(request, 'csm/index.html', context)
@@ -78,3 +120,8 @@ class ServicesListView(ListView):
     def get_queryset(self):
         service_type = self.kwargs['service_type']
         return self.model.objects.filter(type__slug=service_type)
+    
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["hot_deal"] = _build_hot_deal_context()
+        return ctx

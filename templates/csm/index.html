@@ -14,7 +14,9 @@
 {% include 'csm/components/CarouselSection.html' %}
 
 <!-- Hot Deals Section -->
+{% if hot_deal.title %}
 {% include 'csm/components/HotDealsSection.html' %}
+{% endif %}
 
 <!-- Services Section -->
 <section id="services" class="py-20 bg-gray-50">

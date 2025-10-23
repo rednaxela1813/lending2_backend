@@ -3,10 +3,13 @@ from django.urls import reverse
 from properties.models import PropertyType
 import uuid
 from django.urls import NoReverseMatch
+from django.core.validators import MinValueValidator, MaxValueValidator
+from decimal import Decimal
+from django.utils import timezone
 
 
 class HeroSection(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255) #TODO add uuid for all models
     subtitle = models.TextField(blank=True)
     description = models.TextField(blank=True, null=True, default='Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste.')
     button_text = models.CharField(max_length=50, default="Оставить заявку")
@@ -142,29 +145,63 @@ class FrontendTheme(models.Model):
     def __str__(self):
         return self.name
     
+
+
+
     
     
-class HotDealSectionModel(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    section_title = models.CharField(max_length=255, default="Horúce ponuky")
-    section_subtitle = models.CharField(max_length=255, blank=True, null=True)
-    sale_circle_text = models.CharField(max_length=50, default="Zľava")
-    sale_circle_percent = models.IntegerField(default=20)
-    title = models.CharField(max_length=255, default="Kancelárske priestory na prenájom")
-    description = models.TextField(blank=True, null=True, default="Objavte naše exkluzívne kancelárske priestory na prenájom v srdci mesta. Moderné vybavenie, flexibilné možnosti prenájmu a výhodná lokalita – všetko na jednom mieste.")
-    old_price = models.DecimalField(max_digits=10, decimal_places=2, default=500.00)
-    new_price = models.DecimalField(max_digits=10, decimal_places=2, default=400.00)
-    additional_description = models.TextField(blank=True, null=True, default="Získajte profesionálny priestor pre vaše podnikanie za zvýhodnenú cenu. Kontaktujte nás ešte dnes a využite túto jedinečnú ponuku!")
-    advertising_offer_1 = models.TextField(blank=True, null=True, default="Získajte exkluzívnu reklamnú ponuku na naše kancelárske priestory!")
-    advertising_offer_2 = models.TextField(blank=True, null=True, default="Profesionálny priestor pre vaše podnikanie za zvýhodnenú cenu.")
-    advertising_offer_3 = models.TextField(blank=True, null=True, default="Kontaktujte nás ešte dnes a využite túto jedinečnú ponuku!")
-    advertising_offer_4 = models.TextField(blank=True, null=True, default="Flexibilné možnosti prenájmu v srdci mesta.")
+    
+    
+    
+class HotDealItem(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)   
+    
+    
+    # Текст/цены для карточки (можно переопределить независимо от Property)
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    old_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    new_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
+    additional_description = models.TextField(blank=True, null=True)
+    promo_1 = models.TextField(blank=True, null=True)
+    promo_2 = models.TextField(blank=True, null=True)
+    promo_3 = models.TextField(blank=True, null=True)
+    promo_4 = models.TextField(blank=True, null=True)
+
+    badge_text = models.CharField(max_length=50, default="Zľava", help_text="текст в круглом бейдже")
+    badge_percent = models.PositiveIntegerField(default=20)
     date_expiry = models.DateField(blank=True, null=True)
     button_text = models.CharField(max_length=50, default="Zanechajte žiadosť")
+    
+    color_theme = models.CharField(max_length=20, default="bg-red-500", help_text="Цветовая тема для оформления карточки (например, 'red', 'blue', 'green')", blank=True, null=True)
+    
+    # управление порядком вывода
+    sort_order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
-    
+
+    class Meta:
+        ordering = ["sort_order", "-updated_at"]
+
     def __str__(self):
-        return f"Hot Deal Section - {self.section_title}"
-    
-    
+        return f"HotDealItem - {self.title}"
+
+    @property
+    def expires_in_days(self):
+        if not self.date_expiry:
+            return None
+        return (self.date_expiry - timezone.now().date()).days
+
+    def resolve_url(self):
+        """
+        Возвращаем URL карточки:
+        - если у Property есть get_absolute_url — используем его,
+        - иначе — '#contact' как запасной вариант.
+        """
+        try:
+            if self.property and hasattr(self.property, "get_absolute_url"):
+                return self.property.get_absolute_url()
+        except Exception:
+            pass
+        return "#contact"
