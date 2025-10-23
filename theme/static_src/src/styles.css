@@ -80,5 +80,13 @@
   color: var(--color-secondary-text);
 }
 
+
+
+
 @source "../../../**/*.{html,py,js}";
 @source "../../../wagtail_pages/home_page.html";
+
+@theme {
+  --color-custom-red: #df06df;
+  
+}

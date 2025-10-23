@@ -42,6 +42,7 @@ def _build_hot_deal_context():
         "sale_circle_text": offer.badge_text,
         "sale_circle_percent": offer.badge_percent,
         "additional_description": offer.additional_description,
+        "color_theme": offer.color_theme,
         "promo_list": [
             offer.promo_1,
             offer.promo_2,

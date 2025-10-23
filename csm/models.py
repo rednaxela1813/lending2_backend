@@ -174,7 +174,7 @@ class HotDealItem(models.Model):
     date_expiry = models.DateField(blank=True, null=True)
     button_text = models.CharField(max_length=50, default="Zanechajte žiadosť")
     
-    color_theme = models.CharField(max_length=20, default="bg-red-500", help_text="Цветовая тема для оформления карточки (например, 'red', 'blue', 'green')", blank=True, null=True)
+    color_theme = models.CharField(max_length=50, blank=True, null=True)
     
     # управление порядком вывода
     sort_order = models.PositiveIntegerField(default=0)
