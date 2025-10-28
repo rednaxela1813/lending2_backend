@@ -8,6 +8,7 @@ from decimal import Decimal
 from django.utils import timezone
 
 
+
 class HeroSection(models.Model):
     title = models.CharField(max_length=255) #TODO add uuid for all models
     subtitle = models.TextField(blank=True)
@@ -148,13 +149,23 @@ class FrontendTheme(models.Model):
 
 
 
-    
-    
+class Icon(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    key = models.SlugField(max_length=100, unique=True)        # 'office', 'billboard', 'legal', ...
+    label = models.CharField(max_length=100, blank=True)
+    svg_inline = models.TextField(blank=True)                  # <svg>...</svg> — удобнее и быстрее
+    image = models.ImageField(upload_to="icons/", blank=True, null=True)
+    css_class = models.CharField(max_length=120, blank=True)   # если хочешь использовать icon-font
+
+    def __str__(self):
+        return self.label or self.key
     
     
     
 class HotDealItem(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)   
+    
+    icon = models.ForeignKey(Icon, null=True, blank=True, on_delete=models.SET_NULL)
     
     
     # Текст/цены для карточки (можно переопределить независимо от Property)
@@ -182,7 +193,7 @@ class HotDealItem(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["sort_order", "-updated_at"]
+        ordering = [ "-updated_at"]
 
     def __str__(self):
         return f"HotDealItem - {self.title}"
@@ -205,3 +216,27 @@ class HotDealItem(models.Model):
         except Exception:
             pass
         return "#contact"
+    
+    @property
+    def promo_list(self):
+        return [p for p in (self.promo_1, self.promo_2, self.promo_3, self.promo_4) if p]
+    
+   
+class HotDealSection(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255, default="Hot Deals")
+    additional_description = models.TextField(blank=True, null=True, name="additional_description")
+    description = models.TextField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    updated_at = models.DateTimeField(auto_now=True)
+   # items = models.ManyToManyField(HotDealItem, blank=True)
+        
+    class Meta:
+        verbose_name = "Hot Deal Section"
+        verbose_name_plural = "Hot Deal Sections"
+        
+    def __str__(self):
+        return f"HotDealSection - {self.title}"
+    
+    
+    
