@@ -80,8 +80,11 @@ class ContactRequest(models.Model):
     
     
 class CarouselImage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255, blank=True)
     image = models.ImageField(upload_to='carousel_images/')
     description = models.CharField(max_length=255, blank=True)
+    button_text = models.CharField(max_length=255, blank=True, null=True, default="Zanechajte žiadosť")
 
     def __str__(self):
         return f"Carousel Image {self.id}"
@@ -240,3 +243,12 @@ class HotDealSection(models.Model):
     
     
     
+class BottomCTASection(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255, default="Máte otázky?")
+    subtitle = models.TextField(blank=True, null=True, default="Kontaktujte nás ešte dnes a získajte viac informácií o našich službách a ponukách.")
+    button_text = models.CharField(max_length=50, default="Zanechajte žiadosť")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "Bottom CTA Section Content"

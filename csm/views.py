@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, FrontendTheme, ServiceSection, CarouselImage, HotDealItem, HotDealSection, Icon
+from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, FrontendTheme, ServiceSection, CarouselImage, HotDealItem, HotDealSection, Icon, BottomCTASection
 from properties.models import Property
 from datetime import datetime
 from django.utils import timezone
@@ -83,6 +83,8 @@ def homepage(request):
                       .select_related('icon')
                       .order_by('sort_order', '-updated_at'))                # много карточек
 
+    bottom_cta_section = BottomCTASection.objects.first()  # один объект с CTA внизу
+
     context = {
         'hero_section': hero_section,
         'header_section': header_section,
@@ -101,6 +103,7 @@ def homepage(request):
         # --- Раздельно! ---
         'hot_deal_section': hot_deal_section,   # один объект
         'hot_deal_items': hot_deal_items,       # queryset
+        'bottom_cta_section': bottom_cta_section,  # один объект
     }
     return render(request, 'csm/index.html', context)
 
