@@ -49,7 +49,7 @@ def homepage(request):
     footer_info = FooterInfo.objects.first()
     company_info = CompanyInfo.objects.first()
     theme_color = FrontendTheme.objects.filter(is_active=True).first()
-    nas_sluzby = ServiceSection.objects.all()
+    nas_sluzby = ServiceSection.objects.prefetch_related('icon_svg').all()
     phone_number = company_info.phone if company_info else None
     carousel_images = CarouselImage.objects.all()
 

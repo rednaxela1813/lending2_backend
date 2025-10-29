@@ -53,44 +53,96 @@
         </div>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <!-- Contact Form -->
-            <div class="bg-gray-50 rounded-xl p-8">
-                <h3 class="text-2xl font-bold text-gray-900 mb-6">Send us a message</h3>
-                <form class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="first-name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                            <input type="text" id="first-name" name="first-name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                        <div>
-                            <label for="last-name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                            <input type="text" id="last-name" name="last-name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                    </div>
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                        <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    </div>
-                    <div>
-                        <label for="service" class="block text-sm font-medium text-gray-700 mb-2">Service Interest</label>
-                        <select id="service" name="service" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <option value="">Select a service</option>
-                            <option value="office-space">Office Space</option>
-                            <option value="billboard">Billboard Advertising</option>
-                            <option value="legal-address">Legal Address</option>
-                            <option value="multiple">Multiple Services</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                        <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
-                    </div>
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200">
-                        Send Message
-                    </button>
-                </form>
-            </div>
-            
+  <!-- Contact Form -->
+  <div class="bg-gray-50 rounded-xl p-8">
+    <h3 class="text-2xl font-bold text-gray-900 mb-6">Send us a message</h3>
+    <form class="space-y-6" method="post" action="{% url 'contact_messages:submit' %}">
+      {% csrf_token %}
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label for="first-name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+          <input type="text" id="first-name" name="first_name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+        </div>
+        <div>
+          <label for="last-name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+          <input type="text" id="last-name" name="last_name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+        </div>
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+        <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+      </div>
+
+      <div>
+        <label for="service" class="block text-sm font-medium text-gray-700 mb-2">Service Interest</label>
+        <select id="service" name="service" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+          <option value="">Select a service</option>
+          <option value="office-space">Office Space</option>
+          <option value="billboard">Billboard Advertising</option>
+          <option value="legal-address">Legal Address</option>
+          <option value="multiple">Multiple Services</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+        <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+      </div>
+
+      <!-- GDPR consent -->
+      <div class="pt-2">
+        <div class="flex items-start gap-3">
+          <input
+            id="gdpr-consent"
+            name="gdpr_consent"
+            type="checkbox"
+            class="mt-1 h-5 w-5 rounded border-gray-300 focus:ring-2 focus:ring-blue-500"
+            required
+            aria-describedby="gdpr-help"
+          >
+          <label for="gdpr-consent" class="text-sm text-gray-700">
+            I agree to the processing of my personal data in accordance with the
+            <a href="{% url 'privacy_policy' %}" class="text-blue-600 underline hover:no-underline">Privacy Policy</a>.
+          </label>
+        </div>
+        <p id="gdpr-help" class="mt-2 text-xs text-gray-500">
+          We use your data only to contact you about your inquiry. You can withdraw consent at any time.
+        </p>
+      </div>
+
+      <button
+        id="contact-submit"
+        type="submit"
+        class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200
+               hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled
+        aria-disabled="true"
+      >
+        Send Message
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Enable/disable submit based on GDPR checkbox
+  document.addEventListener('DOMContentLoaded', function () {
+    const consent = document.getElementById('gdpr-consent');
+    const submitBtn = document.getElementById('contact-submit');
+
+    function sync() {
+      const ok = consent.checked;
+      submitBtn.disabled = !ok;
+      submitBtn.setAttribute('aria-disabled', String(!ok));
+    }
+
+    sync(); // initial state
+    consent.addEventListener('change', sync);
+  });
+</script>
+
             <!-- Contact Info -->
             <div class="space-y-8">
                 <div>
