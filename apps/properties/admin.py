@@ -50,8 +50,8 @@ class OfficeUnitImageInline(admin.TabularInline):
 
 @admin.register(OfficeUnit)
 class OfficeUnitAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'floor', 'unit_number', 'area_sqm', 'price_per_month', 'status')
-    list_filter = ('property', 'status', 'floor')
+    list_display = ('__str__', 'floor', 'unit_number', 'area_sqm', 'price_per_month')
+    list_filter = ('property',  'floor')
     search_fields = ('unit_number', 'property__name')
     ordering = ('floor', 'unit_number')
     inlines = [OfficeUnitImageInline]

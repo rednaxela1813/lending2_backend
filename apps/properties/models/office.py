@@ -6,16 +6,13 @@ from PIL import Image
 from django.urls import reverse
 from apps.core_images.mixins import ImageOptimizationMixin
 from .property import Property
+from apps.properties.models.mixins import AvailabilityMixin
 
 
 
+class OfficeUnit(AvailabilityMixin, models.Model):
 
-class OfficeUnit(models.Model):
-    STATUS_CHOICES = [
-        ('available', 'Voľné'),
-        ('occupied', 'Obsadené'),
-    ]
-
+    public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     property = models.ForeignKey(
     Property,
     on_delete=models.CASCADE,
@@ -25,7 +22,7 @@ class OfficeUnit(models.Model):
     unit_number = models.CharField(max_length=50, help_text="Číslo kancelárie alebo identifikátor")
     area_sqm = models.FloatField(help_text="Rozloha v m²")
     price_per_month = models.DecimalField(max_digits=10, decimal_places=2, help_text="Cena za mesiac (€)")
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='available')
+    
     description = models.TextField(blank=True)
 
     class Meta:
@@ -40,6 +37,7 @@ class OfficeUnit(models.Model):
 # properties/models.py
 
 class OfficeUnitImage(ImageOptimizationMixin, models.Model):
+    public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     office_unit = models.ForeignKey(
         'OfficeUnit',
         on_delete=models.CASCADE,

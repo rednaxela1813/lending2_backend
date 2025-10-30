@@ -1,6 +1,8 @@
 import uuid
 from django.db import models
 from django.utils.html import format_html
+from apps.properties.models.mixins import AvailabilityMixin
+
 
 
 from django.urls import reverse
@@ -9,6 +11,7 @@ from apps.core_images.mixins import ImageOptimizationMixin
 
 
 class PropertyType(models.Model):
+    public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     type_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     slug = models.SlugField(unique=True)
     name = models.CharField(max_length=100)
@@ -20,9 +23,8 @@ class PropertyType(models.Model):
     
 
 
-class Property(models.Model):
+class Property(AvailabilityMixin,models.Model):
     
-
     public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=255)
     type = models.ForeignKey(PropertyType, on_delete=models.PROTECT, related_name='properties')    
@@ -32,8 +34,9 @@ class Property(models.Model):
     location = models.CharField(max_length=255, blank=True)
     iframe = models.TextField(blank=True, help_text="HTML iframe  Google Maps")
     created_at = models.DateTimeField(auto_now_add=True)
+
     
-    free = models.BooleanField(default=True, help_text="Je nehnuteľnosť voľná?", blank=True, null=True)
+
     busy_until = models.DateField(blank=True, null=True, help_text="Ak je nehnuteľnosť obsadená, do kedy?")
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text="Cena za prenájom (ak je relevantné)")
     currency = models.CharField(max_length=10, default='EUR', help_text="Mena ceny", blank=True, null=True)
@@ -58,6 +61,7 @@ class Property(models.Model):
     
 
 class PropertyImage(ImageOptimizationMixin, models.Model):
+    public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='property_images/')
     description = models.CharField(max_length=255, blank=True)
