@@ -1,3 +1,5 @@
+#apps/hotdeal/management/commands/rebuild_hotdeals.py
+
 from django.core.management.base import BaseCommand
 from apps.properties.models import Property
 from apps.properties.models.mixins import Availability

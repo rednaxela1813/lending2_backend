@@ -1,21 +1,26 @@
+# csm/views.py
 from django.shortcuts import render, redirect
-from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, FrontendTheme, ServiceSection, CarouselImage, HotDealItem, HotDealSection, Icon, BottomCTASection
-from apps.properties.models import Property
 from datetime import datetime
-from django.utils import timezone
-import pytz
-from django.urls import reverse
-from django.views.generic import ListView
-from django.db.models import Q
-from django.db.models import Prefetch
 import itertools
+import pytz
 
+from django.utils import timezone
+from django.urls import reverse
+from django.views.generic import ListView, TemplateView
+from django.contrib import messages
+from django.db.models import Q, Prefetch
+
+from .models import (
+    HeroSection, HeaderSection, FooterInfo, CompanyInfo, FrontendTheme,
+    ServiceSection, CarouselImage, Icon, BottomCTASection,
+)
+from apps.properties.models import Property
+from apps.hotdeal.context import build_hot_deal_items   # ← наш билдер
+from apps.hotdeal.models import HotDealItem, HotDealSection  # ← правильный импорт из apps.hotdeal
 # импорт модели из contact_form
 from contact_form.models import EmailSettings
 from contact_form.forms import ContactForm
 from contact_form.utils import send_contact_email
-from django.contrib import messages
-
 
 
 def is_working_hours():
@@ -23,11 +28,17 @@ def is_working_hours():
     now = datetime.now(tz)
     return now.weekday() < 5 and 9 <= now.hour < 17
 
+
 def _assign_missing_icons_round_robin():
     """
-    Назначает иконки только тем HotDealItem, у кого они ещё не заданы.
-    Если иконок нет — просто ничего не делает.
+    (Опционально) Раздаём иконки для карточек HotDeals,
+    НО: в текущей модели HotDealItem НЕТ поля icon.
+    Если хочешь — добавь в apps/hotdeal/models.py:
+        icon = models.ForeignKey(Icon, null=True, blank=True, on_delete=models.SET_NULL)
+    и миграцию. Пока — просто выходим.
     """
+    return
+    # --- Пример, если добавишь поле icon у HotDealItem ---
     icon_ids = list(Icon.objects.order_by('key').values_list('id', flat=True))
     if not icon_ids:
         return
@@ -35,15 +46,26 @@ def _assign_missing_icons_round_robin():
     to_update = []
     for obj in (HotDealItem.objects
                 .filter(is_active=True, icon__isnull=True)
-                .order_by('sort_order', '-updated_at')):
+                .order_by('order', 'id')):  # было sort_order/updated_at — их нет
         obj.icon_id = next(pool)
         to_update.append(obj)
     if to_update:
         HotDealItem.objects.bulk_update(to_update, ['icon'])
 
 
+class HotDealsPageView(TemplateView):
+    template_name = "csm/sections/HotDealsSection.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        # Горячие предложения готовим билдером → получаем список словарей под шаблон
+        ctx["hot_deal_items"] = build_hot_deal_items()
+        # Один объект заголовка секции (если используешь отдельную модель заголовка)
+        ctx["hot_deal_section"] = HotDealSection.objects.filter(is_active=True).order_by("order", "id").first()
+        return ctx
+
+
 def homepage(request):
-    # ---- прочие секции/данные как у тебя ----
     hero_section = HeroSection.objects.first()
     header_section = HeaderSection.objects.first()
     footer_info = FooterInfo.objects.first()
@@ -74,16 +96,16 @@ def homepage(request):
             messages.error(request, "Email nie je nakonfigurovaný.")
         return redirect("homepage")
 
-    # --- ВАЖНО: раздаём иконки, затем берём данные раздельно ---
+    # Если иконки для HotDeals нужны — см. комментарий в функции; сейчас noop
     _assign_missing_icons_round_robin()
 
-    hot_deal_section = HotDealSection.objects.filter(is_active=True).first()  # один объект с заголовками
-    hot_deal_items = (HotDealItem.objects
-                      .filter(is_active=True)
-                      .select_related('icon')
-                      .order_by('sort_order', '-updated_at'))                # много карточек
+    # Заголовок секции (один объект)
+    hot_deal_section = HotDealSection.objects.filter(is_active=True).order_by("order", "id").first()
 
-    bottom_cta_section = BottomCTASection.objects.first()  # один объект с CTA внизу
+    # КАРТОЧКИ: используем билдер, чтобы структура соответствовала шаблону
+    hot_deal_items = build_hot_deal_items()
+
+    bottom_cta_section = BottomCTASection.objects.first()
 
     context = {
         'hero_section': hero_section,
@@ -100,24 +122,24 @@ def homepage(request):
         'phone_number': phone_number,
         'carousel_images': carousel_images,
 
-        # --- Раздельно! ---
         'hot_deal_section': hot_deal_section,   # один объект
-        'hot_deal_items': hot_deal_items,       # queryset
-        'bottom_cta_section': bottom_cta_section,  # один объект
+        'hot_deal_items': hot_deal_items,       # уже готовые словари
+        'bottom_cta_section': bottom_cta_section,
     }
     return render(request, 'csm/index.html', context)
 
 
 class ServicesListView(ListView):
-    model = Property  # или как у тебя теперь называется
+    model = Property
     template_name = 'csm/components/ServiceSection.html'
     context_object_name = 'services'
 
     def get_queryset(self):
         service_type = self.kwargs['service_type']
         return self.model.objects.filter(type__slug=service_type)
-    
+
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx["hot_deal"] = _build_hot_deal_context()
+        # если где-то ещё нужно hot-deals внутри этой страницы
+        ctx["hot_deal_items"] = build_hot_deal_items()
         return ctx

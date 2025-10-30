@@ -6,4 +6,7 @@ class HotdealsConfig(AppConfig):
     name = 'apps.hotdeal'
     label = 'hotdeal'
     
+    def ready(self):
+        from . import signals  # noqa: F401  (чтобы сигналы загрузились)
+    
     

@@ -1,3 +1,4 @@
+#apps/properties/models/property.py
 import uuid
 from django.db import models
 from django.utils.html import format_html

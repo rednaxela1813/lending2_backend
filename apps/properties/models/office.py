@@ -1,3 +1,4 @@
+#apps/properties/models/office.py
 import uuid
 from django.db import models
 from django.utils.html import format_html

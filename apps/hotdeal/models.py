@@ -1,3 +1,4 @@
+#apps/hotdeal/models.py
 from django.db import models
 from apps.properties.models import Property
 
