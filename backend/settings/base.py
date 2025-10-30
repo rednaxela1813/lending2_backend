@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
 #  'ratelimit',
+    
     'tailwind',
     'theme',
     'widget_tweaks',
@@ -37,12 +38,20 @@ INSTALLED_APPS = [
     'properties',
     'orders',
     'dashboard',
+    'apps.contact_messages',
 ]
 
 TAILWIND_APP_NAME = 'theme'
 
 
+PRIVACY_POLICY_VERSION = "2025-10-01"
+PRIVACY_POLICY_UPDATED = "2025-10-01"
 
+FERNET_KEYS = [k for k in [
+    config("FERNET_KEY_CURRENT", default=None),
+    config("FERNET_KEY_OLD1", default=None),
+    config("FERNET_KEY_OLD2", default=None),
+] if k]
 
 
 MIDDLEWARE = [

@@ -84,7 +84,7 @@ class CarouselImage(models.Model):
     title = models.CharField(max_length=255, blank=True)
     image = models.ImageField(upload_to='carousel_images/')
     description = models.CharField(max_length=255, blank=True)
-    button_text = models.CharField(max_length=255, blank=True, null=True, default="Zanechajte žiadosť")
+    button_text = models.CharField(max_length=50, default="Explore Offices", blank=True, null=True)
 
     def __str__(self):
         return f"Carousel Image {self.id}"
@@ -96,13 +96,14 @@ class CarouselImage(models.Model):
 
 
 class ServiceSection(models.Model):
-    
-
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255, default="Naše služby")
     description = models.TextField(blank=True, null=True, default="Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste."    )
-    icon_svg = models.TextField(blank=True)  # если нужно
+    icon_svg = models.ForeignKey('Icon', blank=True, null=True, on_delete=models.SET_NULL)
+    color_icon = models.CharField(max_length=20, default="#2563eb", help_text="Hex color code for the icon")
     property_type = models.ForeignKey(PropertyType, on_delete=models.SET_NULL, null=True, blank=True)  # 🔥 теперь есть
     updated_at = models.DateTimeField(auto_now=True)
+    
     
     
     def get_list_url(self):

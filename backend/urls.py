@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 
 
 urlpatterns = [
@@ -17,6 +18,18 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path("dashboard/", include("dashboard.urls", namespace="dashboard")),
     path("api/", include("orders.urls")),
+    path("", include("apps.contact_messages.urls")),
+    path(
+        "privacy-policy/",
+        TemplateView.as_view(
+            template_name="legal/privacy_policy.html",
+            extra_context={
+                "policy_version": getattr(settings, "PRIVACY_POLICY_VERSION", "v1"),
+                "policy_updated": getattr(settings, "PRIVACY_POLICY_UPDATED", "2025-10-01"),
+            },
+        ),
+        name="privacy_policy",
+    ),
      
 ]
 
