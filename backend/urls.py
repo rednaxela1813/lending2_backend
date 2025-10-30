@@ -9,7 +9,7 @@ urlpatterns = [
     
     path("pon_ka/", admin.site.urls),
     path('', include('csm.urls')),
-    path('', include('properties.urls')),
+    path('', include('apps.properties.urls')),
     path("kontakt/", include("contact_form.urls")),
 
  
