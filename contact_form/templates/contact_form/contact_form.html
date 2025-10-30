@@ -1,0 +1,85 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<section id="contact" class="bg-gray-900 px-4 py-24 text-yellow-100">
+  <div class="container mx-auto max-w-3xl">
+    <h2 class="mb-12 text-center text-4xl font-bold text-text">Zanechajte žiadosť</h2>
+
+    <form method="post" action="{% url 'homepage' %}" class="space-y-6 bg-gray-900 p-8 border border-border rounded-2xl shadow-lg">
+      {% csrf_token %}
+
+      {% if messages %}
+        <ul class="mb-4 text-center text-sm text-primary">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <!-- Name field -->
+      <div>
+        {{ form.name|add_class:"w-full bg-gray-900 text-yellow-100 px-4 py-3 text-base placeholder:text-muted border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400" }}
+        {% if form.name.errors %}
+          <p class="text-red-500 text-sm">{{ form.name.errors|join:", " }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Email field -->
+      <div>
+        {{ form.email|add_class:"w-full bg-gray-900 text-yellow-100 px-4 py-3 text-base placeholder:text-muted border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400" }}
+        {% if form.email.errors %}
+          <p class="text-red-500 text-sm">{{ form.email.errors|join:", " }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Message field -->
+      <div>
+        {{ form.message|add_class:"w-full bg-gray-900 text-yellow-100 px-4 py-3 text-base placeholder:text-muted border border-border rounded-md h-32 resize-none focus:outline-none focus:ring-2 focus:ring-orange-400" }}
+        {% if form.message.errors %}
+          <p class="text-red-500 text-sm">{{ form.message.errors|join:", " }}</p>
+        {% endif %}
+      </div>
+
+      <!-- GDPR Consent -->
+<div class="flex items-start gap-2 mb-6">
+  {{ form.consent|add_class:"mt-1" |attr:"id:gdprCheckbox" }}
+  <label for="gdprCheckbox" class="text-sm leading-snug">
+    Súhlasím so spracovaním osobných údajov v súlade s
+    <a href="{% url 'privacy' %}" class="text-primary hover:underline">Zásady ochrany osobných údajov</a>.
+  </label>
+</div>
+{% if form.consent.errors %}
+  <p class="text-red-500 text-sm">{{ form.consent.errors|join:", " }}</p>
+{% endif %}
+
+<!-- Submit button -->
+<div class="text-center">
+  <button
+    id="submit-button"
+    type="submit"
+    class="rounded-full bg-orange-400 px-6 py-3 text-lg font-semibold text-white transition hover:bg-orange-500 disabled:cursor-not-allowed disabled:opacity-50"
+    disabled
+  >
+    Odoslať
+  </button>
+</div>
+
+<!-- JS -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const checkbox = document.getElementById("gdprCheckbox");
+    const submitButton = document.getElementById("submit-button");
+
+    if (checkbox && submitButton) {
+      checkbox.addEventListener("change", () => {
+        submitButton.disabled = !checkbox.checked;
+      });
+    }
+  });
+</script>
+
+
+    </form>
+  </div>
+</section>
+

@@ -1,0 +1,27 @@
+{% extends "csm/base.html" %}
+{% block content %}
+<div class="max-w-3xl mx-auto p-8 text-lg leading-relaxed text-wite">
+  <h1 class="text-2xl font-bold mb-4">Prevádzkovateľ</h1>
+  <p><strong>{{ company_info.name }}</strong></p>
+  <p>IČO: {{ COMPANY_ICO }}</p>
+  <p>Sídlo: {{ COMPANY_ADDRESS }}</p>
+  <p>Email: <a href="mailto:{{ company_info.email }}" class="text-blue-600 underline">{{ company_info.email }}</a></p>
+</div>
+
+
+
+<!-- Кнопки навигации -->
+
+
+<div class="mt-12 flex flex-row gap-10 justify-center">
+  <a href="javascript:history.back()"
+     class="w-max inline-block rounded-full bg-orange-400 px-6 py-2 font-medium text-white shadow-md transition-colors duration-200 hover:bg-orange-500">
+    ← Späť
+  </a>
+  <a href="{% url 'homepage' %}"
+     class="w-max inline-block rounded-full bg-orange-400 px-6 py-2 font-medium text-white shadow-md transition-colors duration-200 hover:bg-orange-500">
+    ⤒ Domov
+  </a>
+</div>
+
+{% endblock %}

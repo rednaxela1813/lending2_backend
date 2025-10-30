@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "⏳ Ожидание базы данных..."
 until nc -z db 5432; do
@@ -9,13 +10,24 @@ done
 echo "✅ База доступна. Применяем миграции..."
 python manage.py migrate --noinput
 
-echo "📂 Собираем статические файлы..."
-python manage.py collectstatic --noinput
+ENVIRONMENT=${ENV:-development}
 
-if [ "$ENV" = "production" ]; then
-  echo "🚀 Запускаем Gunicorn (production)..."
-  exec gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+if [ "$ENVIRONMENT" = "development" ]; then
+  echo "⚡ DEV: Устанавливаем зависимости Tailwind..."
+  npm install --prefix theme/static_src
+
+  echo "⚡ DEV: Строим Tailwind CSS..."
+  python manage.py tailwind build
 else
-  echo "🚀 Запускаем Django dev server..."
-  exec python manage.py runserver 0.0.0.0:8000
+  echo "⚡ PROD: Устанавливаем зависимости Tailwind..."
+  npm install --prefix theme/static_src
+
+  echo "⚡ PROD: Строим Tailwind CSS..."
+  python manage.py tailwind build
+
+  echo "📂 PROD: Собираем статические файлы..."
+  python manage.py collectstatic --noinput
 fi
+
+echo "🚀 Запускаем Gunicorn..."
+exec gunicorn backend.wsgi:application --bind 0.0.0.0:8000

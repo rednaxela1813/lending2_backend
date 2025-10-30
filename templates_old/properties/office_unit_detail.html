@@ -1,0 +1,141 @@
+{% extends "csm/base.html" %}
+{% load static %}
+
+{% block content %}
+
+{% include "csm/components/HeaderSection.html" %}
+
+<section class="pt-[112px] pb-24 px-4 bg-gray-900 text-yellow-100"
+         x-data="{
+           isOpen: false,
+           currentIndex: 0,
+           images: [{% for img in unit.images.all %}'{{ img.image.url }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+           open(index) {
+             this.currentIndex = index;
+             this.isOpen = true;
+           },
+           close() {
+             this.isOpen = false;
+           },
+           next() {
+             this.currentIndex = (this.currentIndex + 1) % this.images.length;
+           },
+           prev() {
+             this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+           }
+         }"
+         @keydown.escape.window="close()"
+>
+  <div class="container mx-auto max-w-6xl">
+    <div class="rounded-2xl border border-border bg-navbar/10 p-10 shadow-lg">
+
+      <!-- Название -->
+      <h2 class="text-3xl font-extrabold text-primary mb-8 text-center">
+        Kancelária č. {{ unit.unit_number }}
+      </h2>
+
+      <!-- Основное изображение -->
+      <div class="mb-6">
+        <img src="{% if unit.images.all|length %}{{ unit.images.first.image.url }}{% else %}{% static 'images/default-office.jpg' %}{% endif %}"
+             alt="Office {{ unit.unit_number }}"
+             class="rounded-2xl shadow-lg object-cover w-full h-96">
+      </div>
+
+      <!-- Галерея -->
+      {% if unit.images.all|length > 1 %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+        {% for img in unit.images.all %}
+        <img
+          src="{{ img.image.url }}"
+          alt="{{ img.description|default:'' }}"
+          class="cursor-pointer rounded-lg shadow object-cover w-full h-40 hover:scale-105 transition-transform duration-300"
+          @click="open({{ forloop.counter0 }})">
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Описание -->
+      {% if unit.description %}
+        <div class="prose prose-invert mb-6 text-lg">
+          {{ unit.description|linebreaks }}
+        </div>
+      {% endif %}
+
+      <!-- Детальный список -->
+      {% if unit.list_details %}
+        <ul class="list-disc pl-6 text-lg text-yellow-100 space-y-1 mb-8">
+          {% for item in unit.list_details.splitlines %}
+            <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <!-- Характеристики -->
+      <div class="text-lg space-y-2 mb-8">
+        <p><strong>Rozloha:</strong> {{ unit.area_sqm }} m²</p>
+        <p><strong>Cena:</strong> {{ unit.price_per_month }} € / mesiac</p>
+        <p><strong>Stav:</strong>
+          {% if unit.status == 'available' %}
+            <span class="text-green-400 font-semibold">Voľné</span>
+          {% else %}
+            <span class="text-red-400 font-semibold">Obsadené</span>
+          {% endif %}
+        </p>
+      </div>
+
+      <!-- Кнопки -->
+      <div class="flex flex-col md:flex-row justify-center gap-4">
+        <a href="javascript:history.back()"
+           class="inline-flex items-center justify-center rounded-full bg-gray-700 px-6 py-3 text-white text-lg font-medium hover:bg-gray-600 transition-colors duration-200">
+          ← Späť na zoznam
+        </a>
+
+        <a href="{% url 'homepage' %}#contact"
+           class="inline-flex items-center justify-center rounded-full bg-orange-400 px-6 py-3 text-white text-lg font-medium hover:bg-orange-500 transition duration-200">
+          Zanechajte žiadosť
+        </a>
+      </div>
+
+      <!-- Локация + карта -->
+    <!--  <div class="mt-12">
+        <h3 class="text-2xl font-bold mb-4 text-primary">Lokalita</h3>
+        <p class="text-lg mb-4">
+          Šípová 1, Nitra – Polyfunkčný objekt v blízkosti OBI a OC MAX. Výborná dostupnosť, MHD v pešej vzdialenosti.
+        </p>
+        <iframe
+          class="w-full h-64 rounded-lg border-0 shadow"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2663.4933980154384!2d18.085000!3d48.312222!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x476b3edcffc4dc6b%3A0xe8a2c285e388b8a5!2s%C5%A0%C3%ADpov%C3%A1%201%2C%20949%2001%20Nitra%2C%20Slovakia!5e0!3m2!1ssk!2ssk!4v1690834638041!5m2!1ssk!2ssk"
+          allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div> -->
+
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div x-show="isOpen" x-transition.opacity
+       class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50"
+       @click.self="close()">
+    <div class="relative max-w-[90vw] max-h-[90vh]">
+      <img :src="images[currentIndex]"
+           class="rounded-lg shadow-lg object-contain w-full h-full transition-transform duration-300">
+      
+      <button @click="close()"
+              class="absolute top-4 right-4 text-white text-4xl leading-none hover:text-gray-300">
+        &times;
+      </button>
+
+      <button @click="prev()"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-white text-3xl px-3 hover:text-gray-300">
+        &#10094;
+      </button>
+      <button @click="next()"
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-white text-3xl px-3 hover:text-gray-300">
+        &#10095;
+      </button>
+    </div>
+  </div>
+
+</section>
+
+{% include "csm/components/FooterSection.html" %}
+{% endblock %}

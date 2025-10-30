@@ -9,6 +9,23 @@ DEBUG = False
 CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS").split(",")
 CORS_ALLOW_ALL_ORIGINS = False
 
+
+INSTALLED_APPS += [
+    "axes",
+]
+
+MIDDLEWARE = [
+    'axes.middleware.AxesMiddleware',
+] + MIDDLEWARE
+
+AUTHENTICATION_BACKENDS = [
+    "axes.backends.AxesBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+AXES_FAILURE_LIMIT = 5 
+AXES_COOLOFF_TIME = 1  # 1 hour
+
 # База данных
 DATABASES = {
     'default': {
@@ -20,6 +37,9 @@ DATABASES = {
         'PORT': config("DB_PORT", default='5432'),
     }
 }
+
+TIME_ZONE = 'Europe/Bratislava'
+USE_TZ = True
 
 #
 # Статические файлы

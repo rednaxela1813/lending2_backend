@@ -1,0 +1,52 @@
+<!-- Top Bar -->
+<!-- Sticky glass header -->
+{% load static %}
+<header class="fixed left-0 right-0 w-full top-0 z-50">
+  <div
+    class="navbar w-full bg-yellow-500 from-white/20 via-transparent to-transparent backdrop-blur-md shadow-none border-b border-white/10"
+  >
+    <div class="navbar-start"></div>
+
+    <div class="navbar-center">
+      <a class="btn btn-ghost text-xl"
+        ><img src="{% static 'images/logo3.png' %}" alt="Logo" class="h-24"
+      /></a>
+    </div>
+    <div class="navbar-end">
+      <label class="label cursor-pointer gap-2">
+        <span class="label-text">Synthwave</span>
+        <input type="checkbox" value="dark" class="toggle theme-controller" />
+      </label>
+
+      <ul class="menu menu-horizontal px-1">
+        <li><a>Link</a></li>
+        <li>
+          <details>
+            <summary>Parent</summary>
+            <ul class="bg-base-100 rounded-t-none p-2">
+              <li><a>Link 1</a></li>
+              <li><a>Link 2</a></li>
+            </ul>
+          </details>
+        </li>
+      </ul>
+    </div>
+    <div class="flex-none">
+      <button class="btn btn-square btn-ghost">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          class="inline-block h-5 w-5 stroke-current"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          ></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>

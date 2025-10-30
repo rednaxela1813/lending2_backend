@@ -1,0 +1,181 @@
+{% extends "csm/base.html" %}
+{% load static %}
+
+{% block content %}
+
+{% include "csm/components/HeaderSection.html" %}
+
+<section class="pt-[112px] pb-24 px-4 bg-gray-900 text-yellow-100"
+         x-data="{
+           isOpen: false,
+           currentIndex: 0,
+           images: [{% for img in property.images.all %}'{{ img.image.url }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+           open(index) {
+             this.currentIndex = index;
+             this.isOpen = true;
+           },
+           close() {
+             this.isOpen = false;
+           },
+           next() {
+             this.currentIndex = (this.currentIndex + 1) % this.images.length;
+           },
+           prev() {
+             this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+           }
+         }"
+         @keydown.escape.window="close()"
+>
+  <div class="container mx-auto max-w-6xl">
+    <div class="rounded-2xl border border-border bg-navbar/10 p-10 shadow-lg">
+      
+      <!-- BACK button for desktop -->
+      <div class="hidden md:flex justify-end mb-6">
+        <button onclick="history.back()"
+          class="rounded-full bg-gray-700 px-6 py-2 text-sm font-medium text-yellow-100 hover:bg-gray-600 transition-colors duration-200">
+          ← Späť
+        </button>
+      </div>
+      
+      <!-- Name -->
+      <h2 class="text-center text-4xl font-extrabold text-primary mb-8">{{ property.name }}</h2>
+
+      <!-- Main image -->
+      <div class="mb-6">
+        <img src="{% if property.images.all|length %}{{ property.images.first.image.url }}{% else %}{% static 'images/default-office.jpg' %}{% endif %}"
+             alt="{{ property.name }}"
+             class="rounded-2xl shadow-lg object-cover w-full h-96">
+      </div>
+
+      <!-- Gallery -->
+      {% if property.type != "legal_address" and property.images.all|length > 1 %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+        {% for img in property.images.all %}
+        <img
+          src="{{ img.image.url }}"
+          alt="{{ img.description|default:'' }}"
+          class="cursor-pointer rounded-lg shadow object-cover w-full h-40 hover:scale-105 transition-transform duration-300"
+          @click="open({{ forloop.counter0 }})">
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Description block -->
+      {% if property.description %}
+      <div class="mt-8 mb-8">
+        <h3 class="text-2xl font-bold mb-4 text-yellow-100">📄 Description</h3> <!-- TODO change Description for Slovak-->
+        <p class="text-base text-yellow-100 whitespace-pre-line">
+          {{ property.description }}
+        </p>
+      </div>
+      {% endif %}
+
+      <!-- List details block -->
+      {% if property.list_details %}
+      <div class="mt-8 mb-8">
+        <h3 class="text-2xl font-bold mb-4 text-yellow-100">🔹 Details</h3> <!-- TODO change Details for Slovak -->
+        <ul class="list-disc list-inside space-y-2">
+          {% for item in property.list_details %}
+            <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <!-- Map with location -->
+      <div class="mt-8">
+        <h3 class="text-2xl font-bold mb-4 text-center text-yellow-100">📍 Location</h3>
+        <div class="w-full rounded-2xl overflow-hidden shadow-lg">
+        {% if property.iframe %}
+          <div class="relative" style="padding-bottom: 56.25%; height: 0; overflow: hidden;">
+            {{ property.iframe|safe }}
+          </div>
+        {% else %}
+          <div class="p-6 text-center text-gray-400">
+            Address not specified. Map unavailable.
+          </div>
+        {% endif %}
+        </div>
+      </div>
+
+      <style>
+        .relative iframe {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+      </style>
+
+      <!-- Buttons at the bottom -->
+      <div class="flex flex-col md:flex-row justify-center gap-4 mt-8">
+        {% if property.latitude and property.longitude %}
+          <a href="https://www.google.com/maps/dir/?api=1&destination={{ property.latitude }},{{ property.longitude }}"
+             target="_blank"
+             class="inline-flex items-center justify-center rounded-full bg-yellow-500 px-6 py-3 text-white text-lg font-medium hover:bg-yellow-600 transition-colors duration-200">
+            📍 Získať trasu
+          </a>
+        {% elif property.location %}
+          <a href="https://www.google.com/maps/dir/?api=1&destination={{ property.location|urlencode }}"
+             target="_blank"
+             class="inline-flex items-center justify-center rounded-full bg-orange-400 px-6 py-3 text-white text-lg font-medium hover:bg-orange-500 transition-colors duration-200">
+            📍 Získať trasu
+          </a>
+        {% else %}
+          <button disabled
+                  class="inline-flex items-center justify-center rounded-full bg-gray-500 px-6 py-3 text-white text-lg font-medium">
+            📍 Adresa nedostupná
+          </button>
+        {% endif %}
+
+        <!-- Contact buttons -->
+        <a href="{% url 'homepage' %}#contact" class="hidden md:inline-flex items-center rounded-full bg-orange-400 px-5 py-2 text-sm font-medium text-white hover:bg-orange-500 transition duration-200">
+          {{ header.button_text|default:"Zanechajte žiadosť" }}
+        </a>
+        <a href="{% url 'homepage' %}#contact"
+           class="md:hidden inline-flex w-full items-center justify-center rounded-full bg-orange-400 px-5 py-3 text-base font-medium text-white hover:bg-orange-500 transition duration-200">
+          {{ header.button_text|default:"Zanechajte žiadosť" }}
+        </a>
+
+        <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+                class="inline-flex items-center justify-center rounded-full bg-gray-700 px-6 py-3 text-white text-lg font-medium hover:bg-gray-600 transition-colors duration-200">
+          ⬆️ Späť na začiatok
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Fullscreen Lightbox -->
+  <div x-show="isOpen" x-transition.opacity
+       class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50"
+       @click.self="close()">
+    <div class="relative max-w-[90vw] max-h-[90vh]">
+      <!-- Current photo -->
+      <img :src="images[currentIndex]"
+           alt=""
+           class="rounded-lg shadow-lg object-contain w-full h-full transition-transform duration-300">
+      
+      <!-- Close -->
+      <button @click="close()"
+              class="absolute top-4 right-4 text-white text-4xl leading-none hover:text-gray-300">
+        &times;
+      </button>
+
+      <!-- Navigation -->
+      <button @click="prev()"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-white text-3xl px-3 hover:text-gray-300">
+        &#10094;
+      </button>
+      <button @click="next()"
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-white text-3xl px-3 hover:text-gray-300">
+        &#10095;
+      </button>
+    </div>
+  </div>
+</section>
+
+{% include "csm/components/FooterSection.html" %}
+
+{% endblock %}

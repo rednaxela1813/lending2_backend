@@ -1,0 +1,14 @@
+
+{% if is_working_hours %}
+  <a id="call-button"
+     href="tel:{{COMPANY_PHONE}}"
+     class="fixed bottom-6 right-6 z-50 rounded-full bg-green-400 bg-opacity-100 px-6 py-3 text-white text-lg shadow-lg transition hover:bg-green-500 focus:bg-green-600 active:bg-green-700 focus:outline-none md:hidden">
+     📞 Zavolať
+  </a>
+{% else %}
+  <a id="call-button"
+     href="{% url 'homepage' %}#contact"
+     class="fixed bottom-6 right-6 z-50 rounded-full bg-orange-400 bg-opacity-100 px-6 py-3 text-white text-lg shadow-lg transition hover:bg-orange-500 focus:bg-orange-600 active:bg-orange-700 focus:outline-none md:hidden">
+     ✉️ Napísať nám
+  </a>
+{% endif %}

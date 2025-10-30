@@ -1,7 +1,16 @@
 from django.db import models
+from django.urls import reverse
+from properties.models import PropertyType
+import uuid
+from django.urls import NoReverseMatch
+from django.core.validators import MinValueValidator, MaxValueValidator
+from decimal import Decimal
+from django.utils import timezone
+
+
 
 class HeroSection(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255) #TODO add uuid for all models
     subtitle = models.TextField(blank=True)
     description = models.TextField(blank=True, null=True, default='Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste.')
     button_text = models.CharField(max_length=50, default="Оставить заявку")
@@ -68,34 +77,179 @@ class ContactRequest(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.contact})"
+    
+    
+class CarouselImage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255, blank=True)
+    image = models.ImageField(upload_to='carousel_images/')
+    description = models.CharField(max_length=255, blank=True)
+    button_text = models.CharField(max_length=50, default="Explore Offices", blank=True, null=True)
+
+    def __str__(self):
+        return f"Carousel Image {self.id}"
+    
 
 
 
-class SiteTheme(models.Model):
+
+
+
+class ServiceSection(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255, default="Naše služby")
+    description = models.TextField(blank=True, null=True, default="Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste."    )
+    icon_svg = models.ForeignKey('Icon', blank=True, null=True, on_delete=models.SET_NULL)
+    color_icon = models.CharField(max_length=20, default="#2563eb", help_text="Hex color code for the icon")
+    property_type = models.ForeignKey(PropertyType, on_delete=models.SET_NULL, null=True, blank=True)  # 🔥 теперь есть
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    
+    
+    def get_list_url(self):
+        if self.property_type:
+            slug = self.property_type.slug
+            try:
+                # если есть роут с параметром
+                return reverse('property_list', kwargs={'type': slug})
+            except NoReverseMatch:
+                # fallback: базовый путь + ?type=slug
+                base = reverse('property_list')
+                return f"{base}?type={slug}"
+        return None
+
+
+    def __str__(self):
+        return self.title
+
+
+
+class FrontendTheme(models.Model):
     name = models.CharField(max_length=100, default="Default")
 
-    primary_color = models.CharField(max_length=20, default="#7e22ce")
-    primary_hover = models.CharField(max_length=20, default="#6b21a8")
+    # Фон
+    navbar_background = models.CharField(max_length=20, default="#ffffff")
+    body_background = models.CharField(max_length=20, default="#f9fafb")
+    footer_background = models.CharField(max_length=20, default="#f1f5f9")
 
-    secondary_color = models.CharField(max_length=20, default="#1f2937")
-    secondary_hover = models.CharField(max_length=20, default="#374151")
+    # Текст
+    text_color = models.CharField(max_length=20, default="#111827")
+    text_hover_color = models.CharField(max_length=20, default="#1e40af")
 
-    background_color = models.CharField(max_length=20, default="#111827")
-    text_color = models.CharField(max_length=20, default="#ffffff")
-    
-    secondary_background_color = models.CharField(max_length=20, default="#f3f4f6", blank=True)
-    secondary_text_color = models.CharField(max_length=20, default="#111827", blank=True)
+    # Границы
+    border_color = models.CharField(max_length=20, default="#d1d5db")
+    border_hover_color = models.CharField(max_length=20, default="#9ca3af")
 
-    border_color = models.CharField(max_length=20, default="#374151", blank=True)
-    muted_text_color = models.CharField(max_length=20, default="#9ca3af", blank=True)
+    # Основной цвет (например, для кнопок)
+    primary_color = models.CharField(max_length=20, default="#2563eb")
+    primary_hover_color = models.CharField(max_length=20, default="#1d4ed8")
 
+    # Активация
     is_active = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
     
+
+
+
+class Icon(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    key = models.SlugField(max_length=100, unique=True)        # 'office', 'billboard', 'legal', ...
+    label = models.CharField(max_length=100, blank=True)
+    svg_inline = models.TextField(blank=True)                  # <svg>...</svg> — удобнее и быстрее
+    image = models.ImageField(upload_to="icons/", blank=True, null=True)
+    css_class = models.CharField(max_length=120, blank=True)   # если хочешь использовать icon-font
+
+    def __str__(self):
+        return self.label or self.key
+    
+    
+    
+class HotDealItem(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)   
+    
+    icon = models.ForeignKey(Icon, null=True, blank=True, on_delete=models.SET_NULL)
+    
+    
+    # Текст/цены для карточки (можно переопределить независимо от Property)
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    old_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    new_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
+    additional_description = models.TextField(blank=True, null=True)
+    promo_1 = models.TextField(blank=True, null=True)
+    promo_2 = models.TextField(blank=True, null=True)
+    promo_3 = models.TextField(blank=True, null=True)
+    promo_4 = models.TextField(blank=True, null=True)
+
+    badge_text = models.CharField(max_length=50, default="Zľava", help_text="текст в круглом бейдже")
+    badge_percent = models.PositiveIntegerField(default=20)
+    date_expiry = models.DateField(blank=True, null=True)
+    button_text = models.CharField(max_length=50, default="Zanechajte žiadosť")
+    
+    color_theme = models.CharField(max_length=50, blank=True, null=True)
+    
+    # управление порядком вывода
+    sort_order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     class Meta:
-        verbose_name = "Site Theme"
-        verbose_name_plural = "Site Themes"
+        ordering = [ "-updated_at"]
+
+    def __str__(self):
+        return f"HotDealItem - {self.title}"
+
+    @property
+    def expires_in_days(self):
+        if not self.date_expiry:
+            return None
+        return (self.date_expiry - timezone.now().date()).days
+
+    def resolve_url(self):
+        """
+        Возвращаем URL карточки:
+        - если у Property есть get_absolute_url — используем его,
+        - иначе — '#contact' как запасной вариант.
+        """
+        try:
+            if self.property and hasattr(self.property, "get_absolute_url"):
+                return self.property.get_absolute_url()
+        except Exception:
+            pass
+        return "#contact"
+    
+    @property
+    def promo_list(self):
+        return [p for p in (self.promo_1, self.promo_2, self.promo_3, self.promo_4) if p]
+    
+   
+class HotDealSection(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255, default="Hot Deals")
+    additional_description = models.TextField(blank=True, null=True, name="additional_description")
+    description = models.TextField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    updated_at = models.DateTimeField(auto_now=True)
+   # items = models.ManyToManyField(HotDealItem, blank=True)
         
+    class Meta:
+        verbose_name = "Hot Deal Section"
+        verbose_name_plural = "Hot Deal Sections"
         
+    def __str__(self):
+        return f"HotDealSection - {self.title}"
+    
+    
+    
+class BottomCTASection(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255, default="Máte otázky?")
+    subtitle = models.TextField(blank=True, null=True, default="Kontaktujte nás ešte dnes a získajte viac informácií o našich službách a ponukách.")
+    button_text = models.CharField(max_length=50, default="Zanechajte žiadosť")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "Bottom CTA Section Content"

@@ -1,0 +1,61 @@
+<section class="bg-gray-900 text-yellow-100 py-12 px-4"
+         x-data="{ openForm: false, presetMessage: '' }">
+
+  <div class="text-center mb-10">
+    <h2 class="text-4xl font-bold text-orange-400">Služby k reklame</h2>
+    <p class="mt-4 max-w-xl mx-auto text-lg">Vyberte si službu a kontaktujte nás jednoducho cez formulár.</p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
+    <template x-for="service in [
+      { name: 'Tlač banneru', price: 'Veľký: 205€, Malý: 116€' },
+      { name: 'Montáž banneru', price: 'Veľký: 100€, Malý: 60€' },
+      { name: 'Demontáž banneru', price: 'Veľký: 40€, Malý: 30€' },
+      { name: 'MASH banner', price: 'Individuálne nacenenie' }
+    ]">
+      <div @click="presetMessage = service.name + ' – ' + service.price; openForm = true"
+           class="w-56 h-56 bg-orange-500 text-white rounded-full flex flex-col justify-center items-center shadow-lg cursor-pointer hover:scale-105 transition-all duration-300 text-center p-4">
+        <h3 class="text-lg font-bold" x-text="service.name"></h3>
+        <p class="text-sm mt-2" x-text="service.price"></p>
+      </div>
+    </template>
+  </div>
+
+  <!-- Модальное окно с формой -->
+  <div x-show="openForm" x-transition.opacity
+       class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+       @click.self="openForm = false">
+    <div class="bg-white text-gray-800 rounded-xl p-6 max-w-md w-full shadow-xl">
+      <h3 class="text-2xl font-bold mb-4">Zanechajte žiadosť</h3>
+      <form method="POST" action="{% url 'contact_request_api' %}">
+        {% csrf_token %}
+        <input type="hidden" name="message" :value="presetMessage">
+
+        <label class="block mb-2 font-semibold">Vaše meno</label>
+        <input type="text" name="name" class="w-full border px-3 py-2 rounded mb-4" required>
+
+        <label class="block mb-2 font-semibold">E-mail</label>
+        <input type="email" name="email" class="w-full border px-3 py-2 rounded mb-4" required>
+
+        <label class="block mb-2 font-semibold">Telefón</label>
+        <input type="text" name="phone" class="w-full border px-3 py-2 rounded mb-4">
+
+        <label class="block mb-2 font-semibold">Správa</label>
+        <textarea name="additional_info" class="w-full border px-3 py-2 rounded mb-4" rows="3"
+                  placeholder="Doplňujúce informácie..."></textarea>
+
+        <div class="flex justify-between mt-4">
+          <button type="button" @click="openForm = false"
+                  class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">
+            Zrušiť
+          </button>
+          <button type="submit"
+                  class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">
+            Odoslať
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</section>

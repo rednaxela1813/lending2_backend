@@ -1,0 +1,141 @@
+{% load static %}
+
+<section class="py-20 bg-gradient-to-br from-red-50 to-orange-50 relative overflow-hidden">
+  <!-- background pattern -->
+  <div class="absolute inset-0 opacity-5">
+    <svg class="w-full h-full" viewBox="0 0 100 100" aria-hidden="true">
+      <pattern id="deals-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+        <circle cx="10" cy="10" r="1" fill="currentColor" />
+      </pattern>
+      <rect width="100" height="100" fill="url(#deals-pattern)" />
+    </svg>
+  </div>
+
+  <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+    <!-- section header (single object) -->
+    {% include 'csm/components/HotDealHeaderSection.html' %}
+
+    <!-- cards grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for item in hot_deal_items %}
+
+        <!-- wrapper для вывода бейджа за пределами карточки -->
+        <div class="relative">
+
+          <!-- карточка -->
+          <div
+            class="bg-white rounded-2xl shadow-xl p-8 relative transform hover:scale-105 transition-transform duration-300 border-2"
+            style="border-color:#fecaca;"
+          >
+            <!-- icon -->
+            {% if item.icon %}
+              {% if item.icon.svg_inline %}
+                <div class="w-16 h-16 rounded-xl flex items-center justify-center mb-6 bg-gray-50 shrink-0">
+                  {{ item.icon.svg_inline|safe }}
+                </div>
+              {% elif item.icon.image %}
+                <img class="w-16 h-16 rounded-xl mb-6" src="{{ item.icon.image.url }}" alt="{{ item.icon.label }}">
+              {% elif item.icon.css_class %}
+                <div class="w-16 h-16 rounded-xl flex items-center justify-center mb-6 bg-gray-50">
+                  <i class="{{ item.icon.css_class }} text-3xl" aria-label="{{ item.icon.label }}"></i>
+                </div>
+              {% endif %}
+            {% endif %}
+
+            <!-- title + description -->
+            <h3 class="text-2xl font-bold text-gray-900 mb-3 break-words">{{ item.title }}</h3>
+            {% if item.description %}
+              <p class="text-gray-600 mb-4">{{ item.description }}</p>
+            {% endif %}
+
+            <!-- prices (mobile-safe) -->
+            <div class="space-y-2 mb-6">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 min-w-0">
+                {% if item.old_price %}
+                  <span class="text-gray-500 line-through whitespace-nowrap shrink-0">
+                    ${{ item.old_price }}/month
+                  </span>
+                {% endif %}
+                <span
+                  class="font-bold leading-tight text-right text-xl min-w-0 truncate
+                         {% if item.color_theme %}text-{{ item.color_theme }}{% endif %}
+                         text-[clamp(1.375rem,6vw,1.875rem)]"  {# ~22→30px #}
+                >
+                  ${{ item.new_price }}/month
+                </span>
+              </div>
+
+              {% if item.additional_description %}
+                <div
+                  class="text-sm font-semibold
+                         {% if item.color_theme %}text-{{ item.color_theme }}{% endif %}"
+                >
+                  {{ item.additional_description }}
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- promos -->
+            {% if item.promo_list %}
+              <ul class="space-y-2 mb-6 text-sm">
+                {% for promo in item.promo_list %}
+                  <li class="flex items-center text-gray-600">
+                    <svg class="w-4 h-4 text-green-500 mr-2" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    {{ promo }}
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+
+            <!-- CTA -->
+            <div class="text-center">
+              <div
+                class="text-sm font-semibold mb-3
+                       {% if item.color_theme %}text-{{ item.color_theme }}{% endif %}"
+              >
+                ⏰
+                {% if item.expires_in_days != None %}
+                  Expires in {{ item.expires_in_days }} days
+                {% else %}
+                  Limited time
+                {% endif %}
+              </div>
+
+              <a
+                href="{{ item.resolve_url }}"
+                class="block text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200
+                       {% if item.color_theme %}bg-{{ item.color_theme }}{% else %}bg-red-600 hover:bg-red-700{% endif %}"
+              >
+                {{ item.button_text|default:"Claim This Deal" }}
+              </a>
+            </div>
+          </div>
+
+          <!-- sale badge ВНЕ карточки, выступает за край -->
+          <div
+            class="absolute -top-4 -right-4 z-10 text-white rounded-full w-20 h-20 flex items-center justify-center transform rotate-12
+                   {% if item.color_theme %}bg-{{ item.color_theme }}{% endif %}"
+            style="{% if not item.color_theme %}background-color:#ef4444;{% endif %}"
+            aria-label="{{ item.badge_text }} {{ item.badge_percent }}%"
+          >
+            <div class="text-center leading-none">
+              <div class="text-sm font-bold">{{ item.badge_text }}</div>
+              <div class="text-lg font-bold">{{ item.badge_percent }}%</div>
+            </div>
+          </div>
+
+        </div>
+
+      {% empty %}
+        <p class="italic opacity-70">Нет активных предложений.</p>
+      {% endfor %}
+    </div>
+
+   
+    {% include 'csm/components/BottomCTASection.html' %}
+
+  </div>
+</section>
