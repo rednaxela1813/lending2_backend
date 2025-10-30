@@ -1,6 +1,6 @@
-# properties/tests/test_models.py
+# apps/properties/tests/test_models.py
 import pytest
-from properties.models import Property, PropertyType, PropertyImage
+from apps.properties.models.property import Property, PropertyType, PropertyImage
 from django.test import override_settings
 import os
 from PIL import Image

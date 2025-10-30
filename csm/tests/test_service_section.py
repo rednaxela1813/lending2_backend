@@ -2,7 +2,7 @@
 import pytest
 from django.urls import reverse
 from csm.models import ServiceSection
-from properties.models import PropertyType
+from apps.properties.models import PropertyType
 
 pytestmark = pytest.mark.django_db
 

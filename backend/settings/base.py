@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'csm',
     'core',
     
-    'properties',
+    'apps.properties',
     'orders',
     'dashboard',
     'apps.contact_messages',
