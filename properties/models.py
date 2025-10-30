@@ -5,6 +5,7 @@ from django.utils.html import format_html
 import os
 from PIL import Image
 from django.urls import reverse
+from apps.core_images.mixins import ImageOptimizationMixin
 
 
 
@@ -57,10 +58,14 @@ class Property(models.Model):
     
     
 
-class PropertyImage(models.Model):
+class PropertyImage(ImageOptimizationMixin, models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='property_images/')
     description = models.CharField(max_length=255, blank=True)
+    
+    IMAGE_FIELDS = ("image",)
+    IMAGE_OPT_KWARGS = dict(max_w=1600, max_h=1200, target_format="WEBP", quality=80, only_downscale=True)
+
 
     def __str__(self):
         return f"Изображение для {self.property.name}"
@@ -72,37 +77,8 @@ class PropertyImage(models.Model):
                 self.image.url
             )
         return "(нет изображения)"
-    preview.short_description = "Превью"
-    #preview.allow_tags = True  # Django < 2.0 не нужен в >=2.0
-
-    def save(self, *args, **kwargs):
-        # Сначала сохраняем оригинал (чтобы файл появился на диске)
-        super().save(*args, **kwargs)
-
-        # Путь к файлу изображения
-        img_path = self.image.path
-        img = Image.open(img_path)
-
-        # 💡 Уменьшаем изображение, если оно слишком большое
-        max_size = (1600, 1200)
-        img.thumbnail(max_size, Image.LANCZOS)
-
-        # 💡 Конвертируем в WebP
-        webp_path = os.path.splitext(img_path)[0] + '.webp'
-        img.save(webp_path, 'WEBP', quality=80)  # quality=80 – баланс вес/качество
-
-        # ❗ Удаляем оригинальный файл
-        if img_path != webp_path and os.path.exists(img_path):
-            os.remove(img_path)
-
-        # Меняем имя файла в поле image (чтобы оно указывало на .webp)
-        self.image.name = os.path.splitext(self.image.name)[0] + '.webp'
-
-        # Сохраняем снова, чтобы обновить путь к файлу в БД
-        super().save(update_fields=['image'])
-
-
-# properties/models.py
+    preview.short_description = "Preview"
+    
 
 class OfficeUnit(models.Model):
     STATUS_CHOICES = [
@@ -133,7 +109,7 @@ class OfficeUnit(models.Model):
 
 # properties/models.py
 
-class OfficeUnitImage(models.Model):
+class OfficeUnitImage(ImageOptimizationMixin, models.Model):
     office_unit = models.ForeignKey(
         'OfficeUnit',
         on_delete=models.CASCADE,
@@ -145,35 +121,17 @@ class OfficeUnitImage(models.Model):
     def __str__(self):
         return f"Obrázok kancelárie {self.office_unit}"
 
+    IMAGE_FIELDS = ("image",)
+    IMAGE_OPT_KWARGS = dict(max_w=1600, max_h=1200, target_format="WEBP", quality=80, only_downscale=True)
+    
     def preview(self):
         if self.image:
             return format_html(
                 '<img src="{}" style="max-height: 100px; border-radius: 8px; box-shadow: 0 0 5px #ccc;" />',
                 self.image.url
             )
-        return "(bez obrázka)"
-
-    preview.short_description = "Náhľad"
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-        img_path = self.image.path
-        img = Image.open(img_path)
-
-        # Уменьшаем изображение
-        max_size = (1600, 1200)
-        img.thumbnail(max_size, Image.LANCZOS)
-
-        # Сохраняем как webp
-        webp_path = os.path.splitext(img_path)[0] + '.webp'
-        img.save(webp_path, 'WEBP', quality=80)
-
-        if img_path != webp_path and os.path.exists(img_path):
-            os.remove(img_path)
-
-        self.image.name = os.path.splitext(self.image.name)[0] + '.webp'
-        super().save(update_fields=['image'])
+        return "(нет изображения)"
+    preview.short_description = "Preview"
 
 
 

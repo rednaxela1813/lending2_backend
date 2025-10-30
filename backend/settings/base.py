@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'orders',
     'dashboard',
     'apps.contact_messages',
+    "apps.core_images",
 ]
 
 TAILWIND_APP_NAME = 'theme'
