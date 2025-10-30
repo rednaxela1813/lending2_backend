@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, FrontendTheme, ServiceSection, CarouselImage, HotDealItem, HotDealSection, Icon, BottomCTASection
-from properties.models import Property
+from apps.properties.models import Property
 from datetime import datetime
 from django.utils import timezone
 import pytz

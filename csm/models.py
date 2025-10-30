@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from properties.models import PropertyType
+from apps.properties.models import PropertyType
 import uuid
 from django.urls import NoReverseMatch
 from django.core.validators import MinValueValidator, MaxValueValidator
