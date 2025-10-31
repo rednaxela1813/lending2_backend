@@ -1,0 +1,62 @@
+{% extends "dashboard/base/layout.html" %}
+{% block title %}Image{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">
+  {% if object %}Edit Image{% else %}Upload Image{% endif %}
+</h1>
+
+<form method="post" enctype="multipart/form-data" class="bg-white rounded-xl shadow p-6 space-y-4">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+
+  <div>
+    <label class="block text-sm font-medium">Key</label>
+    {{ form.key }}
+    {{ form.key.errors }}
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-sm font-medium">Language</label>
+      {{ form.language }}
+      {{ form.language.errors }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Image</label>
+      {{ form.image }}
+      {{ form.image.errors }}
+      {% if object and object.image %}
+        <div class="mt-2">
+          <img src="{{ object.image.url }}" class="h-28 rounded border">
+        </div>
+      {% endif %}
+      <p class="text-xs text-gray-500 mt-1">
+        При сохранении изображение будет оптимизировано (WEBP/JPEG, downscale, quality).
+      </p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-sm font-medium">Alt</label>
+      {{ form.alt }}
+      {{ form.alt.errors }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Caption</label>
+      {{ form.caption }}
+      {{ form.caption.errors }}
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2">
+    {{ form.is_active }}
+    <label>Active</label>
+  </div>
+
+  <div class="flex gap-3">
+    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg">Save</button>
+    <a href="{% url 'dashboard:image_list' %}" class="px-4 py-2 border rounded-lg">Cancel</a>
+  </div>
+</form>
+{% endblock %}

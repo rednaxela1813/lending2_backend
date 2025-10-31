@@ -1,0 +1,55 @@
+{% extends "dashboard/base/layout.html" %}
+{% block title %}Images{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <h1 class="text-2xl font-bold">Images</h1>
+  <a href="{% url 'dashboard:image_create' %}" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Upload</a>
+</div>
+
+<form method="get" class="mb-4 flex gap-2">
+  <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search…" class="border rounded-lg px-3 py-2 w-full">
+  <select name="lang" class="border rounded-lg px-3 py-2">
+    <option value="">All languages</option>
+    <option value="sk" {% if request.GET.lang == "sk" %}selected{% endif %}>sk</option>
+    <option value="en" {% if request.GET.lang == "en" %}selected{% endif %}>en</option>
+    <option value="ru" {% if request.GET.lang == "ru" %}selected{% endif %}>ru</option>
+  </select>
+  <button class="px-4 py-2 bg-gray-800 text-white rounded-lg">Filter</button>
+</form>
+
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  {% for obj in object_list %}
+  <div class="bg-white rounded-xl shadow overflow-hidden">
+    <div class="aspect-video bg-gray-100 flex items-center justify-center">
+      {% if obj.image %}
+        <img src="{{ obj.image.url }}" alt="" class="max-h-52 object-contain">
+      {% else %}
+        <span class="text-gray-400">No image</span>
+      {% endif %}
+    </div>
+    <div class="p-4 text-sm">
+      <div class="font-mono">{{ obj.key }}</div>
+      <div class="text-gray-500">lang: {{ obj.language }} · updated: {{ obj.updated_at|date:"Y-m-d H:i" }}</div>
+      <div class="mt-2 flex justify-end gap-3">
+        <a class="text-blue-600 hover:underline" href="{% url 'dashboard:image_update' obj.pk %}">Edit</a>
+        <a class="text-red-600 hover:underline" href="{% url 'dashboard:image_delete' obj.pk %}">Delete</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+    <div class="text-gray-500">No items</div>
+  {% endfor %}
+</div>
+
+{% if is_paginated %}
+<div class="mt-4 flex gap-2">
+  {% if page_obj.has_previous %}
+    <a class="px-3 py-1 border rounded" href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&lang={{ request.GET.lang }}">Prev</a>
+  {% endif %}
+  <span class="px-3 py-1">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}
+    <a class="px-3 py-1 border rounded" href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&lang={{ request.GET.lang }}">Next</a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

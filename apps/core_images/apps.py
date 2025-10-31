@@ -1,3 +1,4 @@
+# apps/core_images/apps.py
 from django.apps import AppConfig
 
 class CoreImagesConfig(AppConfig):

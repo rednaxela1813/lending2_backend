@@ -1,3 +1,4 @@
+# apps/core_images/management/commands/optimize_images.py
 from django.core.management.base import BaseCommand
 from django.apps import apps
 from apps.core_images.mixins import ImageOptimizationMixin

@@ -1,3 +1,4 @@
+# apps/core_images/mixins.py
 import os
 from django.db import models
 from apps.core_images.utils import optimize_image_file
