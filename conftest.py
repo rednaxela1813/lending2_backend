@@ -42,3 +42,10 @@ def client():
 def enable_db_access_for_all_tests(db):
     # Даем доступ к БД всем тестам без явного @pytest.mark.django_db
     pass
+
+
+# ⬇️ ДОПОЛНИМ: добавим properties-фикстуры к уже существующему подключению accounting
+pytest_plugins = [
+    "accounting.tests.conftest",
+    "apps.properties.tests.conftest",
+]

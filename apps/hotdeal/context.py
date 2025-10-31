@@ -1,79 +1,56 @@
 # apps/hotdeal/context.py
 from datetime import date
 from typing import List, Dict, Any
-
 from apps.hotdeal.models import HotDealItem
 
-
 def build_hot_deal_items() -> List[Dict[str, Any]]:
-    """
-    Готовит список словарей под шаблон HotDealsSection.html.
-    Берём только активные элементы в активных секциях,
-    тянем связанные property/section одним запросом.
-    """
     items: List[Dict[str, Any]] = []
     qs = (
         HotDealItem.objects
         .filter(is_active=True, section__is_active=True)
-        .select_related("property", "section")
+        .select_related("property", "section", "property__type", "icon")  # ⬅️ важно
         .order_by("section__order", "order", "id")
     )
 
     today = date.today()
 
     for item in qs:
-        p = item.property  # apps.properties.models.Property
-        # Тут можно из Property/Type вытянуть иконку/цвет/промо и т.п.
-        # Ставим разумные фолбэки, чтобы шаблон не падал.
+        p = item.property
+
+        # 1) приоритет — иконка из HotDealItem.icon.svg_inline
         icon = None
-        if getattr(p.type, "icon_svg", None):
+        if getattr(item, "icon", None) and getattr(item.icon, "svg_inline", None):
+            icon = {
+                "svg_inline": item.icon.svg_inline,
+                "label": getattr(item.icon, "name", "") or "",
+            }
+        # 2) фолбэк — иконка из типа Property (если задана)
+        elif getattr(p.type, "icon_svg", None):
             icon = {"svg_inline": p.type.icon_svg, "label": p.type.name}
-        # color_theme — если у тебя хранится в БД; иначе None
-        color_theme = getattr(p, "color_theme", None)
 
-        # Пример «акции до даты»: если захочешь — добавь поле date_expiry в HotDealItem
-        expires_in_days = None
-        if hasattr(item, "date_expiry") and item.date_expiry:
-            expires_in_days = (item.date_expiry - today).days
+        description = (
+            (item.additional_description or "").strip()
+            or (getattr(p, "summary", "") or "").strip()
+            or (getattr(p, "description", "") or "").strip()
+        )
 
-        # Промо-пункты: если пока нет — отдай пустой список
-        promo_list = []
-        if hasattr(item, "promo_list") and item.promo_list:
-            promo_list = [x for x in item.promo_list if x]  # если это массив в JSON
-        else:
-            # можно собрать из Property.list_details (если это список строк)
-            if isinstance(getattr(p, "list_details", None), list):
-                promo_list = [str(x) for x in p.list_details][:4]
+        promo_list = [x for x in [item.promo_1, item.promo_2, item.promo_3, item.promo_4] if x]
+        expires_in_days = (item.date_expiry - today).days if item.date_expiry else None
 
         items.append({
-            # иконка для блока в шаблоне
-            "icon": icon,
-
-            # заголовок/описание/цены
+            "icon": icon,                                   # ⬅️ передаём dict с svg_inline
             "title": item.title or p.name,
-            "description": item.description or (p.summary or p.description[:160] if p.description else ""),
+            "description": description,
             "old_price": item.old_price,
             "new_price": item.new_price,
-
-            # доп. текст под ценой
-            "additional_description": getattr(item, "additional_description", ""),
-
-            # промо-пули (маркированный список)
+            "additional_description": item.additional_description or "",
             "promo_list": promo_list,
-
-            # визуальная тема (если используешь динамику — см. Tailwind замечание ниже)
-            "color_theme": color_theme,  # например "red-600" → text-red-600/bg-red-600
-
-            # бейдж «скидка»
+            "color_theme": item.color_theme,
             "badge_text": item.badge_text or "SALE",
             "badge_percent": item.badge_percent or 10,
-
-            # истечение
             "expires_in_days": expires_in_days,
-
-            # кнопка
-            "button_text": "Подробнее",
-            "resolve_url": p.get_absolute_url(),
+            "button_text": item.button_text or "Zanechajte žiadosť",
+            "resolve_url": getattr(item, "resolve_url", lambda: "#contact")(),
         })
 
     return items

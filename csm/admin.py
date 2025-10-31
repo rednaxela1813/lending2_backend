@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo,  FrontendTheme, ServiceSection, CarouselImage, HotDealItem, HotDealSection, Icon, BottomCTASection
+from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo,  FrontendTheme, ServiceSection, CarouselImage, Icon, BottomCTASection
 from .forms import  FrontendThemeForm
 from django import forms
 from django.contrib.admin.widgets import AdminDateWidget
@@ -39,8 +39,6 @@ class ServiceSectionAdmin(admin.ModelAdmin):
 admin.site.register(FooterInfo)
 admin.site.register(CompanyInfo)
 admin.site.register(CarouselImage)
-admin.site.register(HotDealItem)
-admin.site.register(HotDealSection)
 admin.site.register(Icon)
 admin.site.register(BottomCTASection)
 
