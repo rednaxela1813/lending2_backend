@@ -1,3 +1,4 @@
+# accounting/tests/test_auth_views.py
 import pytest
 from django.urls import reverse
 from django.test import override_settings

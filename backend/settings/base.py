@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     
     'apps.properties',
     'orders',
-    'dashboard',
+    'apps.dashboard',
     'apps.contact_messages',
     "apps.core_images",
     "apps.hotdeal",
@@ -69,6 +69,8 @@ MIDDLEWARE = [
     
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+MIDDLEWARE += ["apps.dashboard.middleware.DashboardCompanyMiddleware"]
 
 
 ROOT_URLCONF = 'backend.urls'

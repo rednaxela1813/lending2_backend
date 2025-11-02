@@ -3,6 +3,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.contrib.auth.views import LogoutView
+from accounting.views import ResolvingLoginView
 
 
 urlpatterns = [
@@ -15,8 +17,15 @@ urlpatterns = [
  
     #path("__reload__/", include("django_browser_reload.urls")),
     # path('api/csm/', include([...]))
+    
+    # стандартные auth-URL (дадут password_reset и др.)
     path("accounts/", include("django.contrib.auth.urls")),
-    path("dashboard/", include("dashboard.urls", namespace="dashboard")),
+    
+    # кастомный login/logout
+    path("accounts/login/", ResolvingLoginView.as_view(), name="login"),
+    path("accounts/logout/", LogoutView.as_view(), name="logout"),
+    
+    path("dashboard/", include("apps.dashboard.urls", namespace="dashboard")),
     path("api/", include("orders.urls")),
     path("", include("apps.contact_messages.urls")),
     path(

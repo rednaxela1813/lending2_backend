@@ -1,3 +1,4 @@
+# dashboard/tests/test_dashboard.py
 import pytest
 from django.urls import reverse
 

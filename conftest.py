@@ -47,5 +47,5 @@ def enable_db_access_for_all_tests(db):
 # ⬇️ ДОПОЛНИМ: добавим properties-фикстуры к уже существующему подключению accounting
 pytest_plugins = [
     "accounting.tests.conftest",
-    "apps.properties.tests.conftest",
+   # "apps.properties.tests.conftest",
 ]

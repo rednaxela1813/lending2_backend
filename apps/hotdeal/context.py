@@ -1,45 +1,53 @@
-# apps/hotdeal/context.py
 from datetime import date
-from typing import List, Dict, Any
+from django.db import models
+from django.db.models import Q
+from typing import List, Dict, Any, Optional
 from apps.hotdeal.models import HotDealItem
+from accounting.models import Company
 
-def build_hot_deal_items() -> List[Dict[str, Any]]:
+
+def build_hot_deal_items(*, company: Optional["Company"] = None) -> List[Dict[str, Any]]:
+    """
+    company = None → показываем только глобальные (company IS NULL)
+    company = X   → показываем (company=X) И глобальные (company IS NULL)
+    """
     items: List[Dict[str, Any]] = []
     qs = (
-        HotDealItem.objects
-        .filter(is_active=True, section__is_active=True)
-        .select_related("property", "section", "property__type", "icon")  # ⬅️ важно
-        .order_by("section__order", "order", "id")
-    )
+    HotDealItem.objects
+    .filter(is_active=True, section__is_active=True)
+    .select_related("property", "section", "property__type")
+    .order_by("section__order", "id")  # убрали "order"
+)
+
+    if company is None:
+        qs = qs.filter(company__isnull=True)
+    else:
+        qs = qs.filter(Q(company=company) | Q(company__isnull=True))  # ← вот тут просто Q
 
     today = date.today()
 
     for item in qs:
         p = item.property
 
-        # 1) приоритет — иконка из HotDealItem.icon.svg_inline
-        icon = None
+        # приоритет: item.icon.svg_inline → fallback: p.type.icon_svg
+        svg_inline = None
         if getattr(item, "icon", None) and getattr(item.icon, "svg_inline", None):
-            icon = {
-                "svg_inline": item.icon.svg_inline,
-                "label": getattr(item.icon, "name", "") or "",
-            }
-        # 2) фолбэк — иконка из типа Property (если задана)
-        elif getattr(p.type, "icon_svg", None):
-            icon = {"svg_inline": p.type.icon_svg, "label": p.type.name}
+            svg_inline = item.icon.svg_inline
+        elif getattr(getattr(p, "type", None), "icon_svg", None):
+            svg_inline = p.type.icon_svg
+
+        icon = {"svg_inline": svg_inline, "label": getattr(p.type, "name", "")} if svg_inline else None
 
         description = (
-            (item.additional_description or "").strip()
-            or (getattr(p, "summary", "") or "").strip()
-            or (getattr(p, "description", "") or "").strip()
+            (getattr(p, "summary", "") or "").strip()
+              or (getattr(p, "description", "") or "").strip()
         )
-
         promo_list = [x for x in [item.promo_1, item.promo_2, item.promo_3, item.promo_4] if x]
         expires_in_days = (item.date_expiry - today).days if item.date_expiry else None
 
         items.append({
-            "icon": icon,                                   # ⬅️ передаём dict с svg_inline
-            "title": item.title or p.name,
+            "icon": icon,
+            "title": item.title or getattr(p, "name", ""),
             "description": description,
             "old_price": item.old_price,
             "new_price": item.new_price,

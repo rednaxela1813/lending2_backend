@@ -10,6 +10,5 @@ class HotDealSectionAdmin(admin.ModelAdmin):
 
 @admin.register(HotDealItem)
 class HotDealItemAdmin(admin.ModelAdmin):
-    list_display = ("property","section","is_active","order")
-    list_editable = ("section","is_active","order")
-    search_fields = ("property__name",)
+    list_display = ("section", "property", "is_active")
+    list_editable = ("is_active",)

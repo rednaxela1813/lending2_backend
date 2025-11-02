@@ -1,3 +1,4 @@
+# accounting/tests/test_user_model.py
 import pytest
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError, transaction
