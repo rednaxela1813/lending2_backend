@@ -4,8 +4,8 @@ from .models import HotDealSection, HotDealItem
 
 @admin.register(HotDealSection)
 class HotDealSectionAdmin(admin.ModelAdmin):
-    list_display = ("name","is_active","order")
-    list_editable = ("is_active","order")
+    list_display = ("title", "additional_description", "description")
+    list_editable = ("additional_description", "description")
     
 
 @admin.register(HotDealItem)

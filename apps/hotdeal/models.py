@@ -10,14 +10,15 @@ import builtins
 
 
 class HotDealSection(models.Model):
-    name = models.CharField(max_length=255)
-    is_active = models.BooleanField(default=True)
-    order = models.PositiveIntegerField(default=0)
+    title = models.CharField(max_length=255)
+    additional_description = models.TextField(blank=True, default="")
+    description = models.TextField(blank=True, default="")
+    
     class Meta:
-        ordering = ("order","id")
-    def __str__(self): return self.name
-    
-    
+        ordering = ("id",)
+    def __str__(self): return self.title
+
+
 
 class HotDealItem(models.Model):
     section = models.ForeignKey("HotDealSection", on_delete=models.CASCADE)
