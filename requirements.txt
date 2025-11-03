@@ -73,3 +73,4 @@ typing_extensions==4.13.1
 urllib3==2.3.0
 wagtail==7.0.2
 Willow==1.11.0
+django-jazzmin==3.0.1

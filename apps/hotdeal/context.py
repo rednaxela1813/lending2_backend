@@ -14,9 +14,8 @@ def build_hot_deal_items(*, company: Optional["Company"] = None) -> List[Dict[st
     items: List[Dict[str, Any]] = []
     qs = (
     HotDealItem.objects
-    .filter(is_active=True, section__is_active=True)
-    .select_related("property", "section", "property__type")
-    .order_by("section__order", "id")  # убрали "order"
+    .filter(is_active=True)
+    
 )
 
     if company is None:

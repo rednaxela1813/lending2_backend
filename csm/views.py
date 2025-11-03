@@ -100,7 +100,7 @@ def homepage(request):
     _assign_missing_icons_round_robin()
 
     # Заголовок секции (один объект)
-    hot_deal_section = HotDealSection.objects.filter(is_active=True).order_by("order", "id").first()
+    hot_deal_section = HotDealSection.objects.first()
 
     # КАРТОЧКИ: используем билдер, чтобы структура соответствовала шаблону
     hot_deal_items = build_hot_deal_items()
