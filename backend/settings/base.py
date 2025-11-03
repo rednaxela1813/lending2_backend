@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     
     'apps.properties',
     'orders',
+    'apps.company',
     'apps.dashboard',
     'apps.contact_messages',
     "apps.core_images",

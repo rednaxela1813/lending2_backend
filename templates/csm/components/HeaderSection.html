@@ -25,7 +25,7 @@
                 </a>
                 <div class="relative group">
                     <button class="text-gray-600 hover:text-blue-600 px-3 py-2  font-medium transition-colors duration-200 flex items-center">
-                        Services
+                        {{ header_section.nav_services |default:"Services" }}
                         <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
@@ -37,38 +37,38 @@
                                 <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                                 </svg>
-                                Office Spaces
+                                {{ nas_sluzby.0.title |default:"Office Spaces"}}
                             </a>
                             <a href="#billboards" class="flex items-center px-4 py-2  text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                 <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 4v10a2 2 0 002 2h6a2 2 0 002-2V8M7 8H5a2 2 0 00-2 2v10a2 2 0 002 2h2M17 8h2a2 2 0 012 2v10a2 2 0 01-2 2h-2"></path>
                                 </svg>
-                                Billboard Advertising
+                                {{ nas_sluzby.1.title |default:"Billboard Advertising"}}
                             </a>
                             <a href="#legal-address" class="flex items-center px-4 py-2  text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                 <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
-                                Legal Addresses
+                                {{ nas_sluzby.2.title |default:"Legal Addresses"}}
                             </a>
                         </div>
                     </div>
                 </div>
                 <a href="#about" class="text-gray-600 hover:text-blue-600 px-3 py-2  font-medium transition-colors duration-200">
-                    About
+                    {{  header_section.nav_about |default:"About"  }}
                 </a>
                 <a href="#contact" class="text-gray-600 hover:text-blue-600 px-3 py-2  font-medium transition-colors duration-200">
-                    Contact
+                    {{header_section.nav_contact |default:"Contact" }}
                 </a>
             </nav>
 
             <!-- CTA Button -->
             <div class="hidden md:flex items-center space-x-4">
-                <a href="tel:+1234567890" class="text-blue-600 hover:text-blue-700 font-medium">
+                <a href="tel:{{ company_info.phone|default:'(123) 456-7890' }}" class="text-blue-600 hover:text-blue-700 font-medium">
                     {{ company_info.phone|default:"(123) 456-7890" }}
                 </a>
                 <a href="#quote" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg  font-medium transition-colors duration-200">
-                    Get Quote
+                    {{ header_section.button_text |default:"Get Quote" }}
                 </a>
             </div>
 

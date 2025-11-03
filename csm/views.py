@@ -9,9 +9,9 @@ from django.urls import reverse
 from django.views.generic import ListView, TemplateView
 from django.contrib import messages
 from django.db.models import Q, Prefetch
-
+from apps.company.models import CompanyInfo, FooterInfo
 from .models import (
-    HeroSection, HeaderSection, FooterInfo, CompanyInfo, FrontendTheme,
+    HeroSection, HeaderSection, FrontendTheme,
     ServiceSection, CarouselImage, Icon, BottomCTASection,
 )
 from apps.properties.models import Property
@@ -68,7 +68,7 @@ class HotDealsPageView(TemplateView):
 def homepage(request):
     hero_section = HeroSection.objects.first()
     header_section = HeaderSection.objects.first()
-    footer_info = FooterInfo.objects.first()
+    footer_info = FooterInfo.objects.select_related('company').first()
     company_info = CompanyInfo.objects.first()
     theme_color = FrontendTheme.objects.filter(is_active=True).first()
     nas_sluzby = ServiceSection.objects.prefetch_related('icon_svg').all()
@@ -106,6 +106,8 @@ def homepage(request):
     hot_deal_items = build_hot_deal_items()
 
     bottom_cta_section = BottomCTASection.objects.first()
+
+    
 
     context = {
         'hero_section': hero_section,

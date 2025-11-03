@@ -1,6 +1,7 @@
 {% extends "csm/base.html" %}
 
 {% load static %}
+{% load opening_hours %}
 {% block title %}RentSpace Pro - Premium Office Spaces, Billboards & Legal Addresses{% endblock title %}
 
 {% block meta_description %}Professional office spaces, billboard advertising, and legal addresses for rent. Premium locations at competitive rates in prime business districts.{% endblock meta_description %}
@@ -18,7 +19,7 @@
 {% include 'csm/components/HotDealsSection.html' %}
 
 
-{% include 'csm/components/ServicesSection.html' %}
+<!-- {% include 'csm/components/ServicesSection.html' %} -->
 
 <!-- Stats Section -->
 <section class="py-16 bg-blue-600">
@@ -145,7 +146,7 @@
               </div>
               <div>
                 <h4 class="text-lg font-semibold text-gray-900">Office Location</h4>
-                <p class="text-gray-600">123 Business Ave, Suite 100<br>New York, NY 10001</p>
+                <p class="text-gray-600">{{ footer_info.contact_address }}</p>
               </div>
             </div>
 
@@ -158,7 +159,7 @@
               </div>
               <div>
                 <h4 class="text-lg font-semibold text-gray-900">Phone</h4>
-                <p class="text-gray-600">(123) 456-7890</p>
+                <p class="text-gray-600">{{ footer_info.contact_phone }}</p>
               </div>
             </div>
 
@@ -171,7 +172,7 @@
               </div>
               <div>
                 <h4 class="text-lg font-semibold text-gray-900">Email</h4>
-                <p class="text-gray-600">info@rentspacepro.com</p>
+                <p class="text-gray-600">{{ footer_info.contact_email }}</p>
               </div>
             </div>
 
@@ -183,9 +184,60 @@
                 </svg>
               </div>
               <div>
-                <h4 class="text-lg font-semibold text-gray-900">Business Hours</h4>
-                <p class="text-gray-600">Monday - Friday: 9AM - 6PM<br>Saturday: 10AM - 4PM<br>Sunday: Closed</p>
-              </div>
+  <h4 class="text-lg font-semibold text-gray-900">Business Hours</h4>
+
+  {% if company_info and company_info.opening_hours.exists %}
+    {% regroup company_info.opening_hours.all by weekday as hours_by_day %}
+    <ul class="mt-2 space-y-1 text-sm">
+      {% for group in hours_by_day %}
+        <li class="flex justify-between">
+          <span class="text-gray-600">
+            {{ group.list.0.get_weekday_display }}
+          </span>
+          <span class="font-medium text-gray-900">
+            {% for oh in group.list %}
+              {{ oh.start_time|time:"H:i" }}–{{ oh.end_time|time:"H:i" }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-gray-600">
+      Monday - Friday: 9AM - 6PM<br>
+      Saturday: 10AM - 4PM<br>
+      Sunday: Closed
+    </p>
+  {% endif %}
+
+  {% if company_info %}
+    {% with specials=upcoming_specials|default:company_info.special_openings.all %}
+      {% if specials %}
+        <div class="mt-4">
+          <h5 class="text-sm font-semibold text-gray-900">Exceptions / Holidays</h5>
+          <ul class="mt-2 space-y-1 text-sm">
+            {% for s in specials|slice:":7" %}
+              <li class="flex justify-between items-start">
+                <span class="{% if s.is_closed %}text-red-600{% else %}text-gray-600{% endif %}">
+                  {{ s.date|date:"d.M.Y" }}{% if s.note %} — {{ s.note }}{% endif %}
+                </span>
+                <span class="font-medium">
+                  {% if s.is_closed %}
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-red-100 text-red-700">Closed</span>
+                  {% else %}
+                    <span class="text-gray-900">{{ s.start_time|time:"H:i" }}–{{ s.end_time|time:"H:i" }}</span>
+                  {% endif %}
+                </span>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    {% endwith %}
+  {% endif %}
+</div>
+
+
             </div>
 
           </div>

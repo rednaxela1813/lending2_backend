@@ -1,4 +1,4 @@
-from .models import CompanyInfo
+from apps.company.models import CompanyInfo
 
 def company_info(request):
     try:
