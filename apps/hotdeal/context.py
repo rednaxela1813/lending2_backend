@@ -1,63 +1,68 @@
+# apps/hotdeal/context.py
 from datetime import date
-from django.db import models
-from django.db.models import Q
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
+from django.urls import reverse
 from apps.hotdeal.models import HotDealItem
-from accounting.models import Company
 
 
-def build_hot_deal_items(*, company: Optional["Company"] = None) -> List[Dict[str, Any]]:
-    """
-    company = None → показываем только глобальные (company IS NULL)
-    company = X   → показываем (company=X) И глобальные (company IS NULL)
-    """
+def build_hot_deal_items() -> List[Dict[str, Any]]:
+    """Возвращает список активных карточек HotDealItem для сайта."""
     items: List[Dict[str, Any]] = []
-    qs = (
-    HotDealItem.objects
-    .filter(is_active=True)
-    
-)
 
-    if company is None:
-        qs = qs.filter(company__isnull=True)
-    else:
-        qs = qs.filter(Q(company=company) | Q(company__isnull=True))  # ← вот тут просто Q
+    qs = (
+        HotDealItem.objects
+        .filter(is_active=True)
+        .order_by("id")
+    )
 
     today = date.today()
 
     for item in qs:
-        p = item.property
+        icon = None
+        if getattr(item, "icon_svg", None):
+            icon = {
+                "svg_inline": item.icon_svg,
+                "label": getattr(item, "icon_label", "") or ""
+            }
 
-        # приоритет: item.icon.svg_inline → fallback: p.type.icon_svg
-        svg_inline = None
-        if getattr(item, "icon", None) and getattr(item.icon, "svg_inline", None):
-            svg_inline = item.icon.svg_inline
-        elif getattr(getattr(p, "type", None), "icon_svg", None):
-            svg_inline = p.type.icon_svg
+        promo_list = [
+            x for x in [
+                getattr(item, "promo_1", None),
+                getattr(item, "promo_2", None),
+                getattr(item, "promo_3", None),
+                getattr(item, "promo_4", None),
+            ] if x
+        ]
 
-        icon = {"svg_inline": svg_inline, "label": getattr(p.type, "name", "")} if svg_inline else None
+        expires_in_days = (item.date_expiry - today).days if getattr(item, "date_expiry", None) else None
 
-        description = (
-            (getattr(p, "summary", "") or "").strip()
-              or (getattr(p, "description", "") or "").strip()
-        )
-        promo_list = [x for x in [item.promo_1, item.promo_2, item.promo_3, item.promo_4] if x]
-        expires_in_days = (item.date_expiry - today).days if item.date_expiry else None
+        try:
+            detail_url = reverse("hotdeal:detail", args=[item.public_id])
+        except Exception:
+            co = getattr(item, "content_object", None)
+            if co and hasattr(co, "resolve_url"):
+                try:
+                    detail_url = co.resolve_url() or "#contact"
+                except Exception:
+                    detail_url = "#contact"
+            else:
+                detail_url = "#contact"
 
         items.append({
+            "public_id": item.public_id,
             "icon": icon,
-            "title": item.title or getattr(p, "name", ""),
-            "description": description,
-            "old_price": item.old_price,
-            "new_price": item.new_price,
-            "additional_description": item.additional_description or "",
+            "title": item.title,
+            "description": (item.description or "").strip(),
+            "old_price": getattr(item, "old_price", None),
+            "new_price": getattr(item, "new_price", None),
+            "additional_description": getattr(item, "additional_description", "") or "",
             "promo_list": promo_list,
-            "color_theme": item.color_theme,
-            "badge_text": item.badge_text or "SALE",
-            "badge_percent": item.badge_percent or 10,
+            "color_theme": getattr(item, "color_theme", ""),
+            "badge_text": getattr(item, "badge_text", "") or "SALE",
+            "badge_percent": getattr(item, "badge_percent", None) or 10,
             "expires_in_days": expires_in_days,
-            "button_text": item.button_text or "Zanechajte žiadosť",
-            "resolve_url": getattr(item, "resolve_url", lambda: "#contact")(),
+            "button_text": getattr(item, "button_text", None) or "Zanechajte žiadosť",
+            "resolve_url": detail_url,
         })
 
     return items

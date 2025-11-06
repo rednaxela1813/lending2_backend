@@ -22,6 +22,32 @@
     {% block favicon %}
     <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
     {% endblock favicon %}
+
+    <script src="https://unpkg.com/htmx.org@1.9.12"
+        integrity="sha384-tIhKfaCFcz3AqfYwHOJ8DB5LQnPyeZ1ns/x3pKBu+EBE/1oELXVN9Ydkn0Gsp9QK"
+        crossorigin="anonymous"></script>
+
+<style>
+  /* Нежное появление/исчезновение блока */
+  .htmx-added {
+    opacity: 0;
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+  .htmx-swapping {
+    opacity: 1;
+    animation: fadeOut 0.3s ease-in forwards;
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  @keyframes fadeOut {
+    to { opacity: 0; }
+  }
+</style>
+<!-- HTMX -->
+<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+
+
 </head>
 
 <body class="{% block body_class %}bg-gray-50 text-gray-900 font-sans leading-normal tracking-normal{% endblock body_class %}">

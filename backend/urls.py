@@ -39,6 +39,8 @@ urlpatterns = [
         ),
         name="privacy_policy",
     ),
+    #path("", include("apps.hotdeal.urls", namespace="hotdeal")),
+    path("hot-deals/", include(("apps.hotdeal.urls", "hotdeal"), namespace="hotdeal")),
      
 ]
 

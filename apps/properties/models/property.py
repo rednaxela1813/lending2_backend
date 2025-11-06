@@ -18,6 +18,7 @@ class PropertyType(models.Model):
     name = models.CharField(max_length=100)
     icon_svg = models.TextField(blank=True)
     description = models.TextField(blank=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name

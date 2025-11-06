@@ -13,7 +13,7 @@ def section_active():
     return HotDealSection.objects.create(name="Main", is_active=True, order=1)
 
 def test_icon_priority_item_icon_over_property_type(section_active):
-    from apps.hotdeal.context import build_hot_deal_items
+    from pizzalino.backend.apps.hotdeal.context_old import build_hot_deal_items
     c = Company.objects.create(name="Z", slug="z")
 
     ptype = PropertyType.objects.create(name="Office", icon_svg="<svg>TYPE</svg>")
@@ -28,7 +28,7 @@ def test_icon_priority_item_icon_over_property_type(section_active):
     assert items[0]["icon"]["svg_inline"] == "<svg>ITEM</svg>"
 
 def test_icon_fallback_to_property_type(section_active):
-    from apps.hotdeal.context import build_hot_deal_items
+    from pizzalino.backend.apps.hotdeal.context_old import build_hot_deal_items
     c = Company.objects.create(name="Z", slug="z")
 
     ptype = PropertyType.objects.create(name="Office", icon_svg="<svg>TYPE</svg>")

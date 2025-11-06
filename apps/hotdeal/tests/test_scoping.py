@@ -24,7 +24,7 @@ def section_active():
     return HotDealSection.objects.create(name="Main", is_active=True)
 
 def test_hotdeal_scoped_by_company(section_active, prop_c1, prop_c2):
-    from apps.hotdeal.context import build_hot_deal_items
+    from pizzalino.backend.apps.hotdeal.context_old import build_hot_deal_items
     c1 = Company.objects.create(name="Zavodsky", slug="zv")
     c2 = Company.objects.create(name="Other", slug="ot")
 
