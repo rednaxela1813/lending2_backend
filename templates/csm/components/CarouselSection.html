@@ -1,189 +1,110 @@
+{% load static %}
 <!-- Photo Carousel Component -->
- {% load static %}
 <section class="relative bg-gray-900 overflow-hidden">
-    <div class="relative h-96 md:h-[500px] lg:h-[600px]">
-        <!-- Carousel Images -->
-        
-        <div class="carousel-container relative w-full h-full">
-            <!-- Image 1 -->
-             
-             {% for img in carousel_images %}
-            <div class="carousel-slide absolute inset-0 opacity-100 transition-opacity duration-1000 ease-in-out">
-                <a href="{{ img.image.url }} " class="sr-only">View all carousel images</a>
-                <div class="w-full h-full bg-gradient-to-r from-blue-900/80 to-transparent absolute z-10"></div>
-                <img src="{{ img.image.url }}" 
-                     alt="Modern office space with city view" 
-                     class="w-full h-full object-cover">
-                <div class="absolute inset-0 z-20 flex items-center">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="max-w-2xl">
-                            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">{{ img.title }}</h2>
-                            <p class="text-xl text-blue-100 mb-6">{{ img.description }}</p>
-                            <a href="#office-space" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200">
-                                {{ img.button_text }}
-                            </a>
-                        </div>
-                    </div>
-                </div>
+  <div class="relative h-96 md:h-[500px] lg:h-[600px]">
+    <div class="js-carousel relative w-full h-full" data-autoplay="3000">
+      {% for img in carousel_images %}
+        <div class="carousel__slide absolute inset-0 opacity-0 transition-opacity duration-700 ease-in-out" aria-hidden="true">
+          <a href="{{ img.image.url }}" class="sr-only">View all carousel images</a>
+          <div class="w-full h-full bg-gradient-to-r from-blue-900/80 to-transparent absolute z-10"></div>
+          <img src="{{ img.image.url }}" alt="{{ img.title|default:'carousel image' }}" class="w-full h-full object-cover" />
+          <div class="absolute inset-0 z-20 flex items-center">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="max-w-2xl">
+                {% if img.title %}<h2 class="text-4xl md:text-5xl font-bold text-white mb-4">{{ img.title }}</h2>{% endif %}
+                {% if img.description %}<p class="text-xl text-blue-100 mb-6">{{ img.description }}</p>{% endif %}
+                {% if img.button_text %}
+                  <a href="#office-space" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200">
+                    {{ img.button_text }}
+                  </a>
+                {% endif %}
+              </div>
             </div>
-            {% endfor %}
-
-            {% comment %} <!-- Image 2 -->
-            <div class="carousel-slide absolute inset-0 opacity-0 transition-opacity duration-1000 ease-in-out">
-                <div class="w-full h-full bg-gradient-to-r from-purple-900/80 to-transparent absolute z-10"></div>
-                <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
-                     alt="Billboard advertising in busy city street" 
-                     class="w-full h-full object-cover">
-                <div class="absolute inset-0 z-20 flex items-center">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="max-w-2xl">
-                            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">High-Impact Billboards</h2>
-                            <p class="text-xl text-purple-100 mb-6">Strategic advertising locations to maximize your brand visibility and customer reach.</p>
-                            <a href="#billboards" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200">
-                                View Locations
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Image 3 -->
-            <div class="carousel-slide absolute inset-0 opacity-0 transition-opacity duration-1000 ease-in-out">
-                <div class="w-full h-full bg-gradient-to-r from-green-900/80 to-transparent absolute z-10"></div>
-                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
-                     alt="Prestigious business building exterior" 
-                     class="w-full h-full object-cover">
-                <div class="absolute inset-0 z-20 flex items-center">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="max-w-2xl">
-                            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">Prestigious Legal Addresses</h2>
-                            <p class="text-xl text-green-100 mb-6">Professional business addresses for company registration and prestigious correspondence.</p>
-                            <a href="#legal-address" class="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200">
-                                Get Address
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Image 4 -->
-            <div class="carousel-slide absolute inset-0 opacity-0 transition-opacity duration-1000 ease-in-out">
-                <div class="w-full h-full bg-gradient-to-r from-indigo-900/80 to-transparent absolute z-10"></div>
-                <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=2126&q=80" 
-                     alt="Modern coworking space with people working" 
-                     class="w-full h-full object-cover">
-                <div class="absolute inset-0 z-20 flex items-center">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="max-w-2xl">
-                            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">Flexible Coworking</h2>
-                            <p class="text-xl text-indigo-100 mb-6">Dynamic shared workspaces that foster collaboration and networking opportunities.</p>
-                            <a href="#coworking" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200">
-                                Join Community
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> {% endcomment %}
-
-        <!-- Navigation Dots -->
-        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-30">
-            <div class="flex space-x-3">
-                <button class="carousel-dot w-3 h-3 rounded-full bg-white opacity-100 transition-opacity duration-200" data-slide="0"></button>
-                <button class="carousel-dot w-3 h-3 rounded-full bg-white opacity-50 transition-opacity duration-200" data-slide="1"></button>
-                <button class="carousel-dot w-3 h-3 rounded-full bg-white opacity-50 transition-opacity duration-200" data-slide="2"></button>
-                <button class="carousel-dot w-3 h-3 rounded-full bg-white opacity-50 transition-opacity duration-200" data-slide="3"></button>
-            </div>
+          </div>
         </div>
+      {% endfor %}
 
-        <!-- Navigation Arrows -->
-        <button class="carousel-prev absolute left-4 top-1/2 transform -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-colors duration-200">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
-        </button>
-        <button class="carousel-next absolute right-4 top-1/2 transform -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-colors duration-200">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-        </button>
+      <!-- Dots -->
+      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-30">
+        <div class="flex space-x-3" data-role="dots"></div>
+      </div>
+
+      <!-- Arrows -->
+      <button type="button" data-role="prev"
+              class="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full"
+              aria-label="Previous slide">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+      </button>
+      <button type="button" data-role="next"
+              class="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full"
+              aria-label="Next slide">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+      </button>
     </div>
+  </div>
 </section>
 
+<!-- shared carousel engine (guarded) -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.carousel-slide');
-    const dots = document.querySelectorAll('.carousel-dot');
-    const totalSlides = slides.length;
-    let autoplayInterval;
+(() => {
+  if (window.__carouselBootstrapped) return; window.__carouselBootstrapped = true;
 
-    function showSlide(index) {
-        // Hide all slides
-        slides.forEach(slide => {
-            slide.style.opacity = '0';
-        });
-        
-        // Update dots
-        dots.forEach(dot => {
-            dot.style.opacity = '0.5';
-        });
-        
-        // Show current slide
-        slides[index].style.opacity = '1';
-        dots[index].style.opacity = '1';
-        
-        currentSlide = index;
+  function initAll(scope = document) {
+    scope.querySelectorAll('.js-carousel').forEach(initCarousel);
+  }
+  window.__initCarousels = initAll; // экспорт для detail partial
+
+  function initCarousel(root) {
+    if (!root || root._carouselInited) return;
+    root._carouselInited = true;
+
+    const slides = Array.from(root.querySelectorAll('.carousel__slide'));
+    if (!slides.length) return;
+
+    const dotsBox = root.querySelector('[data-role="dots"]');
+    if (dotsBox) {
+      dotsBox.innerHTML = slides.map((_, i) =>
+        `<button type="button" class="carousel__dot w-3 h-3 rounded-full bg-white transition-opacity duration-200 opacity-50" data-idx="${i}" aria-label="Slide ${i+1}"></button>`
+      ).join('');
     }
+    const dots = Array.from(root.querySelectorAll('.carousel__dot'));
+    const btnPrev = root.querySelector('[data-role="prev"]');
+    const btnNext = root.querySelector('[data-role="next"]');
 
-    function nextSlide() {
-        const next = (currentSlide + 1) % totalSlides;
-        showSlide(next);
+    let idx = 0;
+    let timer = null;
+
+    function show(n) {
+      idx = (n + slides.length) % slides.length;
+      slides.forEach((s, i) => {
+        s.style.opacity = i === idx ? '1' : '0';
+        s.setAttribute('aria-hidden', i === idx ? 'false' : 'true');
+      });
+      dots.forEach((d, i) => {
+        if (i === idx) { d.classList.add('opacity-100'); d.classList.remove('opacity-50'); d.setAttribute('aria-current','true'); }
+        else { d.classList.add('opacity-50'); d.classList.remove('opacity-100'); d.removeAttribute('aria-current'); }
+      });
     }
+    function next(){ show(idx + 1); }
+    function prev(){ show(idx - 1); }
 
-    function prevSlide() {
-        const prev = (currentSlide - 1 + totalSlides) % totalSlides;
-        showSlide(prev);
+    function start(){
+      const delay = parseInt(root.dataset.autoplay || '0', 10);
+      if (delay > 0 && !timer) timer = setInterval(next, delay);
     }
+    function stop(){ if (timer) { clearInterval(timer); timer = null; } }
 
-    function startAutoplay() {
-        autoplayInterval = setInterval(nextSlide, 3000); // Change slide every 3 seconds
-    }
+    btnNext && btnNext.addEventListener('click', () => { stop(); next(); start(); });
+    btnPrev && btnPrev.addEventListener('click', () => { stop(); prev(); start(); });
+    dots.forEach(d => d.addEventListener('click', () => { stop(); show(+d.dataset.idx); start(); }));
 
-    function stopAutoplay() {
-        if (autoplayInterval) {
-            clearInterval(autoplayInterval);
-        }
-    }
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
 
-    // Event listeners for navigation
-    document.querySelector('.carousel-next').addEventListener('click', () => {
-        stopAutoplay();
-        nextSlide();
-        startAutoplay();
-    });
+    show(0); start();
+  }
 
-    document.querySelector('.carousel-prev').addEventListener('click', () => {
-        stopAutoplay();
-        prevSlide();
-        startAutoplay();
-    });
-
-    // Event listeners for dots
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            stopAutoplay();
-            showSlide(index);
-            startAutoplay();
-        });
-    });
-
-    // Pause autoplay on hover
-    const carousel = document.querySelector('.carousel-container');
-    carousel.addEventListener('mouseenter', stopAutoplay);
-    carousel.addEventListener('mouseleave', startAutoplay);
-
-    // Start autoplay
-    startAutoplay();
-});
+  document.addEventListener('DOMContentLoaded', () => initAll());
+  document.body.addEventListener('htmx:afterSwap', (e) => initAll(e.target));
+})();
 </script>

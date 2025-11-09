@@ -25,6 +25,8 @@ class OfficeUnit(AvailabilityMixin, models.Model):
     price_per_month = models.DecimalField(max_digits=10, decimal_places=2, help_text="Cena za mesiac (€)")
     
     description = models.TextField(blank=True)
+    
+    iframe = models.TextField(blank=True, help_text="HTML iframe z Google Maps pre túto jednotku")
 
     class Meta:
         unique_together = ('property', 'floor', 'unit_number')

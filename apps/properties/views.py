@@ -1,3 +1,4 @@
+# apps/properties/views.py
 from django.views.generic import ListView, DetailView
 from .models import Property, OfficeUnit
 from django.shortcuts import get_object_or_404, render
