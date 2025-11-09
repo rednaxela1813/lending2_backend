@@ -1,204 +1,121 @@
-{% extends "csm/base.html" %}
-{% load static %}
+{# templates/hotdeal/detail.html #}
+{% with ROOT_ID="hdp-"|add:item.public_id|stringformat:"s" %}
+<div id="{{ ROOT_ID }}" class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+  <div class="flex items-start justify-between mb-4 md:mb-6">
+    <h3 class="text-2xl md:text-3xl font-bold">{{ item.title }}</h3>
+    <button
+      type="button"
+      class="ml-4 text-gray-400 hover:text-gray-700 transition"
+      hx-get="{% url 'hotdeal:partial_empty' %}"
+      hx-target="#hotdeal-detail-area"
+      hx-swap="innerHTML"
+      aria-label="Close"
+      title="Close">✕</button>
+  </div>
 
-{% block content %}
-<section class="bg-white py-10 lg:py-16 min-h-[85vh] flex flex-col justify-between">
+  {# ——— КАРУСЕЛЬ БЕЗ JS-ИНИЦИАЛИЗАЦИИ ——— #}
+  <section class="relative bg-gray-900 overflow-hidden rounded-xl mb-6" data-hd-carousel>
+    {# фикс. высота, чтобы всегда было видно #}
+    <div class="relative w-full" style="height:62vh; max-height:720px; min-height:340px;">
 
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {% if images and images|length > 0 %}
+        {# Вьюпорт: горизонтальный скролл + snap #}
+        <div class="hd-viewport w-full h-full overflow-x-auto overflow-y-hidden relative"
+             style="scroll-snap-type:x mandatory; -ms-overflow-style:none; scrollbar-width:none;"
+             onwheel="if(Math.abs(event.deltaX)<Math.abs(event.deltaY)){this.scrollBy({left:event.deltaY,behavior:'smooth'});event.preventDefault();}"
+             onscroll="const d=this.closest('[data-hd-carousel]').querySelectorAll('.hd-dot'); if(d.length){const idx=Math.round(this.scrollLeft/this.clientWidth); d.forEach((el,i)=>el.style.opacity=(i===idx?'1':'0.5'));}">
+          <style>
+            /* скрыть скроллбар (webkit) */
+            #{{ ROOT_ID }} .hd-viewport::-webkit-scrollbar { display:none; }
+          </style>
 
-    <!-- breadcrumb -->
-    <nav class="text-sm mb-6 text-gray-500">
-      <a href="/" class="hover:underline">Home</a> / <span>Hot Deal</span>
-    </nav>
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-      <!-- LEFT: gallery + map -->
-      <div class="lg:col-span-2 space-y-6">
-
-        <!-- CARD header (title + badge) -->
-        <div class="rounded-2xl border border-gray-200 p-6">
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 rounded-lg bg-gray-900 text-white flex items-center justify-center shrink-0">
-              {% if deal.icon and deal.icon.svg_inline %}
-                {{ deal.icon.svg_inline|safe }}
-              {% elif deal.property and deal.property.type and deal.property.type.icon_svg %}
-                {{ deal.property.type.icon_svg|safe }}
-              {% else %}
-                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-              {% endif %}
-            </div>
-            <div class="flex-1">
-              <h1 class="text-2xl md:text-3xl font-extrabold text-gray-900 leading-tight">
-                {{ deal.title|default:deal.property.name }}
-              </h1>
-              {% if deal.section %}
-                <p class="text-sm text-gray-500 mt-1">{{ deal.section.title }}</p>
-              {% endif %}
-            </div>
-            {% if deal.badge_text or deal.badge_percent %}
-              <div class="rounded-full px-3 py-1 text-xs font-bold text-white bg-red-600/95">
-                {{ deal.badge_text|default:"Zľava" }}{% if deal.badge_percent %} • {{ deal.badge_percent }}%{% endif %}
+          {# Лента слайдов #}
+          <div class="hd-strip flex w-full h-full"
+               style="width:100%; height:100%;">
+            {% for img in images %}
+              <div class="shrink-0 w-full h-full"
+                   style="scroll-snap-align:center;">
+                <img src="{{ img.image.url }}"
+                     alt="{{ img.description|default:item.title }}"
+                     class="w-full h-full object-cover"
+                     loading="lazy">
               </div>
-            {% endif %}
+            {% endfor %}
           </div>
         </div>
 
-        <!-- GALLERY (carousel) -->
-        <div class="rounded-2xl border border-gray-200 overflow-hidden">
-          {% if prop_images %}
-            <div id="gallery" class="relative">
-              <!-- viewport -->
-              <div class="overflow-hidden">
-                <div id="gallery-track" class="flex transition-transform duration-300" style="transform: translateX(0)">
-                  {% for img in prop_images %}
-                    <div class="basis-full shrink-0">
-                      <img src="{{ img.image.url }}" alt="" class="w-full h-80 md:h-[28rem] object-cover">
-                    </div>
-                  {% endfor %}
-                </div>
-              </div>
+        {# Стрелки (работают без инициализации) #}
+        {% if images|length > 1 %}
+          <button type="button"
+                  class="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white p-2 sm:p-3 rounded-full"
+                  aria-label="Prev"
+                  onclick="const v=this.closest('[data-hd-carousel]').querySelector('.hd-viewport'); v&&v.scrollBy({left:-v.clientWidth,behavior:'smooth'});">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </button>
+          <button type="button"
+                  class="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white p-2 sm:p-3 rounded-full"
+                  aria-label="Next"
+                  onclick="const v=this.closest('[data-hd-carousel]').querySelector('.hd-viewport'); v&&v.scrollBy({left:v.clientWidth,behavior:'smooth'});">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
 
-              <!-- controls -->
-              <button id="g-prev" type="button" class="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 border border-gray-200 w-10 h-10 flex items-center justify-center shadow hover:bg-white">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-              </button>
-              <button id="g-next" type="button" class="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 border border-gray-200 w-10 h-10 flex items-center justify-center shadow hover:bg-white">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
-              </button>
-
-              <!-- dots -->
-              <div id="g-dots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-                {% for _ in prop_images %}
-                  <span class="w-2.5 h-2.5 rounded-full bg-white/60 border border-white"></span>
-                {% endfor %}
-              </div>
+          {# Точки (обновляются в onscroll без инициализации) #}
+          <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20">
+            <div class="flex space-x-2">
+              {% for _ in images %}
+                <span class="hd-dot w-2.5 h-2.5 rounded-full bg-white {% if forloop.first %}opacity-100{% else %}opacity-50{% endif %} transition-opacity"></span>
+              {% endfor %}
             </div>
-          {% else %}
-            <img src="{% static 'img/placeholder/hero.jpg' %}" alt="" class="w-full h-80 md:h-[28rem] object-cover">
-          {% endif %}
-        </div>
-
-        <!-- PROPERTY DESCRIPTION -->
-        {% if deal.additional_description %}
-  <div class="rounded-2xl border border-gray-200 p-6">
-    <h2 class="text-xl font-semibold mb-3">Description</h2>
-    <div class="prose prose-sm max-w-none">
-      {{ deal.additional_description }}
-    </div>
-  </div>
-{% elif deal.property and deal.property.description %}
-  <div class="rounded-2xl border border-gray-200 p-6">
-    <h2 class="text-xl font-semibold mb-3">Description</h2>
-    <div class="prose prose-sm max-w-none">
-      {{ deal.property.description }}
-    </div>
-  </div>
-{% endif %}
-
-
-        <!-- MAP (Leaflet). Показываем только если есть координаты у property -->
-        {% if deal.property and deal.property.latitude and deal.property.longitude %}
-          <div class="rounded-2xl border border-gray-200 overflow-hidden">
-            <div id="deal-map" class="w-full h-80"></div>
           </div>
         {% endif %}
 
-      </div>
-
-      <!-- RIGHT: sticky info/CTA -->
-      <aside class="lg:sticky lg:top-24 space-y-6 h-fit">
-        <div class="rounded-2xl border border-gray-200 p-6">
-          {% if deal.old_price or deal.new_price %}
-            <div class="mb-4 flex items-end gap-3">
-              {% if deal.old_price %}<span class="text-sm text-gray-400 line-through">{{ deal.old_price }} €</span>{% endif %}
-              {% if deal.new_price %}<span class="text-3xl font-bold text-gray-900">{{ deal.new_price }} €</span>{% endif %}
-            </div>
-          {% endif %}
-
-          {% if deal.promo_list %}
-            <ul class="mb-4 flex flex-wrap gap-2">
-              {% for p in deal.promo_list %}
-                <li class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700">{{ p }}</li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-
-          <a href="#contact" class="inline-flex w-full items-center justify-center rounded-xl px-5 py-3 text-sm font-medium bg-gray-900 text-white hover:bg-gray-800 transition">
-            {{ deal.button_text|default:"Zanechajte žiadosť" }}
-          </a>
-
-          {% if expires_in_days != None %}
-            <p class="mt-3 text-xs text-gray-500">Do konca: {{ expires_in_days }} dní</p>
-          {% endif %}
+      {% else %}
+        <div class="absolute inset-0 flex items-center justify-center text-white/80">
+          <div class="text-center">
+            <div class="text-2xl font-semibold mb-2">Žiadne fotografie</div>
+            <div class="text-sm">Pre tento objekt zatiaľ nemáme obrázky.</div>
+          </div>
         </div>
-
-        <div class="rounded-2xl border border-gray-200 p-6">
-          <h3 class="text-lg font-semibold mb-2">Object</h3>
-          {% if deal.property %}
-            <div class="text-sm text-gray-700">
-              <div class="font-medium">{{ deal.property.name }}</div>
-              {% if deal.property.type %}<div class="text-gray-500">{{ deal.property.type.name }}</div>{% endif %}
-              {% if deal.property.get_absolute_url %}
-                <a href="{{ deal.property.get_absolute_url }}" class="text-gray-900 hover:underline mt-2 inline-block">View property</a>
-              {% endif %}
-            </div>
-          {% else %}
-            <p class="text-sm text-gray-500">No linked object.</p>
-          {% endif %}
-        </div>
-      </aside>
-
+      {% endif %}
     </div>
+  </section>
+  {# ——— /КАРУСЕЛЬ ——— #}
+
+  {% if description %}
+    <div class="prose max-w-none mb-6">
+      {{ description|linebreaks }}
+    </div>
+  {% endif %}
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+    {% if item.new_price %}
+      <div class="rounded-lg bg-gray-50 p-4">
+        <div class="text-sm text-gray-500">Cena</div>
+        <div class="text-2xl font-semibold">${{ item.new_price }}/month</div>
+      </div>
+    {% endif %}
+    {% if item.additional_description %}
+      <div class="rounded-lg bg-gray-50 p-4">
+        <div class="text-sm text-gray-500">Parametre</div>
+        <div class="text-2xl font-semibold">{{ item.additional_description }}</div>
+      </div>
+    {% endif %}
+    {% if unit and unit.property and unit.property.location %}
+      <div class="rounded-lg bg-gray-50 p-4">
+        <div class="text-sm text-gray-500">Adresa</div>
+        <div class="text-2xl font-semibold break-words">{{ unit.property.location }}</div>
+      </div>
+    {% endif %}
   </div>
-</section>
-{% endblock %}
 
-{% block extra_scripts %}
-{{ block.super }}
-<script>
-  // --- Simple gallery slider (no deps) ---
-  (function() {
-    const track = document.getElementById('gallery-track');
-    if (!track) return;
-    const slides = track.children;
-    const dots = document.getElementById('g-dots')?.children || [];
-    const prev = document.getElementById('g-prev');
-    const next = document.getElementById('g-next');
-    let i = 0;
-
-    function update() {
-      track.style.transform = `translateX(-${i * 100}%)`;
-      for (let d = 0; d < dots.length; d++) {
-        dots[d].style.opacity = d === i ? '1' : '0.5';
-      }
-    }
-    prev?.addEventListener('click', () => { i = (i - 1 + slides.length) % slides.length; update(); });
-    next?.addEventListener('click', () => { i = (i + 1) % slides.length; update(); });
-    for (let d = 0; d < dots.length; d++) {
-      dots[d].style.cursor = 'pointer';
-      dots[d].addEventListener('click', () => { i = d; update(); });
-    }
-    update();
-  })();
-</script>
-
-{% if deal.property and deal.property.latitude and deal.property.longitude %}
-  <!-- Leaflet CDN (быстро и без сборки) -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script>
-    (function() {
-      const lat = parseFloat('{{ deal.property.latitude|default:"" }}');
-      const lng = parseFloat('{{ deal.property.longitude|default:"" }}');
-      if (!isFinite(lat) || !isFinite(lng)) return;
-      const map = L.map('deal-map', { scrollWheelZoom: false }).setView([lat, lng], 15);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19, attribution: '&copy; OpenStreetMap'
-      }).addTo(map);
-      L.marker([lat, lng]).addTo(map);
-      setTimeout(() => map.invalidateSize(), 100); // на случай скрытия/перехода
-    })();
-  </script>
-{% endif %}
-{% endblock %}
+  {% if iframe %}
+    <div class="w-full aspect-video rounded-xl overflow-hidden">
+      {{ iframe|safe }}
+    </div>
+  {% endif %}
+</div>
+{% endwith %}

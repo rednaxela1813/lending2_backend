@@ -30,10 +30,16 @@ def test_email_and_message_encrypted_at_rest(settings):
 
     # но в БД хранится зашифрованный токен (не равен открытым строкам)
     table = ContactMessage._meta.db_table  # ← динамическое имя таблицы
+    id_field = ContactMessage._meta.get_field("id")
+    adapt_uuid = getattr(connection.ops, "adapt_uuidfield_value", None)
+    if adapt_uuid:
+        adapted_pk = adapt_uuid(obj.pk, id_field)
+    else:
+        adapted_pk = obj.pk.hex if hasattr(obj.pk, "hex") else str(obj.pk)
     with connection.cursor() as cur:
         cur.execute(
             f'SELECT email, message FROM "{table}" WHERE id=%s',
-            [str(obj.pk)],
+            [adapted_pk],
         )
         raw_email, raw_message = cur.fetchone()
 

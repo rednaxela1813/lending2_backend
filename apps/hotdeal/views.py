@@ -1,59 +1,37 @@
-# apps/hotdeal/views.py
-from django.views.generic import DetailView
-from django.db.models import Q
-from django.utils import timezone
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
-from .models import HotDealItem
+from apps.hotdeal.models import HotDealItem
 
-
+from apps.properties.models import OfficeUnitImage, OfficeUnit  
 
 def hotdeal_partial(request, public_id):
-    deal = get_object_or_404(
-        HotDealItem.objects.select_related("property", "section", "property__type"),
-        public_id=public_id
+    item = get_object_or_404(HotDealItem, public_id=public_id, is_active=True)
+    unit = getattr(item, "content_object", None)
+
+    is_office = isinstance(unit, OfficeUnit)
+    images = []
+    if is_office and unit:
+        # Не полагаемся на related_name — выбираем напрямую по FK
+        images = list(OfficeUnitImage.objects.filter(office_unit=unit).order_by("id"))
+
+    prop = unit.property if is_office and hasattr(unit, "property") else None
+    description = (
+        (getattr(prop, "description", "") or "")
+        or (getattr(unit, "description", "") or "")
+        or (item.description or "")
     )
-    prop = deal.property
-    prop_images = prop.images.all() if prop else []
-    return render(request, "hotdeal/detail_partial.html", {
-        "deal": deal,
-        "prop_images": prop_images,
+    iframe = getattr(prop, "iframe", None)
+
+    return render(request, "hotdeal/detail.html", {
+        "item": item,
+        "unit": unit,
+        "property": prop,
+        "images": images,
+        "description": description,
+        "iframe": iframe,
     })
-    
-    
 
-class HotDealDetailView(DetailView):
-    model = HotDealItem
-    template_name = "hotdeal/detail.html"        
-    context_object_name = "deal"                 
 
-    # ← 3. указываем поле и имя параметра из URL
-    slug_field = "public_id"
-    slug_url_kwarg = "public_id"
-
-    def get_queryset(self):
-        today = timezone.localdate()
-        return (
-            HotDealItem.objects
-            .select_related("property", "section", "property__type")
-            .filter(
-                is_active=True,                                        
-                # section__is_active=True,                             
-            )
-            .filter(Q(date_expiry__isnull=True) | Q(date_expiry__gte=today))  
-        )
-
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        deal = ctx["deal"]
-
-        # ← 5. срок действия в днях (если указан)
-        today = timezone.localdate()
-        ctx["expires_in_days"] = (
-            (deal.date_expiry - today).days if deal.date_expiry else None
-        )
-
-        # ← 6. картинки связанного объекта (если есть related_name=images)
-        images_manager = getattr(getattr(deal, "property", None), "images", None)
-        ctx["prop_images"] = list(images_manager.all()) if images_manager else []
-
-        return ctx
+def hotdeal_partial_empty(request):
+    # Возвращаем пустой HTML, чтобы htmx очистил #hotdeal-detail-area
+    return HttpResponse("")

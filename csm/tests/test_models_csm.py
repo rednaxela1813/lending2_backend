@@ -1,6 +1,6 @@
 # csm/tests/test_models.py
 import pytest
-from csm.models import HeroSection, HeaderSection, FooterInfo, CompanyInfo
+from csm.models import HeroSection, HeaderSection
 
 pytestmark = pytest.mark.django_db
 
@@ -11,22 +11,11 @@ def test_hero_section_str():
 
 
 def test_header_section_str():
-    obj = HeaderSection.objects.create(images="logo/test.png")
+    obj = HeaderSection.objects.create()
     assert str(obj) == "Header Content"
 
 
-def test_footer_info_str():
-    obj = FooterInfo.objects.create(
-        about_description="About us",
-        contact_email="e@e.com",
-        contact_phone="123",
-        contact_address="Addr",
-    )
-    assert str(obj) == "Footer Info"
 
 
-def test_company_info_str():
-    obj = CompanyInfo.objects.create(
-        name="Comp", address="Addr", phone="1", email="e@e.com"
-    )
-    assert str(obj) == "Comp"
+
+

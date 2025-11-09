@@ -71,10 +71,11 @@ class OfficeUnitImageInline(ImagePreviewInline):
 @admin.register(OfficeUnit)
 class OfficeUnitAdmin(admin.ModelAdmin):
     inlines = [OfficeUnitImageInline]
-    list_display = ("__str__", "property", "floor", "unit_number", "area_sqm", "price_per_month", "availability")
+    list_display = ("__str__", "property", "floor", "unit_number", "area_sqm", "price_per_month", "availability", "id")
     list_filter = ("property", "floor", "availability")
     search_fields = ("unit_number", "property__name")
     ordering = ("property", "floor", "unit_number")
+    readonly_fields = ("public_id",)
 
 
 # ───────────────────────────

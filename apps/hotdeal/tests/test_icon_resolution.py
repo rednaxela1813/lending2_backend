@@ -1,42 +1,33 @@
-import pytest
-from accounting.models import Company
-from apps.hotdeal.models import HotDealItem, HotDealSection
-from apps.properties.models import Property, PropertyType
-from csm.models import Icon  # у тебя в csm есть Icon со svg_inline
+import uuid
 
+import pytest
+
+from apps.hotdeal.context import build_hot_deal_items
+from csm.models import Icon
 
 
 pytestmark = pytest.mark.django_db
 
-@pytest.fixture
-def section_active():
-    return HotDealSection.objects.create(name="Main", is_active=True, order=1)
 
-def test_icon_priority_item_icon_over_property_type(section_active):
-    from pizzalino.backend.apps.hotdeal.context_old import build_hot_deal_items
-    c = Company.objects.create(name="Z", slug="z")
-
-    ptype = PropertyType.objects.create(name="Office", icon_svg="<svg>TYPE</svg>")
-    prop = Property.objects.create(name="HQ", type=ptype)
-
-    item_icon = Icon.objects.create(svg_inline="<svg>ITEM</svg>")
-    HotDealItem.objects.create(
-        section=section_active, property=prop, title="Deal", is_active=True, company=c, icon=item_icon
+def test_builder_returns_icon_from_item(hotdeal_item_factory):
+    icon = Icon.objects.create(
+        key=f"icon-{uuid.uuid4().hex[:6]}",
+        label="Star",
+        svg_inline="<svg>ITEM</svg>",
     )
+    hotdeal_item_factory(icon=icon, promo_1="Wi-Fi", description="Great deal")
 
-    items = build_hot_deal_items(company=c)
-    assert items[0]["icon"]["svg_inline"] == "<svg>ITEM</svg>"
+    payload = build_hot_deal_items()
+    assert len(payload) == 1
+    entry = payload[0]
+    assert entry["icon"] == {"svg_inline": "<svg>ITEM</svg>", "label": "Star"}
+    assert entry["promo_list"] == ["Wi-Fi"]
+    assert entry["description"] == "Great deal"
 
-def test_icon_fallback_to_property_type(section_active):
-    from pizzalino.backend.apps.hotdeal.context_old import build_hot_deal_items
-    c = Company.objects.create(name="Z", slug="z")
 
-    ptype = PropertyType.objects.create(name="Office", icon_svg="<svg>TYPE</svg>")
-    prop = Property.objects.create(name="HQ", type=ptype)
+def test_builder_skips_inactive_items(hotdeal_item_factory):
+    hotdeal_item_factory(title="Active deal")
+    hotdeal_item_factory(title="Hidden deal", is_active=False)
 
-    HotDealItem.objects.create(
-        section=section_active, property=prop, title="Deal", is_active=True, company=c, icon=None
-    )
-
-    items = build_hot_deal_items(company=c)
-    assert items[0]["icon"]["svg_inline"] == "<svg>TYPE</svg>"
+    payload = build_hot_deal_items()
+    assert [item["title"] for item in payload] == ["Active deal"]

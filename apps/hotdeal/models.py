@@ -79,6 +79,18 @@ class HotDealItem(models.Model):
         return self.title
 
     @builtins.property
+    def icon_svg(self):
+        if self.icon and getattr(self.icon, "svg_inline", None):
+            return self.icon.svg_inline
+        return None
+
+    @builtins.property
+    def icon_label(self):
+        if self.icon:
+            return self.icon.label or ""
+        return ""
+
+    @builtins.property
     def expires_in_days(self):
         if not self.date_expiry:
             return None

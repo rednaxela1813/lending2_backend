@@ -1,42 +1,31 @@
-import pytest
-from accounting.models import Company
-from apps.hotdeal.models import HotDealItem, HotDealSection
-from apps.properties.models import Property, PropertyType
+from datetime import date, timedelta
 
+import pytest
+
+from apps.hotdeal.context import build_hot_deal_items
 
 
 pytestmark = pytest.mark.django_db
 
-@pytest.fixture
-def ptype():
-    return PropertyType.objects.create(name="Office", icon_svg="<svg>PT</svg>")
 
-@pytest.fixture
-def prop_c1(ptype):
-    return Property.objects.create(name="P1", type=ptype)
+def test_builder_returns_items_sorted_by_id(hotdeal_item_factory):
+    first = hotdeal_item_factory(title="First deal")
+    second = hotdeal_item_factory(title="Second deal")
 
-@pytest.fixture
-def prop_c2(ptype):
-    return Property.objects.create(name="P2", type=ptype)
+    titles = [item["title"] for item in build_hot_deal_items()]
+    assert titles == [first.title, second.title]
 
-@pytest.fixture
-def section_active():
-    return HotDealSection.objects.create(name="Main", is_active=True)
 
-def test_hotdeal_scoped_by_company(section_active, prop_c1, prop_c2):
-    from pizzalino.backend.apps.hotdeal.context_old import build_hot_deal_items
-    c1 = Company.objects.create(name="Zavodsky", slug="zv")
-    c2 = Company.objects.create(name="Other", slug="ot")
+def test_builder_computes_expires_in_days(hotdeal_item_factory):
+    hotdeal_item_factory(date_expiry=date.today() + timedelta(days=3))
+    entry = build_hot_deal_items()[0]
+    assert entry["expires_in_days"] == 3
 
-    HotDealItem.objects.create(section=section_active, property=prop_c1, title="Deal C1", is_active=True, company=c1)
-    HotDealItem.objects.create(section=section_active, property=prop_c2, title="Deal C2", is_active=True, company=c2)
-    # глобальное (видно всем)
-    HotDealItem.objects.create(section=section_active, property=prop_c1, title="Global Deal", is_active=True, company=None)
 
-    items_c1 = build_hot_deal_items(company=c1)
-    titles_c1 = {i["title"] for i in items_c1}
-    assert "Deal C1" in titles_c1 and "Global Deal" in titles_c1 and "Deal C2" not in titles_c1
-
-    items_c2 = build_hot_deal_items(company=c2)
-    titles_c2 = {i["title"] for i in items_c2}
-    assert "Deal C2" in titles_c2 and "Global Deal" in titles_c2 and "Deal C1" not in titles_c2
+def test_builder_falls_back_to_defaults_when_fields_missing(hotdeal_item_factory):
+    hotdeal_item_factory(badge_text="", badge_percent=None, button_text="")
+    entry = build_hot_deal_items()[0]
+    assert entry["badge_text"] == "SALE"
+    assert entry["badge_percent"] == 10
+    assert entry["button_text"] == "Zanechajte žiadosť"
+    assert entry["resolve_url"] == "#contact"
