@@ -4,7 +4,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from django.contrib.auth.views import LogoutView
+
 from accounting.views import ResolvingLoginView
+from apps.company.views import about_us_view
 
 
 urlpatterns = [
@@ -28,6 +30,7 @@ urlpatterns = [
     path("dashboard/", include("apps.dashboard.urls", namespace="dashboard")),
     path("api/", include("orders.urls")),
     path("", include("apps.contact_messages.urls")),
+    path("about/", about_us_view, name="about_us"),
     path(
         "privacy-policy/",
         TemplateView.as_view(

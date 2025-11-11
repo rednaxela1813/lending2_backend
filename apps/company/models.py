@@ -198,3 +198,27 @@ def company_status_text(company) -> str:
 # Добавляем свойства прямо на модель CompanyInfo
 CompanyInfo.is_open_now = property(lambda self: company_is_open_now(self))
 CompanyInfo.open_status_text = property(lambda self: company_status_text(self))
+
+
+class AboutUsPage(models.Model):
+    """this models will be used to store About Us page content and Company working hours including special opening hours for holidays or events."""
+    company = models.OneToOneField(
+        "CompanyInfo",
+        on_delete=models.CASCADE,
+        related_name="about_us_page",
+        verbose_name="Компания",
+    )
+    content = models.TextField()
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "csm_aboutuspage"
+        verbose_name = "Страница 'О нас'"
+        verbose_name_plural = "Страницы 'О нас'"
+
+    def __str__(self):
+        return f"About Us: {self.company.name}"
+
+
+

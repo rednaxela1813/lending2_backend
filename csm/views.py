@@ -145,3 +145,21 @@ class ServicesListView(ListView):
         # если где-то ещё нужно hot-deals внутри этой страницы
         ctx["hot_deal_items"] = build_hot_deal_items()
         return ctx
+
+
+# class ServicesListView2(ListView):
+#     model = Property
+#     template_name = "csm/services_list.html"   # <- один конкретный шаблон
+#     context_object_name = "items"
+
+#     def get_queryset(self):
+#         qs = super().get_queryset().filter(is_active=True)
+#         service_type = self.kwargs.get("service_type") or self.request.GET.get("service_type")
+#         if service_type:
+#             qs = qs.filter(type__slug=service_type)
+#         return qs
+
+#     def get_context_data(self, **kwargs):
+#         ctx = super().get_context_data(**kwargs)
+#         ctx["active_service_type"] = self.kwargs.get("service_type") or self.request.GET.get("service_type")
+#         return ctx

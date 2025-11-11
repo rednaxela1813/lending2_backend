@@ -21,6 +21,7 @@ urlpatterns = [
     path("autorske-prava/", TemplateView.as_view(template_name="legal/copyright.html"), name="copyright"),
     path("podmienky-pouzivania/", TemplateView.as_view(template_name="legal/terms.html"), name="terms"),
     path("hot-deals/", HotDealsPageView.as_view(), name="hot_deals"),
+    #path('services/<slug:service_type>/', ServicesListView.as_view(), name='services'),
      
     
 ]
