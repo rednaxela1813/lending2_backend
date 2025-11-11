@@ -13,10 +13,10 @@ class ResolvingLoginView(LoginView):
         url = super().get_success_url()  # берёт settings.LOGIN_REDIRECT_URL или next
         if not url:
             return url
-        # если уже абсолютный/относительный путь — возвращаем как есть
+        # If it's already an absolute/relative path, return it as is.
         if url.startswith("/") or url.startswith("http"):
             return url
-        # иначе пробуем трактовать как имя urlpattern'а
+        # Otherwise, try to interpret it as a urlpattern name
         try:
             return reverse(url)
         except NoReverseMatch:
