@@ -1,0 +1,88 @@
+<!-- LOCATIONS PREVIEW (HTMX фильтр по городам — опционально) -->
+<section class="mx-auto max-w-7xl px-4 py-12">
+  <div class="flex items-center justify-between gap-4">
+    <h2 class="text-2xl font-semibold">Popular locations</h2>
+    <div class="hidden sm:flex gap-2 text-sm">
+      {% for city in cities %}
+        <button class="px-4 py-2 rounded-lg border border-white/25 hover:bg-white/10 text-sm"
+                hx-get="/locations/?city={{ city }}"
+                hx-target="#loc-grid"
+                hx-push-url="true">{{ city }}</button>
+      {% endfor %}
+    </div>
+  </div>
+  <div id="loc-grid" class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {# заполни из view или оставь заглушки #}
+    <article class="glass rounded-2xl overflow-hidden">
+      <img src="" alt="" class="w-full h-44 object-cover">
+      <div class="p-5">
+        <div class="text-sm text-white/60">Bratislava</div>
+        <h3 class="text-lg font-semibold mt-1">River Park</h3>
+        <p class="text-white/80 text-sm mt-1">€1050/mo</p>
+        <div class="mt-4 flex gap-3">
+          <a href="#tour" class="px-4 py-2 rounded-lg border border-white/25 hover:bg-white/10 text-sm">Book a tour</a>
+          <a href="/locations/" class="px-4 py-2 rounded-lg border border-white/25 hover:bg-white/10 text-sm">Details</a>
+        </div>
+      </div>
+    </article>
+    <article class="glass rounded-2xl overflow-hidden">
+      <img src="" alt="" class="w-full h-44 object-cover">
+      <div class="p-5">
+        <div class="text-sm text-white/60">Banská Bystrica</div>
+        <h3 class="text-lg font-semibold mt-1">Europa BC</h3>
+        <p class="text-white/80 text-sm mt-1">€750/mo</p>
+        <div class="mt-4 flex gap-3">
+          <a href="#tour" class="px-4 py-2 rounded-lg border border-white/25 hover:bg-white/10 text-sm">Book a tour</a>
+          <a href="/locations/" class="px-4 py-2 rounded-lg border border-white/25 hover:bg-white/10 text-sm">Details</a>
+        </div>
+      </div>
+    </article>
+    <article class="glass rounded-2xl overflow-hidden">
+      <img src="" alt="" class="w-full h-44 object-cover">
+      <div class="p-5">
+        <div class="text-sm text-white/60">Košice</div>
+        <h3 class="text-lg font-semibold mt-1">Business Center</h3>
+        <p class="text-white/80 text-sm mt-1">€890/mo</p>
+        <div class="mt-4 flex gap-3">
+          <a href="#tour" class="px-4 py-2 rounded-lg border border-white/25 hover:bg-white/10 text-sm">Book a tour</a>
+          <a href="/locations/" class="px-4 py-2 rounded-lg border border-white/25 hover:bg-white/10 text-sm">Details</a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="mx-auto max-w-3xl px-4 py-16">
+  <h2 class="text-2xl font-semibold mb-6">FAQ</h2>
+
+  <details class="group glass rounded-xl p-4 mb-3">
+    <summary class="cursor-pointer flex items-center justify-between">
+      <span class="font-medium">What is a private office?</span>
+      <span class="transition group-open:rotate-180">▾</span>
+    </summary>
+    <div class="mt-3 text-white/80">
+      Fully furnished room with locking door, shared amenities included.
+    </div>
+  </details>
+
+  <details class="group glass rounded-xl p-4 mb-3">
+    <summary class="cursor-pointer flex items-center justify-between">
+      <span class="font-medium">Are utilities included?</span>
+      <span class="transition group-open:rotate-180">▾</span>
+    </summary>
+    <div class="mt-3 text-white/80">
+      Yes — internet, cleaning, coffee and more are included in pricing.
+    </div>
+  </details>
+
+  <details class="group glass rounded-xl p-4">
+    <summary class="cursor-pointer flex items-center justify-between">
+      <span class="font-medium">Can I upgrade later?</span>
+      <span class="transition group-open:rotate-180">▾</span>
+    </summary>
+    <div class="mt-3 text-white/80">
+      You can switch to larger suites anytime (subject to availability).
+    </div>
+  </details>
+</section>

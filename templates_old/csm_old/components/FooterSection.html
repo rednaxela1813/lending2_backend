@@ -1,0 +1,62 @@
+{% load static %}
+{% load tz %} {# чтобы работал now.year #}
+
+<footer class="bg-gray-900 border-t border-border px-4 py-8 text-yellow-100">
+  <div class="container mx-auto grid grid-cols-1 gap-8 md:grid-cols-3">
+
+    <!-- Логотип и описание -->
+    <div class="flex flex-col items-center md:items-start">
+      <a href="{% url 'homepage' %}" class="flex items-center gap-3 mb-4 transition hover:opacity-80 hover:text-orange-500">
+        <img src="{% static 'images/Logo3.png' %}" alt="{{ footer_info.about_title }}" class="h-12" />
+        <span class="text-xl font-bold">{{ footer_info.about_title }}</span>
+      </a>
+      <p class="text-muted text-center md:text-left hover:text-orange-500 transition">
+        {{ footer_info.about_description|default:"Váš spoľahlivý partner v oblasti kancelárskych priestorov, právnych adries a reklamy." }}
+      </p>
+    </div>
+
+    <!-- Навигация -->
+    <div class="flex flex-col items-center md:items-start">
+      <h3 class="mb-3 text-lg font-semibold text-text hover:text-orange-500 transition">Navigácia</h3>
+      <ul class="space-y-2 text-muted">
+        <li><a href="{% url 'homepage' %}#services" class="hover:text-orange-500">{{ header.nav_services|default:"Služby" }}</a></li>
+        <li><a href="{% url 'homepage' %}#why" class="hover:text-orange-500">{{ header.nav_why|default:"Prečo práve my?" }}</a></li>
+        <li><a href="{% url 'homepage' %}#contact" class="hover:text-orange-500">{{ header.nav_contact|default:"Kontakt" }}</a></li>
+        <li><a href="#top" class="hover:text-orange-500">↑ Hore</a></li>
+      </ul>
+    </div>
+
+    <!-- Контакты -->
+    <div class="flex flex-col items-center md:items-start">
+      <h3 class="mb-3 text-lg font-semibold text-text hover:text-orange-500 transition">Kontakt</h3>
+      <p class="text-muted">
+        📍 {{ COMPANY_ADDRESS|default:"" }}<br>
+        📞 <a href="tel:{{ COMPANY_PHONE|default:"" }}" class="hover:text-orange-500">
+             {{ COMPANY_PHONE|default:"" }}
+        </a><br>
+        ✉️ <a href="mailto:{{ COMPANY_EMAIL|default:"" }}" class="hover:text-orange-500">
+             {{ COMPANY_EMAIL|default:"" }}
+        </a>
+      </p>
+      <div class="mt-4 flex gap-3">
+        <a href="#contact" class="rounded-full px-4 py-2 text-yellow-100 font-medium hover:text-orange-500 transition">
+          Kontaktovať nás
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Юридические ссылки -->
+  <div class="mt-6 flex flex-wrap justify-center gap-4 text-sm text-muted">
+    <a href="{% url 'privacy' %}" class="hover:text-orange-500">Ochrana osobných údajov</a>
+    <a href="{% url 'operator' %}" class="hover:text-orange-500">Prevádzkovateľ</a>
+    <a href="{% url 'copyright' %}" class="hover:text-orange-500">Autorské práva</a>
+    <a href="{% url 'terms' %}" class="hover:text-orange-500">Podmienky používania</a>
+  </div>
+
+  <!-- Линия и копирайт -->
+  <div class="mt-4 border-t border-border pt-4 text-center text-sm text-muted">
+    © {{ company_info.name }} {{ now.year }}. Všetky práva vyhradené.
+  </div>
+</footer>

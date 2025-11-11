@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, SiteTheme
+from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo, CarouselImage, SiteTheme
 from .serializers import HeroSectionSerializer, HeaderSectionSerializer, FooterInfoSerializer, CompanyInfoSerializer, ContactRequestSerializer, SiteThemeSerializer
 from rest_framework.generics import RetrieveAPIView
 from core.utils.telegram import send_telegram_message
@@ -139,3 +139,10 @@ class ActiveThemeAPIView(APIView):
         if theme:
             return Response(SiteThemeSerializer(theme).data)
         return Response({'detail': 'No active theme found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    
+# class CarouselImagesView(APIView):
+#     def get(self, request):
+#         carousel_images = CarouselImage.objects.all()
+#         return Response(carousel_images.values('id', 'image', 'description'))
+

@@ -1,0 +1,46 @@
+{% extends "csm/base.html" %}
+{% block content_class %}py-10{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+  <div class="rounded-xl shadow-xl p-6
+              bg-[var(--card-bg)] text-[var(--card-text)]
+              border border-[var(--border-color)]">
+    <h1 class="text-2xl font-bold mb-4">Личный кабинет</h1>
+    <p class="mb-6">
+      Привет, <strong>{{ request.user.full_name|default:request.user.email }}</strong>!
+    </p>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <a href="/pon_ka/" class="block p-4 rounded-lg border border-[var(--border-color)]
+                               hover:border-[var(--border-hover-color)]">
+        <div class="text-sm opacity-80">Админка</div>
+        <div class="font-semibold">Перейти в админ-панель</div>
+      </a>
+
+      <a href="{% url 'password_change' %}" class="block p-4 rounded-lg border border-[var(--border-color)]
+                                               hover:border-[var(--border-hover-color)]">
+        <div class="text-sm opacity-80">Безопасность</div>
+        <div class="font-semibold">Сменить пароль</div>
+      </a>
+
+      <form method="post" action="{% url 'logout' %}"
+            class="p-4 rounded-lg border border-[var(--border-color)]
+                   hover:border-[var(--border-hover-color)]">
+        {% csrf_token %}
+        <div class="text-sm opacity-80">Сессия</div>
+        <button class="font-semibold text-white px-3 py-1 rounded
+                       bg-[var(--primary-color)] hover:bg-[var(--primary-hover-color)]">
+          Выйти
+        </button>
+      </form>
+
+      <a href="/" class="block p-4 rounded-lg border border-[var(--border-color)]
+                         hover:border-[var(--border-hover-color)]">
+        <div class="text-sm opacity-80">Сайт</div>
+        <div class="font-semibold">На главную</div>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

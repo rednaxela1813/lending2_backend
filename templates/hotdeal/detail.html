@@ -1,0 +1,169 @@
+{# templates/hotdeal/detail.html #}
+{% with ROOT_ID="hdp-"|add:item.public_id|stringformat:"s" %}
+<div id="{{ ROOT_ID }}" class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+  <div class="flex items-start justify-between mb-4 md:mb-6">
+    <h3 class="text-2xl md:text-3xl font-bold">{{ item.title }}</h3>
+    <button
+      type="button"
+      class="ml-4 text-gray-400 hover:text-gray-700 transition"
+      hx-get="{% url 'hotdeal:partial_empty' %}"
+      hx-target="#hotdeal-detail-area"
+      hx-swap="innerHTML"
+      aria-label="Close"
+      title="Close">✕</button>
+  </div>
+
+  {# КАРУСЕЛЬ (единый движок) #}
+  <section class="relative bg-gray-900 overflow-hidden rounded-xl mb-6">
+    <div class="relative w-full" style="height:62vh; max-height:720px; min-height:340px;">
+      {% if images and images|length > 0 %}
+        <div class="js-carousel relative w-full h-full" data-autoplay="5000">
+          {% for img in images %}
+            <div class="carousel__slide absolute inset-0 opacity-0 transition-opacity duration-700 ease-in-out" aria-hidden="true">
+              <img src="{{ img.image.url }}"
+                   alt="{{ img.description|default:item.title }}"
+                   class="w-full h-full object-cover"
+                   loading="lazy">
+            </div>
+          {% endfor %}
+
+          {% if images|length > 1 %}
+            <!-- dots -->
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20">
+              <div class="flex space-x-2" data-role="dots"></div>
+            </div>
+            <!-- arrows -->
+            <button type="button"
+                    class="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white p-2 sm:p-3 rounded-full"
+                    aria-label="Prev" data-role="prev">
+              <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+            </button>
+            <button type="button"
+                    class="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white p-2 sm:p-3 rounded-full"
+                    aria-label="Next" data-role="next">
+              <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="absolute inset-0 flex items-center justify-center text-white/80">
+          <div class="text-center">
+            <div class="text-2xl font-semibold mb-2">Žiadne fotografie</div>
+            <div class="text-sm">Pre tento objekt zatiaľ nemáme obrázky.</div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+  {# /КАРУСЕЛЬ #}
+
+  {% if description %}
+    <div class="prose max-w-none mb-6">
+      {{ description|linebreaks }}
+    </div>
+  {% endif %}
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+    {% if item.new_price %}
+      <div class="rounded-lg bg-gray-50 p-4">
+        <div class="text-sm text-gray-500">Cena</div>
+        <div class="text-2xl font-semibold">${{ item.new_price }}/month</div>
+      </div>
+    {% endif %}
+    {% if item.additional_description %}
+      <div class="rounded-lg bg-gray-50 p-4">
+        <div class="text-sm text-gray-500">Parametre</div>
+        <div class="text-2xl font-semibold">{{ item.additional_description }}</div>
+      </div>
+    {% endif %}
+    {% if unit and unit.property and unit.property.location %}
+      <div class="rounded-lg bg-gray-50 p-4">
+        <div class="text-sm text-gray-500">Adresa</div>
+        <div class="text-2xl font-semibold break-words">{{ unit.property.location }}</div>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if iframe %}
+    <div class="w-full aspect-video rounded-xl overflow-hidden">
+      {{ iframe|safe }}
+    </div>
+  {% endif %}
+</div>
+{% endwith %}
+
+<!-- движок (guarded) + мгновенная инициализация текущего блока -->
+<script>
+(() => {
+  if (!window.__carouselBootstrapped) {
+    // Подключаем общий код, если его ещё нет
+    window.__carouselBootstrapped = true;
+
+    function initAll(scope = document) {
+      scope.querySelectorAll('.js-carousel').forEach(initCarousel);
+    }
+    window.__initCarousels = initAll;
+
+    function initCarousel(root) {
+      if (!root || root._carouselInited) return;
+      root._carouselInited = true;
+
+      const slides = Array.from(root.querySelectorAll('.carousel__slide'));
+      if (!slides.length) return;
+
+      const dotsBox = root.querySelector('[data-role="dots"]');
+      if (dotsBox) {
+        dotsBox.innerHTML = slides.map((_, i) =>
+          `<button type="button" class="carousel__dot w-3 h-3 rounded-full bg-white transition-opacity duration-200 opacity-50" data-idx="${i}" aria-label="Slide ${i+1}"></button>`
+        ).join('');
+      }
+      const dots = Array.from(root.querySelectorAll('.carousel__dot'));
+      const btnPrev = root.querySelector('[data-role="prev"]');
+      const btnNext = root.querySelector('[data-role="next"]');
+
+      let idx = 0;
+      let timer = null;
+
+      function show(n) {
+        idx = (n + slides.length) % slides.length;
+        slides.forEach((s, i) => {
+          s.style.opacity = i === idx ? '1' : '0';
+          s.setAttribute('aria-hidden', i === idx ? 'false' : 'true');
+        });
+        dots.forEach((d, i) => {
+          if (i === idx) { d.classList.add('opacity-100'); d.classList.remove('opacity-50'); d.setAttribute('aria-current','true'); }
+          else { d.classList.add('opacity-50'); d.classList.remove('opacity-100'); d.removeAttribute('aria-current'); }
+        });
+      }
+      function next(){ show(idx + 1); }
+      function prev(){ show(idx - 1); }
+
+      function start(){
+        const delay = parseInt(root.dataset.autoplay || '0', 10);
+        if (delay > 0 && !timer) timer = setInterval(next, delay);
+      }
+      function stop(){ if (timer) { clearInterval(timer); timer = null; } }
+
+      btnNext && btnNext.addEventListener('click', () => { stop(); next(); start(); });
+      btnPrev && btnPrev.addEventListener('click', () => { stop(); prev(); start(); });
+      dots.forEach(d => d.addEventListener('click', () => { stop(); show(+d.dataset.idx); start(); }));
+
+      root.addEventListener('mouseenter', stop);
+      root.addEventListener('mouseleave', start);
+
+      show(0); start();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => window.__initCarousels());
+    document.body.addEventListener('htmx:afterSwap', (e) => window.__initCarousels(e.target));
+  }
+
+  // мгновенная инициализация только что вставленного фрагмента
+  const root = document.getElementById('{{ ROOT_ID }}');
+  if (window.__initCarousels && root) window.__initCarousels(root);
+})();
+</script>

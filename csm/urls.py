@@ -1,7 +1,7 @@
 from django.urls import path
 #from .api_views import HeroSectionView, HeaderSectionView, FooterInfoView, CompanyInfoView,  ContactRequestView, ActiveThemeAPIView
 from .views import ServicesListView
-from .views import homepage
+from .views import homepage, HotDealsPageView
 from django.views.generic import TemplateView
 
 
@@ -20,6 +20,8 @@ urlpatterns = [
     path("prevadzkovatel/", TemplateView.as_view(template_name="legal/operator.html"), name="operator"),
     path("autorske-prava/", TemplateView.as_view(template_name="legal/copyright.html"), name="copyright"),
     path("podmienky-pouzivania/", TemplateView.as_view(template_name="legal/terms.html"), name="terms"),
+    path("hot-deals/", HotDealsPageView.as_view(), name="hot_deals"),
+    #path('services/<slug:service_type>/', ServicesListView.as_view(), name='services'),
      
     
 ]

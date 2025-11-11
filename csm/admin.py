@@ -1,8 +1,14 @@
 from django.contrib import admin
-from .models import HeroSection, HeaderSection, FooterInfo, CompanyInfo,  FrontendTheme, ServiceSection
+from .models import HeroSection, HeaderSection,   FrontendTheme, ServiceSection, CarouselImage, Icon, BottomCTASection
 from .forms import  FrontendThemeForm
+from django import forms
+from django.contrib.admin.widgets import AdminDateWidget
 
 
+
+
+    
+    
 @admin.register(HeroSection)
 class HeroSectionAdmin(admin.ModelAdmin):
     list_display = ('title', 'updated_at', 'button_text', 'right_colon_text')
@@ -30,5 +36,12 @@ class ServiceSectionAdmin(admin.ModelAdmin):
 #     form = SiteThemeForm
     
 
-admin.site.register(FooterInfo)
-admin.site.register(CompanyInfo)
+
+
+admin.site.register(CarouselImage)
+admin.site.register(Icon)
+admin.site.register(BottomCTASection)
+
+
+
+

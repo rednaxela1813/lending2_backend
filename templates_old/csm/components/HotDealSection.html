@@ -1,0 +1,48 @@
+{% load static %}
+
+<section class="hot-deal bg-base-100 my-12 md:my-16 px-4">
+  <!-- Карточка-обертка -->
+<div class="card mx-auto w-full max-w-5xl md:max-w-5xl bg-base-100 shadow-xl p-6 mt-8 md:mt-12">
+  <!-- Карусель с фиксированной высотой -->
+  <div class="carousel w-full h-72 md:h-96 rounded-2xl">
+    <!-- slide 1 -->
+    <div id="slide1" class="carousel-item relative w-full">
+      <img src="{% static 'images/hero_images/14_adminsklad_01.jpg' %}"
+           class="w-full h-full object-cover" alt="Фото 1" />
+      <!-- затемнение + подпись -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+      <div class="absolute bottom-0 left-0 p-4 md:p-6 text-white">
+        <h3 class="text-xl md:text-2xl font-bold">Заголовок 1</h3>
+        <p class="text-sm md:text-base opacity-90">Описание к первому фото.</p>
+      </div>
+      <!-- навигация -->
+      <a href="#slide7" class="btn btn-circle btn-sm md:btn-md absolute left-2 top-1/2 -translate-y-1/2">❮</a>
+      <a href="#slide2" class="btn btn-circle btn-sm md:btn-md absolute right-2 top-1/2 -translate-y-1/2">❯</a>
+    </div>
+
+    <!-- slide 2 -->
+    <div id="slide2" class="carousel-item relative w-full">
+      <img src="{% static 'images/hero_images/14_adminsklad_01.jpg' %}"
+           class="w-full h-full object-cover" alt="Фото 2" />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+      <div class="absolute bottom-0 left-0 p-4 md:p-6 text-white">
+        <h3 class="text-xl md:text-2xl font-bold">Заголовок 2</h3>
+        <p class="text-sm md:text-base opacity-90">Описание ко второму фото.</p>
+      </div>
+      <a href="#slide1" class="btn btn-circle btn-sm md:btn-md absolute left-2 top-1/2 -translate-y-1/2">❮</a>
+      <a href="#slide3" class="btn btn-circle btn-sm md:btn-md absolute right-2 top-1/2 -translate-y-1/2">❯</a>
+    </div>
+
+    <!-- добавь остальные слайды по аналогии (slide3…slide7) -->
+  </div>
+
+  <!-- индикаторы (по желанию) -->
+  <div class="flex justify-center gap-2 py-4">
+    <a href="#slide1" class="btn btn-xs btn-circle">1</a>
+    <a href="#slide2" class="btn btn-xs btn-circle">2</a>
+    <a href="#slide3" class="btn btn-xs btn-circle">3</a>
+    <!-- ... -->
+  </div>
+</div>
+
+</section>

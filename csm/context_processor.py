@@ -1,4 +1,4 @@
-from .models import CompanyInfo
+from apps.company.models import CompanyInfo
 
 def company_info(request):
     try:
@@ -7,7 +7,7 @@ def company_info(request):
         company = None
 
     return {
-        "COMPANY_NAME": company.name if company else "",
+        "COMPANY_NAME": company.name if company else "Bum",
         "COMPANY_ICO": company.ico if company else "",
         "COMPANY_DIC": company.dic if company else "",
         "COMPANY_ADDRESS": company.address if company else "",

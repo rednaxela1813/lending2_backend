@@ -13,6 +13,7 @@ ALLOWED_ORIGINS = config("ALLOWED_ORIGINS", default="", cast=lambda v: [s.strip(
 INSTALLED_APPS = [
     
     "django_filters",
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -24,24 +25,77 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
 #  'ratelimit',
+    
     'tailwind',
     'theme',
     'widget_tweaks',
     
     'contact_form',
-    'core',
+    
     'accounting',
     'csm',
-    'contact',
-    'properties',
+    'core',
+    
+    'apps.properties',
     'orders',
-    'dashboard',
+    'apps.company',
+    'apps.dashboard',
+    'apps.contact_messages',
+    "apps.core_images",
+    "apps.hotdeal",
 ]
 
 TAILWIND_APP_NAME = 'theme'
 
 
+# --- Jazzmin minimal ---
+JAZZMIN_SETTINGS = {
+    "site_title": "Deilmann Admin",
+    "site_header": "Deilmann Admin",
+    "site_brand": "Deilmann",
+    "welcome_sign": "Управление контентом",
+    "copyright": "Deilmann s.r.o.",
+    "show_ui_builder": True,  # включи лайв-кастомайзер в правом верхнем углу
+    "topmenu_links": [
+        # ссылка на твой кастомный дашборд
+        {"name": "Dashboard", "url": "dashboard:index", "permissions": ["auth.view_user"]},
+        # ссылка на публичный сайт
+        {"name": "Site", "url": "/", "new_window": True},
+    ],
+    "icons": {
+        # Иконки для ключевых моделей
+        "csm.HeroSection": "fas fa-bullhorn",
+        "csm.HeaderSection": "fas fa-layer-group",
+        "csm.FooterInfo": "fas fa-shoe-prints",
+        "csm.CompanyInfo": "fas fa-building",
+        "apps_properties.Property": "fas fa-city",
+        "apps_properties.PropertyImage": "far fa-image",
+        "orders.Order": "fas fa-shopping-cart",
+        "hotdeal.HotDealSection": "fas fa-fire",
+        "hotdeal.HotDealItem": "fas fa-percent",
+        # по умолчанию
+        "auth.User": "fas fa-user",
+        "auth.Group": "fas fa-users",
+    },
+}
+# опционально — быстрые твики UI (темы/шапка/сайдбар)
+JAZZMIN_UI_TWEAKS = {
+    "theme": "cosmo",  # потом подберёшь через UI Builder
+    "navbar": "navbar-dark",
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_flat_style": True,
+}
 
+
+
+PRIVACY_POLICY_VERSION = "2025-10-01"
+PRIVACY_POLICY_UPDATED = "2025-10-01"
+
+FERNET_KEYS = [k for k in [
+    config("FERNET_KEY_CURRENT", default=None),
+    config("FERNET_KEY_OLD1", default=None),
+    config("FERNET_KEY_OLD2", default=None),
+] if k]
 
 
 MIDDLEWARE = [
@@ -57,6 +111,8 @@ MIDDLEWARE = [
     
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+MIDDLEWARE += ["apps.dashboard.middleware.DashboardCompanyMiddleware"]
 
 
 ROOT_URLCONF = 'backend.urls'
@@ -101,3 +157,6 @@ LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard:home"
 
 LOGOUT_REDIRECT_URL = "/"
+
+
+REQUIRE_VERIFIED_EMAIL_FOR_ORDER = True

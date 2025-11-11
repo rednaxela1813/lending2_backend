@@ -1,11 +1,16 @@
 from django.db import models
 from django.urls import reverse
-from properties.models import PropertyType
+from apps.properties.models import PropertyType
 import uuid
+from django.urls import NoReverseMatch
+from django.core.validators import MinValueValidator, MaxValueValidator
+from decimal import Decimal
+from django.utils import timezone
+
 
 
 class HeroSection(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255) #TODO add uuid for all models
     subtitle = models.TextField(blank=True)
     description = models.TextField(blank=True, null=True, default='Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste.')
     button_text = models.CharField(max_length=50, default="Оставить заявку")
@@ -21,45 +26,14 @@ class HeaderSection(models.Model):
     logo_text = models.CharField(max_length=100, default='Agentúra Závodský s.r.o.')
     nav_services = models.CharField(max_length=50, default='Služby')
     nav_why = models.CharField(max_length=50, default='Prečo práve my?')
+    nav_about = models.CharField(max_length=50, default='O nás')
     nav_contact = models.CharField(max_length=50, default='Kontakt')
     button_text = models.CharField(max_length=50, default='Zanechajte žiadosť')
     updated_at = models.DateTimeField(auto_now=True)
-    images = models.ImageField(upload_to='logo/')
+   # images = models.ImageField(upload_to='logo/')
 
     def __str__(self):
         return "Header Content"
-
-
-class FooterInfo(models.Model):
-    about_title = models.CharField(max_length=100, default="Agentúra Závodský")
-    about_description = models.TextField()
-    contact_email = models.EmailField()
-    contact_phone = models.CharField(max_length=30)
-    contact_address = models.CharField(max_length=255)
-
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return "Footer Info"
-    
-
-class CompanyInfo(models.Model):
-    name = models.CharField(max_length=255)
-    ico = models.CharField("IČO", max_length=20, blank=True)
-    dic = models.CharField("DIČ", max_length=20, blank=True)
-    address = models.CharField(max_length=255)
-    phone = models.CharField(max_length=30)
-    email = models.EmailField()
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = "Informácie o firme"
-        verbose_name_plural = "Informácie o firme"
-
-    def __str__(self):
-        return self.name
-    
     
 
 
@@ -73,6 +47,17 @@ class ContactRequest(models.Model):
     def __str__(self):
         return f"{self.name} ({self.contact})"
     
+    
+class CarouselImage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255, blank=True)
+    image = models.ImageField(upload_to='carousel_images/')
+    description = models.CharField(max_length=255, blank=True)
+    button_text = models.CharField(max_length=50, default="Explore Offices", blank=True, null=True)
+
+    def __str__(self):
+        return f"Carousel Image {self.id}"
+    
 
 
 
@@ -80,18 +65,26 @@ class ContactRequest(models.Model):
 
 
 class ServiceSection(models.Model):
-    
-
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255, default="Naše služby")
     description = models.TextField(blank=True, null=True, default="Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste."    )
-    icon_svg = models.TextField(blank=True)  # если нужно
+    icon_svg = models.ForeignKey('Icon', blank=True, null=True, on_delete=models.SET_NULL)
+    color_icon = models.CharField(max_length=20, default="#2563eb", help_text="Hex color code for the icon")
     property_type = models.ForeignKey(PropertyType, on_delete=models.SET_NULL, null=True, blank=True)  # 🔥 теперь есть
     updated_at = models.DateTimeField(auto_now=True)
     
     
+    
     def get_list_url(self):
         if self.property_type:
-            return reverse('property_list', kwargs={'type': self.property_type.slug})
+            slug = self.property_type.slug
+            try:
+                # если есть роут с параметром
+                return reverse('property_list', kwargs={'type': slug})
+            except NoReverseMatch:
+                # fallback: базовый путь + ?type=slug
+                base = reverse('property_list')
+                return f"{base}?type={slug}"
         return None
 
 
@@ -125,3 +118,31 @@ class FrontendTheme(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+
+
+class Icon(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    key = models.SlugField(max_length=100, unique=True)        # 'office', 'billboard', 'legal', ...
+    label = models.CharField(max_length=100, blank=True)
+    svg_inline = models.TextField(blank=True)                  # <svg>...</svg> — удобнее и быстрее
+    image = models.ImageField(upload_to="icons/", blank=True, null=True)
+    css_class = models.CharField(max_length=120, blank=True)   # если хочешь использовать icon-font
+
+    def __str__(self):
+        return self.label or self.key
+    
+    
+    
+
+    
+class BottomCTASection(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255, default="Máte otázky?")
+    subtitle = models.TextField(blank=True, null=True, default="Kontaktujte nás ešte dnes a získajte viac informácií o našich službách a ponukách.")
+    button_text = models.CharField(max_length=50, default="Zanechajte žiadosť")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "Bottom CTA Section Content"

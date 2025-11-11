@@ -16,3 +16,6 @@ class LegalAddressOrderSerializer(serializers.ModelSerializer):
             'created_at',
         ]
         read_only_fields = ['public_id', 'created_at']
+        
+        
+        
