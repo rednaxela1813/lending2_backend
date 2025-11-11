@@ -1,4 +1,5 @@
 #!/bin/bash
+export DJANGO_SETTINGS_MODULE="${DJANGO_SETTINGS_MODULE:-backend.settings.prod}"
 set -e
 
 echo "⏳ Ожидание базы данных..."
