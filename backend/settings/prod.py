@@ -1,3 +1,4 @@
+#  prod.py
 from .base import *
 from decouple import config
 
@@ -89,6 +90,9 @@ LOGGING = {
     },
 }
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://my-work.deilmann.sk"
-]
+# ✅ ЧИТАЕМ из env и автоматически добавляем https:// для всех ALLOWED_HOSTS
+CSRF_TRUSTED_ORIGINS = _csv("CSRF_TRUSTED_ORIGINS")
+for host in ALLOWED_HOSTS:
+    url = f"https://{host}"
+    if url not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(url)
