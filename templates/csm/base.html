@@ -1,4 +1,4 @@
-{% load static %}
+{% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +9,11 @@
   <title>{% block title %}RentSpace Pro - Office Space, Billboards & Legal Addresses{% endblock title %}</title>
 
   {# Tailwind (собранный) #}
+  {% if DEBUG %}
+  {% tailwind_css %}
+{% else %}
   <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+{% endif %}
 
   {# Дополнительные стили страниц #}
   {% block extra_css %}{% endblock extra_css %}
