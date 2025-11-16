@@ -15,19 +15,19 @@ ENVIRONMENT=${ENV:-development}
 
 if [ "$ENVIRONMENT" = "development" ]; then
   echo "⚡ DEV: Устанавливаем зависимости Tailwind..."
-  npm install --prefix theme/static_src
+  #npm install --prefix theme/static_src
 
   echo "⚡ DEV: Строим Tailwind CSS..."
-  python manage.py tailwind build
+  #python manage.py tailwind build
 else
   echo "⚡ PROD: Устанавливаем зависимости Tailwind..."
-  npm install --prefix theme/static_src
+  #npm install --prefix theme/static_src
 
   echo "⚡ PROD: Строим Tailwind CSS..."
-  python manage.py tailwind build
+  #python manage.py tailwind build
 
   echo "📂 PROD: Собираем статические файлы..."
-  python manage.py collectstatic --noinput
+  #python manage.py collectstatic --noinput
 fi
 
 echo "🚀 Запускаем Gunicorn..."

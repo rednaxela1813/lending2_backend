@@ -1,3 +1,4 @@
+# backend/settings/__init__.py
 import os
 
 
