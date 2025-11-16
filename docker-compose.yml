@@ -17,6 +17,16 @@ services:
       ENV: development
     depends_on:
       - db
+  tailwind:
+    build: .
+    container_name: pizzalino-tailwind
+    command: python manage.py tailwind start
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    environment:
+      ENV: development
 
   db:
     image: postgres:15

@@ -1,133 +1,158 @@
-<!-- Header Section Component -->
- {% load static %}
-<header class="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-18">
-            <!-- Logo -->
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <a href="{% url 'homepage' %}" class="flex items-center">
-                        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-                            </svg>
-                        </div>
-                        <span class="text-xl font-bold text-gray-900"><img src="{% static 'images/logo3_light_theme.png' %}" alt="Logo" class="h-24"
-      /></span>
-                    </a>
-                </div>
-            </div>
+{# templates/partials/HeaderSection.html #}
+{% load static %}
 
-            <!-- Desktop Navigation -->
-            <nav class="hidden md:flex space-x-8 text-md">
-                <a href="{% url 'homepage' %}" class="text-gray-600 hover:text-blue-600 px-3 py-2  font-medium transition-colors duration-200">
-                    Home
-                </a>
-                <div class="relative group">
-                    <button class="text-gray-600 hover:text-blue-600 px-3 py-2  font-medium transition-colors duration-200 flex items-center">
-                        {{ header_section.nav_services |default:"Services" }}
-                        <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
-                    <!-- Dropdown Menu -->
-                    <div class="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                        <div class="py-1">
-                            <a href="#services" class="flex items-center px-4 py-2  text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                                <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                                </svg>
-                                {{ nas_sluzby.0.title |default:"Office Spaces"}}
-                            </a>
-                            <a href="#services" class="flex items-center px-4 py-2  text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                                <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 4v10a2 2 0 002 2h6a2 2 0 002-2V8M7 8H5a2 2 0 00-2 2v10a2 2 0 002 2h2M17 8h2a2 2 0 012 2v10a2 2 0 01-2 2h-2"></path>
-                                </svg>
-                                {{ nas_sluzby.1.title |default:"Billboard Advertising"}}
-                            </a>
-                            <a href="#services" class="flex items-center px-4 py-2  text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                                <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                </svg>
-                                {{ nas_sluzby.2.title |default:"Legal Addresses"}}
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <a href="{% url 'about_us' %}" class="text-gray-600 hover:text-blue-600 px-3 py-2  font-medium transition-colors duration-200">
-                    {{  header_section.nav_about |default:"About"  }}
-                </a>
-                <a href="#contact" class="text-gray-600 hover:text-blue-600 px-3 py-2  font-medium transition-colors duration-200">
-                    {{header_section.nav_contact |default:"Contact" }}
-                </a>
-            </nav>
+<header class="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
 
-            <!-- CTA Button -->
-            <div class="hidden md:flex items-center space-x-4">
-                <a href="tel:{{ company_info.phone|default:'(123) 456-7890' }}" class="text-blue-600 hover:text-blue-700 font-medium">
-                    {{ company_info.phone|default:"(123) 456-7890" }}
-                </a>
-                <a href="#quote" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg  font-medium transition-colors duration-200">
-                    {{ header_section.button_text |default:"Get Quote" }}
-                </a>
-            </div>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between py-4"> {# было py-3 #}
 
-            <!-- Mobile menu button -->
-            <div class="md:hidden">
-                <button type="button" class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" id="mobile-menu-button">
-                    <span class="sr-only">Open main menu</span>
-                    <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
+      {# --- Logo (увеличен) --- #}
+      <a href="{% url 'homepage' %}" class="flex items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center"> {# было 8x8 #}
+          <svg class="w-6 h-6 text-white" viewBox="0 0 20 20" aria-hidden="true">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+          </svg>
         </div>
-    </div>
 
-    <!-- Mobile menu -->
-    <div class="md:hidden hidden" id="mobile-menu">
-        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
-            <a href="#home" class="text-gray-600 hover:text-blue-600 block px-3 py-2 text-base font-medium">
-                Home
-            </a>
-            <a href="#office-space" class="text-gray-600 hover:text-blue-600 block px-3 py-2 text-base font-medium">
-                Office Spaces
-            </a>
-            <a href="#billboards" class="text-gray-600 hover:text-blue-600 block px-3 py-2 text-base font-medium">
-                Billboard Advertising
-            </a>
-            <a href="#legal-address" class="text-gray-600 hover:text-blue-600 block px-3 py-2 text-base font-medium">
-                Legal Addresses
-            </a>
-            <a href="{% url 'about_us' %}" class="text-gray-600 hover:text-blue-600 block px-3 py-2 text-base font-medium">
-                About
-            </a>
-            <a href="#contact" class="text-gray-600 hover:text-blue-600 block px-3 py-2 text-base font-medium">
-                Contact
-            </a>
-            <div class="border-t border-gray-200 pt-4 pb-3">
-                <div class="px-3 space-y-2">
-                    <a href="tel:+1234567890" class="block text-blue-600 font-medium">
-                        (123) 456-7890
-                    </a>
-                    <a href="#quote" class="block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium text-center">
-                        Get Quote
-                    </a>
-                </div>
+        <img
+          src="{% static 'images/Logo3_light_theme.png' %}"
+          alt="Zavodsky s.r.o."
+          class="block h-14 md:h-16 w-auto object-contain" />  {# было h-10 md:h-12 #}
+        <span class="sr-only">Zavodsky s.r.o. – domov</span>
+      </a>
+
+      {# --- Desktop Nav (крупнее) --- #}
+      <nav class="hidden md:flex items-center gap-4 lg:gap-8 text-[16px] lg:text-[17px]"> {# шрифт и интервалы ↑ #}
+        <a href="{% url 'homepage' %}"
+           class="px-3 py-2 text-gray-800 hover:text-blue-600 transition-colors">
+          Home
+        </a>
+
+        <div class="relative group">
+          <button type="button"
+                  class="flex items-center px-3 py-2 text-gray-800 hover:text-blue-600 transition-colors"
+                  aria-haspopup="true" aria-expanded="false">
+            {{ header_section.nav_services|default:"Services" }}
+            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+
+          {# Dropdown #}
+          <div
+            class="absolute left-0 mt-3 w-64 rounded-lg border border-gray-200 bg-white shadow-xl ring-1 ring-black/5
+                   opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
+                   transition-all duration-200 z-50">
+            <div class="py-2">
+              <a href="#services"
+                 class="flex items-center gap-3 px-4 py-2.5 text-gray-800 hover:bg-blue-50 hover:text-blue-700">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+                {{ nas_sluzby.0.title|default:"Office Spaces" }}
+              </a>
+
+              <a href="#services"
+                 class="flex items-center gap-3 px-4 py-2.5 text-gray-800 hover:bg-blue-50 hover:text-blue-700">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 4v10a2 2 0 002 2h6a2 2 0 002-2V8M7 8H5a2 2 0 00-2 2v10a2 2 0 002 2h2M17 8h2a2 2 0 012 2v10a2 2 0 01-2 2h-2"/>
+                </svg>
+                {{ nas_sluzby.1.title|default:"Billboard Advertising" }}
+              </a>
+
+              <a href="#services"
+                 class="flex items-center gap-3 px-4 py-2.5 text-gray-800 hover:bg-blue-50 hover:text-blue-700">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                {{ nas_sluzby.2.title|default:"Legal Addresses" }}
+              </a>
             </div>
+          </div>
         </div>
+
+        <a href="{% url 'about_us' %}"
+           class="px-3 py-2 text-gray-800 hover:text-blue-600 transition-colors">
+          {{ header_section.nav_about|default:"About" }}
+        </a>
+
+        <a href="#contact"
+           class="px-3 py-2 text-gray-800 hover:text-blue-600 transition-colors">
+          {{ header_section.nav_contact|default:"Contact" }}
+        </a>
+      </nav>
+
+      {# --- CTA (увеличена) --- #}
+      <div class="hidden md:flex items-center gap-5">
+        <a href="tel:{{ company_info.phone|default:'(123) 456-7890' }}"
+           class="text-[16px] font-semibold text-blue-600 hover:text-blue-700">
+          {{ company_info.phone|default:"(123) 456-7890" }}
+        </a>
+        <a href="#quote"
+           class="rounded-xl bg-blue-600 px-5 py-3 text-[15px] font-semibold text-white hover:bg-blue-700 transition-colors">
+          {{ header_section.button_text|default:"Get Quote" }}
+        </a>
+      </div>
+
+      {# --- Mobile burger --- #}
+      <div class="md:hidden">
+        <button id="mobile-menu-button"
+                type="button"
+                class="inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-controls="mobile-menu" aria-expanded="false">
+          <span class="sr-only">Open main menu</span>
+          <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
     </div>
+  </div>
+
+  {# --- Mobile menu --- #}
+  <div id="mobile-menu" class="md:hidden hidden">
+    <div class="border-t border-gray-200 bg-white px-4 py-3 space-y-1">
+      <a href="{% url 'homepage' %}" class="block px-2 py-2 text-[16px] text-gray-800 hover:text-blue-600">Home</a>
+      <a href="#services" class="block px-2 py-2 text-[16px] text-gray-800 hover:text-blue-600">
+        {{ nas_sluzby.0.title|default:"Office Spaces" }}
+      </a>
+      <a href="#services" class="block px-2 py-2 text-[16px] text-gray-800 hover:text-blue-600">
+        {{ nas_sluzby.1.title|default:"Billboard Advertising" }}
+      </a>
+      <a href="#services" class="block px-2 py-2 text-[16px] text-gray-800 hover:text-blue-600">
+        {{ nas_sluzby.2.title|default:"Legal Addresses" }}
+      </a>
+      <a href="{% url 'about_us' %}" class="block px-2 py-2 text-[16px] text-gray-800 hover:text-blue-600">
+        {{ header_section.nav_about|default:"About" }}
+      </a>
+      <a href="#contact" class="block px-2 py-2 text-[16px] text-gray-800 hover:text-blue-600">
+        {{ header_section.nav_contact|default:"Contact" }}
+      </a>
+
+      <div class="mt-2 border-t border-gray-200 pt-3">
+        <a href="tel:{{ company_info.phone|default:'(123) 456-7890' }}" class="block px-2 py-2 text-blue-600 font-semibold">
+          {{ company_info.phone|default:"(123) 456-7890" }}
+        </a>
+        <a href="#quote" class="mt-2 block rounded-xl bg-blue-600 px-4 py-2.5 text-center text-white font-semibold hover:bg-blue-700">
+          {{ header_section.button_text|default:"Get Quote" }}
+        </a>
+      </div>
+    </div>
+  </div>
 </header>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', function() {
-                mobileMenu.classList.toggle('hidden');
-            });
-        }
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('mobile-menu-button');
+    const menu = document.getElementById('mobile-menu');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', () => {
+      const isHidden = menu.classList.toggle('hidden');
+      btn.setAttribute('aria-expanded', String(!isHidden));
     });
+  });
 </script>
