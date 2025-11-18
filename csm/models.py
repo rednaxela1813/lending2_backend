@@ -73,19 +73,14 @@ class ServiceSection(models.Model):
     property_type = models.ForeignKey(PropertyType, on_delete=models.SET_NULL, null=True, blank=True)  # 🔥 теперь есть
     updated_at = models.DateTimeField(auto_now=True)
     
-    
-    
     def get_list_url(self):
-        if self.property_type:
-            slug = self.property_type.slug
-            try:
-                # если есть роут с параметром
-                return reverse('property_list', kwargs={'type': slug})
-            except NoReverseMatch:
-                # fallback: базовый путь + ?type=slug
-                base = reverse('property_list')
-                return f"{base}?type={slug}"
-        return None
+        # Линк на список предложений для данного типа услуги
+        if not self.property_type:
+            return None
+        try:
+            return reverse('csm:service_offers', kwargs={'type': self.property_type.slug})
+        except NoReverseMatch:
+            return None
 
 
     def __str__(self):

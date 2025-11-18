@@ -2,76 +2,101 @@
 {% extends "csm/base.html" %}
 
 {% block title %}
-  Services{% if active_service_type %} — {{ active_service_type|capfirst }}{% endif %}
+  Ponuky{% if service_type_obj %} — {{ service_type_obj.name }}{% endif %}
 {% endblock %}
 
 {% block content %}
-<section class="container mx-auto px-4 py-8">
-
-  <header class="mb-8">
-    <h1 class="text-3xl font-bold">
-      Services{% if active_service_type %}: {{ active_service_type|capfirst }}{% endif %}
-    </h1>
-    {# горизонтальное меню типов услуг (появится, если в контексте передать service_types) #}
-    {% if service_types %}
-      <nav class="mt-4 flex flex-wrap gap-2">
-        <a href="{% url 'services' %}"
-           class="px-3 py-1 rounded-lg border {% if not active_service_type %}bg-gray-900 text-white{% else %}bg-white{% endif %}">
-          All
-        </a>
-        {% for t in service_types %}
-          <a href="{% url 'services_by_type' t.slug %}"
-             class="px-3 py-1 rounded-lg border {% if active_service_type == t.slug %}bg-gray-900 text-white{% else %}bg-white{% endif %}">
-            {{ t.name }}
-          </a>
-        {% endfor %}
-      </nav>
-    {% endif %}
-  </header>
-
-  {# список объектов #}
-  {% if items %}
-    <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {% for it in items %}
-        <li class="border rounded-2xl overflow-hidden bg-white">
-          <div class="p-4">
-            <h3 class="text-lg font-semibold mb-1">
-              {{ it.title|default:it }}
-            </h3>
-
-            {# опциональные поля — рендерятся, если есть #}
-            {% if it.address %}<p class="text-sm text-gray-600">{{ it.address }}</p>{% endif %}
-            {% if it.description %}<p class="mt-2 text-sm text-gray-700">{{ it.description|truncatechars:160 }}</p>{% endif %}
-
-            <div class="mt-4 flex gap-3">
-              {# подставь свой url детальной страницы объекта #}
-              {# пример: {% url 'properties:detail' it.public_id %} или it.pk #}
-              <a href="{% url 'properties:detail' it.pk %}"
-                 class="inline-block text-sm font-medium px-3 py-1.5 rounded-lg bg-gray-900 text-white">
-                Подробнее
-              </a>
-            </div>
-          </div>
-        </li>
-      {% endfor %}
-    </ul>
-
-    {# пагинация, если во view включишь paginate_by = N #}
-    {% if is_paginated %}
-      <div class="mt-8 flex items-center justify-center gap-2">
-        {% if page_obj.has_previous %}
-          <a class="px-3 py-1 border rounded-lg" href="?page={{ page_obj.previous_page_number }}{% if active_service_type %}&service_type={{ active_service_type }}{% endif %}">← Prev</a>
-        {% endif %}
-        <span class="px-3 py-1">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
-        {% if page_obj.has_next %}
-          <a class="px-3 py-1 border rounded-lg" href="?page={{ page_obj.next_page_number }}{% if active_service_type %}&service_type={{ active_service_type }}{% endif %}">Next →</a>
+<section class="bg-white py-16">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
+      <div>
+        <p class="text-sm uppercase tracking-wide text-gray-500">Ponuky</p>
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
+          {{ service_type_obj.name|default:"Dostupné ponuky" }}
+        </h1>
+        {% if service_type_obj.description %}
+          <p class="mt-2 text-gray-600 max-w-3xl">{{ service_type_obj.description }}</p>
         {% endif %}
       </div>
+
+      {% if service_types %}
+        <div class="flex flex-wrap gap-2">
+          {% for slug,name in service_types %}
+            <a href="{% url 'csm:service_offers' slug %}"
+               class="px-3 py-2 rounded-lg border {% if active_service_type == slug %}bg-blue-600 text-white border-blue-600{% else %}bg-white text-gray-800 hover:border-blue-200{% endif %}">
+              {{ name }}
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    {% if items %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for it in items %}
+          <article class="border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition bg-white overflow-hidden">
+            <div class="p-6">
+              <h3 class="text-xl font-semibold text-gray-900">
+                {{ it.name|default:it }}
+              </h3>
+              {% if it.location %}
+                <p class="text-sm text-gray-500 mt-1">{{ it.location }}</p>
+              {% endif %}
+              {% if it.summary %}
+                <p class="mt-3 text-gray-700">{{ it.summary }}</p>
+              {% elif it.description %}
+                <p class="mt-3 text-gray-700">{{ it.description|truncatechars:180 }}</p>
+              {% endif %}
+
+              {% if it.price %}
+                <div class="mt-4 text-lg font-semibold text-blue-700">
+                  Od {{ it.price }} {{ it.currency|default:"EUR" }}
+                </div>
+              {% endif %}
+
+              {% if it.list_details %}
+                <ul class="mt-4 space-y-2 text-sm text-gray-600">
+                  {% for detail in it.list_details %}
+                    <li class="flex items-start">
+                      <span class="mt-1 mr-2 text-green-500">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                      </span>
+                      <span>{{ detail }}</span>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+
+              <div class="mt-6 flex gap-3">
+                <a href="{{ it.get_absolute_url }}"
+                   class="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700">
+                  Detail ponuky
+                </a>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+
+      {% if is_paginated %}
+        <div class="mt-10 flex items-center justify-center gap-3">
+          {% if page_obj.has_previous %}
+            <a class="px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50"
+               href="?page={{ page_obj.previous_page_number }}">← Predchádzajúca</a>
+          {% endif %}
+          <span class="px-3 py-2 text-gray-600">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+          {% if page_obj.has_next %}
+            <a class="px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50"
+               href="?page={{ page_obj.next_page_number }}">Ďalšia →</a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+    {% else %}
+      <div class="text-center py-16">
+        <p class="text-gray-600 text-lg">Momentálne nemáme dostupné ponuky pre túto kategóriu.</p>
+      </div>
     {% endif %}
-
-  {% else %}
-    <p class="text-gray-600">Пока нет объектов для отображения.</p>
-  {% endif %}
-
+  </div>
 </section>
 {% endblock %}

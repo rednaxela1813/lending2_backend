@@ -66,4 +66,3 @@ class BillboardListView(ListView):
 
     def get_queryset(self):
         return Property.objects.filter(type__slug='billboards')
-

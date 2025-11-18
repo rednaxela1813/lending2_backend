@@ -13,7 +13,7 @@ from apps.company.views import about_us_view
 urlpatterns = [
     
     path("pon_ka/", admin.site.urls),
-    path('', include('csm.urls')),
+    path('', include(('csm.urls', 'csm'), namespace='csm')),
     path('', include('apps.properties.urls')),
     path("kontakt/", include("contact_form.urls")),
 

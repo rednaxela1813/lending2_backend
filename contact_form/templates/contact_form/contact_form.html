@@ -5,7 +5,7 @@
   <div class="container mx-auto max-w-3xl">
     <h2 class="mb-12 text-center text-4xl font-bold text-text">Zanechajte žiadosť</h2>
 
-    <form method="post" action="{% url 'homepage' %}" class="space-y-6 bg-gray-900 p-8 border border-border rounded-2xl shadow-lg">
+    <form method="post" action="{% url 'csm:homepage' %}" class="space-y-6 bg-gray-900 p-8 border border-border rounded-2xl shadow-lg">
       {% csrf_token %}
 
       {% if messages %}
@@ -82,4 +82,3 @@
     </form>
   </div>
 </section>
-

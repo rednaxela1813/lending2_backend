@@ -6,7 +6,7 @@ import pytz
 
 from django.utils import timezone
 from django.urls import reverse
-from django.views.generic import ListView, TemplateView
+from django.views.generic import DetailView, ListView, TemplateView
 from django.contrib import messages
 from django.db.models import Q, Prefetch
 from apps.company.models import CompanyInfo, FooterInfo
@@ -14,7 +14,7 @@ from .models import (
     HeroSection, HeaderSection, FrontendTheme,
     ServiceSection, CarouselImage, Icon, BottomCTASection,
 )
-from apps.properties.models import Property
+from apps.properties.models import Property, PropertyType
 from apps.hotdeal.context import build_hot_deal_items   # ← наш билдер
 from apps.hotdeal.models import HotDealItem, HotDealSection  # ← правильный импорт из apps.hotdeal
 # импорт модели из contact_form
@@ -94,7 +94,7 @@ def homepage(request):
             messages.success(request, "Správa bola úspešne odoslaná.")
         else:
             messages.error(request, "Email nie je nakonfigurovaný.")
-        return redirect("homepage")
+        return redirect("csm:homepage")
 
     # Если иконки для HotDeals нужны — см. комментарий в функции; сейчас noop
     _assign_missing_icons_round_robin()
@@ -144,6 +144,47 @@ class ServicesListView(ListView):
         ctx = super().get_context_data(**kwargs)
         # если где-то ещё нужно hot-deals внутри этой страницы
         ctx["hot_deal_items"] = build_hot_deal_items()
+        return ctx
+
+
+class ServiceDetailView(DetailView):
+    model = ServiceSection
+    template_name = "csm/service_detail.html"
+    context_object_name = "service"
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .select_related("icon_svg", "property_type")
+        )
+
+
+class ServiceOffersListView(ListView):
+    model = Property
+    template_name = "csm/services_list.html"
+    context_object_name = "items"
+    paginate_by = 12
+
+    def get_queryset(self):
+        slug = self.kwargs.get("type")
+        return (
+            super()
+            .get_queryset()
+            .select_related("type")
+            .filter(type__slug=slug)
+        )
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        slug = self.kwargs.get("type")
+        ctx["active_service_type"] = slug
+        ctx["service_type_obj"] = PropertyType.objects.filter(slug=slug).first()
+        ctx["service_types"] = (
+            ServiceSection.objects.select_related("property_type")
+            .exclude(property_type__isnull=True)
+            .values_list("property_type__slug", "property_type__name")
+        )
         return ctx
 
 

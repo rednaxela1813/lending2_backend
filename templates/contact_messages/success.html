@@ -44,11 +44,11 @@
 
         <!-- Actions -->
         <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-          <a href="{% url 'homepage' %}"
+          <a href="{% url 'csm:homepage' %}"
              class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition">
             Back to Home
           </a>
-          <a href="{% url 'homepage' %}#stats"
+          <a href="{% url 'csm:homepage' %}#stats"
              class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 transition">
             View Services
           </a>
@@ -74,7 +74,7 @@
     var n = 5, el = document.getElementById('sec');
     var t = setInterval(function () {
       n -= 1; if (el) el.textContent = n;
-      if (n <= 0) { clearInterval(t); window.location.href = "{% url 'homepage' %}"; }
+      if (n <= 0) { clearInterval(t); window.location.href = "{% url 'csm:homepage' %}"; }
     }, 1000);
   })();
 </script>
