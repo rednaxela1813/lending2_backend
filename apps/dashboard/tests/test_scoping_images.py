@@ -1,6 +1,6 @@
 import pytest
 from django.urls import reverse
-from accounting.models import Company
+from apps.company.models import CompanyInfo
 from apps.dashboard.models import EditableImage
 from django.contrib.auth import get_user_model
 from django.test import RequestFactory
@@ -14,8 +14,8 @@ User = get_user_model()
 
 def test_image_list_is_scoped_by_company(client):
     # --- подготовка компаний и пользователей ---
-    c1 = Company.objects.create(name="Zavodsky", slug="zv")
-    c2 = Company.objects.create(name="Other", slug="ot")
+    c1 = CompanyInfo.objects.create(name="Zavodsky", ico="", dic="", address="Addr", phone="123", email="zav@example.com")
+    c2 = CompanyInfo.objects.create(name="Other", ico="", dic="", address="Addr2", phone="321", email="other@example.com")
 
     u1 = User.objects.create_user(email="m1@example.com", password="pass")
     u2 = User.objects.create_user(email="m2@example.com", password="pass")

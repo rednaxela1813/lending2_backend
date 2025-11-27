@@ -2,7 +2,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from apps.core_images.mixins import ImageOptimizationMixin
-from accounting.models import Company
+from apps.company.models import CompanyInfo
 from django.db.models import Q
 
 
@@ -62,7 +62,7 @@ class EditableText(models.Model):
     text = models.TextField(_('Text / HTML'), blank=True)
     is_active = models.BooleanField(_('Active'), default=True)
     updated_at = models.DateTimeField(auto_now=True)
-    company = models.ForeignKey(Company, null=True, blank=True, on_delete=models.CASCADE, related_name="editable_texts")
+    company = models.ForeignKey(CompanyInfo, null=True, blank=True, on_delete=models.CASCADE, related_name="editable_texts")
 
     class Meta:
         constraints = [
@@ -96,7 +96,7 @@ class EditableImage(models.Model):
     is_active = models.BooleanField(default=True)
     updated_at = models.DateTimeField(auto_now=True)
     company = models.ForeignKey(
-        Company, null=True, blank=True,
+        CompanyInfo, null=True, blank=True,
         on_delete=models.CASCADE, related_name="editable_images"
     )
 

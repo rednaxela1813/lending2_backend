@@ -1,7 +1,8 @@
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from accounting.models import Company, ManagerProfile
+from accounting.models import ManagerProfile
+from apps.company.models import CompanyInfo
 from apps.dashboard.models import EditableText
 
 
@@ -10,11 +11,25 @@ User = get_user_model()
 
 @pytest.fixture
 def c1():
-    return Company.objects.create(name="Zavodsky", slug="zavodsky")
+    return CompanyInfo.objects.create(
+        name="Zavodsky",
+        ico="",
+        dic="",
+        address="Addr",
+        phone="123",
+        email="zav@example.com",
+    )
 
 @pytest.fixture
 def c2():
-    return Company.objects.create(name="OtherCo", slug="other")
+    return CompanyInfo.objects.create(
+        name="OtherCo",
+        ico="",
+        dic="",
+        address="Addr2",
+        phone="321",
+        email="other@example.com",
+    )
 
 @pytest.fixture
 def manager1(c1):
