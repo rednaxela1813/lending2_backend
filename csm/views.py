@@ -1,12 +1,13 @@
 # csm/views.py
 from django.shortcuts import render, redirect
 from datetime import datetime
+import random
 import itertools
 import pytz
 
 from django.utils import timezone
 from django.urls import reverse
-from django.views.generic import ListView, TemplateView
+from django.views.generic import DetailView, ListView, TemplateView
 from django.contrib import messages
 from django.db.models import Q, Prefetch
 from apps.company.models import CompanyInfo, FooterInfo
@@ -14,7 +15,7 @@ from .models import (
     HeroSection, HeaderSection, FrontendTheme,
     ServiceSection, CarouselImage, Icon, BottomCTASection,
 )
-from apps.properties.models import Property
+from apps.properties.models import Property, PropertyType
 from apps.hotdeal.context import build_hot_deal_items   # ← наш билдер
 from apps.hotdeal.models import HotDealItem, HotDealSection  # ← правильный импорт из apps.hotdeal
 # импорт модели из contact_form
@@ -94,7 +95,7 @@ def homepage(request):
             messages.success(request, "Správa bola úspešne odoslaná.")
         else:
             messages.error(request, "Email nie je nakonfigurovaný.")
-        return redirect("homepage")
+        return redirect("csm:homepage")
 
     # Если иконки для HotDeals нужны — см. комментарий в функции; сейчас noop
     _assign_missing_icons_round_robin()
@@ -144,6 +145,72 @@ class ServicesListView(ListView):
         ctx = super().get_context_data(**kwargs)
         # если где-то ещё нужно hot-deals внутри этой страницы
         ctx["hot_deal_items"] = build_hot_deal_items()
+        return ctx
+
+
+class ServiceDetailView(DetailView):
+    model = ServiceSection
+    template_name = "csm/service_detail.html"
+    context_object_name = "service"
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .select_related("icon_svg", "property_type")
+        )
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        images_pool = []
+
+        # если есть связанный property_type, собираем изображения из Property с этим типом
+        if self.object and self.object.property_type:
+            props = (
+                Property.objects.filter(type=self.object.property_type)
+                .prefetch_related("images")
+            )
+            for prop in props:
+                for img in prop.images.all():
+                    images_pool.append(img.image.url)
+
+        # фон только из фото соответствующего типа; если их нет — остаётся белый фон
+        ctx["random_bg_image"] = random.choice(images_pool) if images_pool else None
+        return ctx
+
+
+class ServiceOffersListView(ListView):
+    model = Property
+    template_name = "csm/services_list.html"
+    context_object_name = "items"
+    paginate_by = 12
+
+    def get_queryset(self):
+        slug = self.kwargs.get("type")
+        return (
+            super()
+            .get_queryset()
+            .select_related("type")
+            .prefetch_related("images")
+            .filter(type__slug=slug)
+        )
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        slug = self.kwargs.get("type")
+        ctx["active_service_type"] = slug
+        ctx["service_type_obj"] = PropertyType.objects.filter(slug=slug).first()
+        ctx["service_types"] = (
+            ServiceSection.objects.select_related("property_type")
+            .exclude(property_type__isnull=True)
+            .values_list("property_type__slug", "property_type__name")
+        )
+        images_pool = []
+        for prop in ctx["items"]:
+            images = list(prop.images.all())
+            prop.random_image = random.choice(images).image.url if images else None
+            images_pool.extend([img.image.url for img in images])
+        ctx["random_bg_image"] = random.choice(images_pool) if images_pool else None
         return ctx
 
 

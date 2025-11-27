@@ -1,4 +1,9 @@
 {# templates/hotdeal/detail.html #}
+{% load static %}
+
+
+{# Детальная информация по акции #}
+{# Контекстные переменные: item, images, description, unit, iframe #}
 {% with ROOT_ID="hdp-"|add:item.public_id|stringformat:"s" %}
 <div id="{{ ROOT_ID }}" class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
   <div class="flex items-start justify-between mb-4 md:mb-6">
@@ -89,6 +94,7 @@
   </div>
 
   {% if iframe %}
+  
     <div class="w-full aspect-video rounded-xl overflow-hidden">
       {{ iframe|safe }}
     </div>

@@ -20,7 +20,7 @@ def hotdeal_partial(request, public_id):
         or (getattr(unit, "description", "") or "")
         or (item.description or "")
     )
-    iframe = getattr(prop, "iframe", None)
+    iframe = getattr(unit, "iframe", None) or getattr(prop, "iframe", None)
 
     return render(request, "hotdeal/detail.html", {
         "item": item,

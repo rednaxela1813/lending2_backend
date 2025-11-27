@@ -6,7 +6,7 @@
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between py-3">
       {# --- Logo (чуть меньше) --- #}
-      <a href="{% url 'homepage' %}" class="flex items-center gap-3">
+      <a href="{% url 'csm:homepage' %}" class="flex items-center gap-3">
         <div class="w-8 h-8 rounded-xl bg-blue-600/80 flex items-center justify-center ">
           <svg class="w-5 h-5 text-white" viewBox="0 0 20 20" aria-hidden="true">
             <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h3a1 1 0 001-1v-3h2v3a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
@@ -23,7 +23,7 @@
 
       {# --- Desktop Nav (чуть меньше шрифт и отступы) --- #}
       <nav class="hidden md:flex items-center gap-4 lg:gap-7 text-[15px] lg:text-[16px]">
-        <a href="{% url 'homepage' %}"
+        <a href="{% url 'csm:homepage' %}"
            class="px-2 py-2 text-gray-800 hover:text-blue-600 transition-colors">
           Home
         </a>
@@ -90,7 +90,7 @@
            class="text-[15px] font-semibold text-blue-600 hover:text-blue-700">
           {{ company_info.phone|default:"(123) 456-7890" }}
         </a>
-        <a href="#quote"
+        <a href="#contact"
            class="rounded-xl bg-blue-600 px-4 py-2.5 text-[14px] font-semibold text-white hover:bg-blue-700 transition-colors">
           {{ header_section.button_text|default:"Get Quote" }}
         </a>
@@ -116,7 +116,7 @@
   {# --- Mobile menu --- #}
   <div id="mobile-menu" class="md:hidden hidden border-t border-gray-200 bg-white/95 backdrop-blur">
     <div class="space-y-1 px-4 py-4">
-      <a href="{% url 'homepage' %}"
+      <a href="{% url 'csm:homepage' %}"
          class="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100">
         Home
       </a>

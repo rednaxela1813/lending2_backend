@@ -28,11 +28,11 @@ class EditableTextAdmin(admin.ModelAdmin):
 
 @admin.register(EditableImage)
 class EditableImageAdmin(admin.ModelAdmin):
-    list_display = ("key", "company", "is_active", "updated_at", "preview")
+    list_display = ("company", "is_active", "updated_at", "preview")
     list_filter = ("company", "is_active")
-    search_fields = ("key", "caption", "alt")
+    search_fields = ( "caption", "alt")
     autocomplete_fields = ("company",)
-    fields = ("key", "image", "alt", "caption", "is_active", "company", "updated_at", "preview")
+    fields = ( "image", "alt", "caption", "is_active", "company", "updated_at", "preview")
     readonly_fields = ("updated_at", "preview")
 
     def preview(self, obj):
