@@ -45,7 +45,7 @@
   {{ form.consent|add_class:"mt-1" |attr:"id:gdprCheckbox" }}
   <label for="gdprCheckbox" class="text-sm leading-snug">
     Súhlasím so spracovaním osobných údajov v súlade s
-    <a href="{% url 'privacy' %}" class="text-primary hover:underline">Zásady ochrany osobných údajov</a>.
+    <a href="{% url 'csm:privacy' %}" class="text-primary hover:underline">Zásady ochrany osobných údajov</a>.
   </label>
 </div>
 {% if form.consent.errors %}

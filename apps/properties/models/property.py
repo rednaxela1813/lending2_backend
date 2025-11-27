@@ -13,7 +13,6 @@ from apps.core_images.mixins import ImageOptimizationMixin
 
 class PropertyType(models.Model):
     public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    type_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     slug = models.SlugField(unique=True)
     name = models.CharField(max_length=100)
     icon_svg = models.TextField(blank=True)

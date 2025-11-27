@@ -12,7 +12,13 @@ class PropertyListView(ListView):
     context_object_name = 'properties'
     
     def get_queryset(self):
-        return Property.objects.filter(type__slug='offices')
+        slug = self.request.GET.get("type") or "offices"
+        return Property.objects.filter(type__slug=slug)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_type"] = self.request.GET.get("type") or "offices"
+        return context
 
 
 class PropertyDetailView(View):

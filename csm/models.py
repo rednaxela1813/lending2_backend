@@ -74,11 +74,14 @@ class ServiceSection(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def get_list_url(self):
-        # Линк на список предложений для данного типа услуги
+        """
+        Link to the general property list filtered by this service type.
+        Falls back to None if the route is not configured.
+        """
         if not self.property_type:
             return None
         try:
-            return reverse('csm:service_offers', kwargs={'type': self.property_type.slug})
+            return f"{reverse('property_list')}?type={self.property_type.slug}"
         except NoReverseMatch:
             return None
 
