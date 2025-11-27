@@ -33,12 +33,12 @@ INSTALLED_APPS = [
     'contact_form',
     
     'accounting',
-    'csm',
+    'csm.apps.CsmConfig',
     'core',
     
     'apps.properties',
     'orders',
-    'apps.company',
+    'apps.company.apps.CompanyConfig',
     'apps.dashboard',
     'apps.contact_messages',
     "apps.core_images",

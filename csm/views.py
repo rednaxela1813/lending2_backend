@@ -1,6 +1,7 @@
 # csm/views.py
 from django.shortcuts import render, redirect
 from datetime import datetime
+import random
 import itertools
 import pytz
 
@@ -159,6 +160,24 @@ class ServiceDetailView(DetailView):
             .select_related("icon_svg", "property_type")
         )
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        images_pool = []
+
+        # если есть связанный property_type, собираем изображения из Property с этим типом
+        if self.object and self.object.property_type:
+            props = (
+                Property.objects.filter(type=self.object.property_type)
+                .prefetch_related("images")
+            )
+            for prop in props:
+                for img in prop.images.all():
+                    images_pool.append(img.image.url)
+
+        # фон только из фото соответствующего типа; если их нет — остаётся белый фон
+        ctx["random_bg_image"] = random.choice(images_pool) if images_pool else None
+        return ctx
+
 
 class ServiceOffersListView(ListView):
     model = Property
@@ -172,6 +191,7 @@ class ServiceOffersListView(ListView):
             super()
             .get_queryset()
             .select_related("type")
+            .prefetch_related("images")
             .filter(type__slug=slug)
         )
 
@@ -185,6 +205,12 @@ class ServiceOffersListView(ListView):
             .exclude(property_type__isnull=True)
             .values_list("property_type__slug", "property_type__name")
         )
+        images_pool = []
+        for prop in ctx["items"]:
+            images = list(prop.images.all())
+            prop.random_image = random.choice(images).image.url if images else None
+            images_pool.extend([img.image.url for img in images])
+        ctx["random_bg_image"] = random.choice(images_pool) if images_pool else None
         return ctx
 
 

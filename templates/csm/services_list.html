@@ -1,13 +1,21 @@
 {# templates/csm/services_list.html #}
 {% extends "csm/base.html" %}
+{% load static %}
 
 {% block title %}
   Ponuky{% if service_type_obj %} — {{ service_type_obj.name }}{% endif %}
 {% endblock %}
 
 {% block content %}
-<section class="bg-white py-16">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<section class="relative py-16 overflow-hidden">
+  <div class="absolute inset-0">
+    <div class="h-full w-full bg-cover bg-center"
+         style="background-image: url('{% if random_bg_image %}{{ random_bg_image }}{% else %}{% static 'images/default-office.jpg' %}{% endif %}');">
+    </div>
+    <div class="absolute inset-0 bg-white/90 backdrop-blur-sm"></div>
+  </div>
+
+  <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
       <div>
         <p class="text-sm uppercase tracking-wide text-gray-500">Ponuky</p>
@@ -35,6 +43,14 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {% for it in items %}
           <article class="border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition bg-white overflow-hidden">
+            <div class="relative h-48 bg-gray-100">
+              {% if it.random_image %}
+                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ it.random_image }}');"></div>
+              {% else %}
+                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{% static 'images/default-office.jpg' %}');"></div>
+              {% endif %}
+              <div class="absolute inset-0 bg-gradient-to-t from-black/25 via-black/10 to-transparent"></div>
+            </div>
             <div class="p-6">
               <h3 class="text-xl font-semibold text-gray-900">
                 {{ it.name|default:it }}
