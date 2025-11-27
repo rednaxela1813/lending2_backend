@@ -26,6 +26,11 @@ class CompanyInfo(models.Model):
     address = models.CharField(max_length=255)
     phone = models.CharField(max_length=30)
     email = models.EmailField()
+    facebook_url = models.URLField(blank=True, null=True, default="facebook.com")
+    instagram_url = models.URLField(blank=True, null=True, default="instagram.com")
+    linkedin_url = models.URLField(blank=True, null=True, default="linkedin.com")
+    x_url = models.URLField(blank=True, null=True, default="x.com")
+    tiktok_url = models.URLField(blank=True, null=True, default="tiktok.com")
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

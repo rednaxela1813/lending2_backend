@@ -88,7 +88,7 @@ class EditableText(models.Model):
         super().save(*args, **kwargs)
 
 
-class EditableImage(models.Model):
+class EditableImage(ImageOptimizationMixin, models.Model):
     key = models.CharField(max_length=255)
     image = models.ImageField(upload_to="editable_images/", blank=True, null=True)
     caption = models.CharField(max_length=255, blank=True)
@@ -107,11 +107,12 @@ class EditableImage(models.Model):
                 name="uniq_editableimage_key_company",
             ),
             models.UniqueConstraint(
-                fields=["key"],
-                condition=Q(company__isnull=True),
-                name="uniq_editableimage_key_global",
-            ),
-        ]
+            fields=["key"],
+            condition=Q(company__isnull=True),
+            name="uniq_editableimage_key_global",
+        ),
+    ]
+    IMAGE_FIELDS = ("image",)
 
     def __str__(self):
         return f"{self.key} ({self.company or 'global'})"

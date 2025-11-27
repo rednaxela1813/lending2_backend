@@ -6,10 +6,11 @@ from django.urls import NoReverseMatch
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 from django.utils import timezone
+from apps.core_images.mixins import ImageOptimizationMixin
 
 
 
-class HeroSection(models.Model):
+class HeroSection(ImageOptimizationMixin, models.Model):
     title = models.CharField(max_length=255) #TODO add uuid for all models
     subtitle = models.TextField(blank=True)
     description = models.TextField(blank=True, null=True, default='Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste.')
@@ -17,6 +18,7 @@ class HeroSection(models.Model):
     right_colon_text = models.CharField(max_length=50, default="Zanechajte žiadosť", blank=True, null=True)   
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to='hero_images/', blank=True, null=True)
+    IMAGE_FIELDS = ("image",)
 
     def __str__(self):
         return "Hero Section Content"
@@ -48,12 +50,13 @@ class ContactRequest(models.Model):
         return f"{self.name} ({self.contact})"
     
     
-class CarouselImage(models.Model):
+class CarouselImage(ImageOptimizationMixin, models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255, blank=True)
     image = models.ImageField(upload_to='carousel_images/')
     description = models.CharField(max_length=255, blank=True)
     button_text = models.CharField(max_length=50, default="Explore Offices", blank=True, null=True)
+    IMAGE_FIELDS = ("image",)
 
     def __str__(self):
         return f"Carousel Image {self.id}"
@@ -120,13 +123,14 @@ class FrontendTheme(models.Model):
 
 
 
-class Icon(models.Model):
+class Icon(ImageOptimizationMixin, models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     key = models.SlugField(max_length=100, unique=True)        # 'office', 'billboard', 'legal', ...
     label = models.CharField(max_length=100, blank=True)
     svg_inline = models.TextField(blank=True)                  # <svg>...</svg> — удобнее и быстрее
     image = models.ImageField(upload_to="icons/", blank=True, null=True)
     css_class = models.CharField(max_length=120, blank=True)   # если хочешь использовать icon-font
+    IMAGE_FIELDS = ("image",)
 
     def __str__(self):
         return self.label or self.key
