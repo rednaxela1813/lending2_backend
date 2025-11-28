@@ -38,9 +38,9 @@ class Property(AvailabilityMixin,models.Model):
 
     
 
-    busy_until = models.DateField(blank=True, null=True, help_text="Ak je nehnuteľnosť obsadená, do kedy?")
-    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text="Cena za prenájom (ak je relevantné)")
-    currency = models.CharField(max_length=10, default='EUR', help_text="Mena ceny", blank=True, null=True)
+    #busy_until = models.DateField(blank=True, null=True, help_text="Ak je nehnuteľnosť obsadená, do kedy?")
+    #price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text="Cena za prenájom (ak je relevantné)")
+   # currency = models.CharField(max_length=10, default='EUR', help_text="Mena ceny", blank=True, null=True)
     
     
     def clean(self):

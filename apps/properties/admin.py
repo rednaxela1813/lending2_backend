@@ -53,7 +53,7 @@ class PropertyAdmin(admin.ModelAdmin):
 @admin.register(PropertyType)
 class PropertyTypeAdmin(admin.ModelAdmin):
     list_display = ("name",)
-    prepopulated_fields = {"slug": ("name",)}
+   # prepopulated_fields = {"slug": ("name",)}
     search_fields = ("name",)
     ordering = ("name",)
 

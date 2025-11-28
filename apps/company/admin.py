@@ -6,7 +6,7 @@ class OpeningHourInline(admin.TabularInline):
     model = OpeningHour
     extra = 1
     ordering = ("weekday", "start_time")
-    fields = ("weekday", "start_time", "end_time")
+    fields = ("weekday", "is_closed", "start_time", "end_time")
 
 class SpecialOpeningInline(admin.TabularInline):
     model = SpecialOpening

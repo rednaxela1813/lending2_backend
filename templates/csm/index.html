@@ -20,7 +20,7 @@
 {% include 'csm/components/HotDealsSection.html' %}
 
 
-<!-- {% include 'csm/components/ServicesSection.html' %} -->
+{% include 'csm/components/ServicesSection.html' %}
 
 <!-- Stats Section -->
 <!-- <section  class="py-16 bg-blue-600">
@@ -197,7 +197,11 @@
           </span>
           <span class="font-medium text-gray-900">
             {% for oh in group.list %}
+            {% if oh.is_closed %}
+              Closed
+            {% else %}
               {{ oh.start_time|time:"H:i" }}–{{ oh.end_time|time:"H:i" }}{% if not forloop.last %}, {% endif %}
+            {% endif %}
             {% endfor %}
           </span>
         </li>

@@ -5,10 +5,10 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Availability(models.TextChoices):
-    AVAILABLE = "available", _("Свободно")
-    RESERVED  = "reserved",  _("Забронировано")
-    OCCUPIED  = "occupied",  _("Занято")
-    HIDDEN    = "hidden",    _("Скрыто/на сервисе")
+    AVAILABLE = "available", _("Volné")
+    RESERVED  = "reserved",  _("Rezervováno")
+    OCCUPIED  = "occupied",  _("Obsazeno")
+    HIDDEN    = "hidden",    _("Skryto/na servisu")
     
     
 class AvailabilityQuerySet(models.QuerySet):
