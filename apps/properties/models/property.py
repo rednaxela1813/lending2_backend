@@ -15,7 +15,7 @@ class PropertyType(models.Model):
     public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     slug = models.SlugField(unique=True)
     name = models.CharField(max_length=100)
-    icon_svg = models.TextField(blank=True)
+    #icon_svg = models.TextField(blank=True)
     description = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
 

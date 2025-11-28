@@ -90,7 +90,7 @@
            class="text-[15px] font-semibold text-blue-600 hover:text-blue-700">
           {{ company_info.phone|default:"(123) 456-7890" }}
         </a>
-        <a href="#contact"
+        <a href="{% url 'csm:homepage' %}#contact"
            class="rounded-xl bg-blue-600 px-4 py-2.5 text-[14px] font-semibold text-white hover:bg-blue-700 transition-colors">
           {{ header_section.button_text|default:"Get Quote" }}
         </a>

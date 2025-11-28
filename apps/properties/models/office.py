@@ -14,11 +14,8 @@ from apps.properties.models.mixins import AvailabilityMixin
 class OfficeUnit(AvailabilityMixin, models.Model):
 
     public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    property = models.ForeignKey(
-    Property,
-    on_delete=models.CASCADE,
-    related_name='office_units',
-)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='office_units')
+
     floor = models.IntegerField(help_text="Číslo poschodia (napr. 0 = prízemie, 1 = prvé poschodie)")
     unit_number = models.CharField(max_length=50, help_text="Číslo kancelárie alebo identifikátor")
     area_sqm = models.FloatField(help_text="Rozloha v m²")

@@ -11,7 +11,9 @@ from apps.core_images.mixins import ImageOptimizationMixin
 
 
 class HeroSection(ImageOptimizationMixin, models.Model):
-    title = models.CharField(max_length=255) #TODO add uuid for all models
+    """Content for the hero section on the homepage."""
+
+    title = models.CharField(max_length=255)  # TODO add uuid for all models
     subtitle = models.TextField(blank=True)
     description = models.TextField(blank=True, null=True, default='Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste.')
     button_text = models.CharField(max_length=50, default="Оставить заявку")
@@ -25,6 +27,8 @@ class HeroSection(ImageOptimizationMixin, models.Model):
 
 
 class HeaderSection(models.Model):
+    """Header navigation labels and CTA text."""
+
     logo_text = models.CharField(max_length=100, default='Agentúra Závodský s.r.o.')
     nav_services = models.CharField(max_length=50, default='Služby')
     nav_why = models.CharField(max_length=50, default='Prečo práve my?')
@@ -41,6 +45,8 @@ class HeaderSection(models.Model):
 
 
 class ContactRequest(models.Model):
+    """Stored contact form submissions."""
+
     name = models.CharField(max_length=255)
     contact = models.CharField(max_length=255)
     message = models.TextField()
@@ -51,6 +57,8 @@ class ContactRequest(models.Model):
     
     
 class CarouselImage(ImageOptimizationMixin, models.Model):
+    """Images and captions for the homepage carousel."""
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255, blank=True)
     image = models.ImageField(upload_to='carousel_images/')
@@ -68,12 +76,14 @@ class CarouselImage(ImageOptimizationMixin, models.Model):
 
 
 class ServiceSection(models.Model):
+    """Homepage service tiles tied to a property type for filtering."""
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255, default="Naše služby")
     description = models.TextField(blank=True, null=True, default="Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste."    )
     icon_svg = models.ForeignKey('Icon', blank=True, null=True, on_delete=models.SET_NULL)
     color_icon = models.CharField(max_length=20, default="#2563eb", help_text="Hex color code for the icon")
-    property_type = models.ForeignKey(PropertyType, on_delete=models.SET_NULL, null=True, blank=True)  # 🔥 теперь есть
+    property_type = models.ForeignKey(PropertyType, on_delete=models.SET_NULL, null=True, blank=True)  # property type relation enabled
     updated_at = models.DateTimeField(auto_now=True)
     
     def get_list_url(self):
@@ -95,26 +105,28 @@ class ServiceSection(models.Model):
 
 
 class FrontendTheme(models.Model):
+    """Color settings applied across the frontend."""
+
     name = models.CharField(max_length=100, default="Default")
 
-    # Фон
+    # Background colors
     navbar_background = models.CharField(max_length=20, default="#ffffff")
     body_background = models.CharField(max_length=20, default="#f9fafb")
     footer_background = models.CharField(max_length=20, default="#f1f5f9")
 
-    # Текст
+    # Text colors
     text_color = models.CharField(max_length=20, default="#111827")
     text_hover_color = models.CharField(max_length=20, default="#1e40af")
 
-    # Границы
+    # Border colors
     border_color = models.CharField(max_length=20, default="#d1d5db")
     border_hover_color = models.CharField(max_length=20, default="#9ca3af")
 
-    # Основной цвет (например, для кнопок)
+    # Primary colors (e.g., buttons)
     primary_color = models.CharField(max_length=20, default="#2563eb")
     primary_hover_color = models.CharField(max_length=20, default="#1d4ed8")
 
-    # Активация
+    # Activation
     is_active = models.BooleanField(default=False)
 
     def __str__(self):
@@ -124,12 +136,14 @@ class FrontendTheme(models.Model):
 
 
 class Icon(ImageOptimizationMixin, models.Model):
+    """Reusable icon assets for cards and services."""
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     key = models.SlugField(max_length=100, unique=True)        # 'office', 'billboard', 'legal', ...
     label = models.CharField(max_length=100, blank=True)
-    svg_inline = models.TextField(blank=True)                  # <svg>...</svg> — удобнее и быстрее
+    svg_inline = models.TextField(blank=True)                  # Inline <svg> markup
     image = models.ImageField(upload_to="icons/", blank=True, null=True)
-    css_class = models.CharField(max_length=120, blank=True)   # если хочешь использовать icon-font
+    css_class = models.CharField(max_length=120, blank=True)   # Optional icon-font class name
     IMAGE_FIELDS = ("image",)
 
     def __str__(self):
@@ -140,6 +154,8 @@ class Icon(ImageOptimizationMixin, models.Model):
 
     
 class BottomCTASection(models.Model):
+    """CTA block displayed at the bottom of marketing pages."""
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255, default="Máte otázky?")
     subtitle = models.TextField(blank=True, null=True, default="Kontaktujte nás ešte dnes a získajte viac informácií o našich službách a ponukách.")
