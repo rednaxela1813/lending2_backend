@@ -4,8 +4,10 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
 from apps.contact_messages.utils import anonymize_ip
+from apps.site_email.services import send_contact_message_email
 from .models import ContactMessage
 
+CONSENT_COOKIE_NAME = getattr(settings, "COOKIE_CONSENT_NAME", "cookie_consent")
 
 
 def _get_client_ip(request):
@@ -25,10 +27,16 @@ def _client_ip(request):
     return anonymize_ip(ip)
 
 
+def _has_cookie_consent(request):
+    return bool(request.COOKIES.get(CONSENT_COOKIE_NAME))
+
 
 def submit(request):
     if request.method != "POST":
         return HttpResponseNotAllowed(["POST"])
+
+    if not _has_cookie_consent(request):
+        return render(request, "cookie/consent_required.html", status=403)
 
     first_name = request.POST.get("first_name", "").strip()
     last_name  = request.POST.get("last_name", "").strip()
@@ -42,7 +50,7 @@ def submit(request):
     if not gdpr:
         return HttpResponseBadRequest("GDPR consent is required.")
 
-    ContactMessage.objects.create(
+    contact_message = ContactMessage.objects.create(
         first_name=first_name,
         last_name=last_name,
         email=email,
@@ -56,6 +64,9 @@ def submit(request):
         referrer=request.META.get("HTTP_REFERER", ""),
         source_path=request.path,
     )
+
+    # fire-and-forget email notification; errors are logged
+    send_contact_message_email(contact_message)
 
     # редирект на «спасибо» (или на главную с якорем)
     return HttpResponseRedirect(reverse("contact_messages:success"))

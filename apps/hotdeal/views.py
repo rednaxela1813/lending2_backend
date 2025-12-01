@@ -20,7 +20,11 @@ def hotdeal_partial(request, public_id):
         or (getattr(unit, "description", "") or "")
         or (item.description or "")
     )
-    iframe = getattr(unit, "iframe", None) or getattr(prop, "iframe", None)
+    embed_src = ""
+    if unit and hasattr(unit, "embed_src"):
+        embed_src = unit.embed_src
+    elif prop and hasattr(prop, "embed_src"):
+        embed_src = prop.embed_src
 
     return render(request, "hotdeal/detail.html", {
         "item": item,
@@ -28,7 +32,7 @@ def hotdeal_partial(request, public_id):
         "property": prop,
         "images": images,
         "description": description,
-        "iframe": iframe,
+        "map_embed_src": embed_src,
     })
 
 

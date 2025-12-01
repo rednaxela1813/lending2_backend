@@ -144,12 +144,12 @@
   {% endif %}
 
   <!-- MAP -->
-  {% if deal.property and deal.property.iframe %}
+  {% if deal.property and deal.property.embed_src %}
     <div class="mt-10">
       <h3 class="text-lg font-semibold text-gray-900 mb-3">Location</h3>
       <div class="relative w-full overflow-hidden rounded-2xl border border-gray-200 shadow-sm"
            style="aspect-ratio: 16 / 9;">
-        {{ deal.property.iframe|safe }}
+        <iframe src="{{ deal.property.embed_src }}" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" class="w-full h-full border-0"></iframe>
       </div>
     </div>
   {% endif %}

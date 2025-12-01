@@ -59,6 +59,12 @@ SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_HSTS_SECONDS = 31536000  # 1 year; adjust if you need a gradual rollout
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = False  # set to True only after confirming preload readiness
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+X_FRAME_OPTIONS = "DENY"
 
 TELEGRAM_BOT_TOKEN = config("TELEGRAM_BOT_TOKEN", default="")
 TELEGRAM_CHAT_ID = config("TELEGRAM_CHAT_ID", default="")
@@ -72,9 +78,6 @@ CACHES = {
 }
 RATELIMIT_USE_CACHE = "cache-for-ratelimiting"
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {"console": {"class": "logging.StreamHandler"}},
-    "root": {"handlers": ["console"], "level": "INFO"},
-}
+from apps.site_logging.config import get_logging_config
+
+LOGGING = get_logging_config(debug=DEBUG)

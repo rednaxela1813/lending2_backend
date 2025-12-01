@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sitemaps",
 
     
     'rest_framework',
@@ -41,8 +42,14 @@ INSTALLED_APPS = [
     'apps.company.apps.CompanyConfig',
     'apps.dashboard',
     'apps.contact_messages',
+    'apps.site_email',
+    'apps.site_logging',
+    'apps.site_seo',
     "apps.core_images",
     "apps.hotdeal",
+    
+    
+    "cookie_consent",
 ]
 
 TAILWIND_APP_NAME = 'theme'
@@ -91,6 +98,35 @@ JAZZMIN_UI_TWEAKS = {
 PRIVACY_POLICY_VERSION = "2025-10-01"
 PRIVACY_POLICY_UPDATED = "2025-10-01"
 
+
+# Email configuration (overridable via .env)
+EMAIL_BACKEND = config("EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="no-reply@example.com")
+SITE_EMAIL_RECIPIENTS = config(
+    "SITE_EMAIL_RECIPIENTS",
+    default="",
+    cast=lambda v: [s.strip() for s in v.split(",") if s.strip()],
+)
+EMAIL_HOST = config("EMAIL_HOST", default="")
+EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False, cast=bool)
+EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=10, cast=int)
+ADMIN_EMAILS = config(
+    "ADMIN_EMAILS",
+    default="",
+    cast=lambda v: [s.strip() for s in v.split(",") if s.strip()],
+)
+
+ADMIN_NAME = config("ADMIN_NAME", default="Site Admin")
+ADMINS = [(ADMIN_NAME, email) for email in ADMIN_EMAILS]
+SERVER_EMAIL = config("SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
+SITE_URL = config("SITE_URL", default="http://localhost:8000").rstrip("/")
+SITE_OG_IMAGE = config("SITE_OG_IMAGE", default="")
+SITE_SEO_ENABLED = config("SITE_SEO_ENABLED", default=False, cast=bool)
+
 FERNET_KEYS = [k for k in [
     config("FERNET_KEY_CURRENT", default=None),
     config("FERNET_KEY_OLD1", default=None),
@@ -107,7 +143,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     
-    
+   
     
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -129,6 +165,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'csm.context_processor.company_info',
+                'apps.site_seo.context_processors.seo_settings',
+                
 
             ],
         },

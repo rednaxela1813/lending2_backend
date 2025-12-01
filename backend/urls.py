@@ -45,10 +45,10 @@ urlpatterns = [
     ),
     #path("", include("apps.hotdeal.urls", namespace="hotdeal")),
     path("hot-deals/", include(("apps.hotdeal.urls", "hotdeal"), namespace="hotdeal")),
+    path("", include(("apps.site_seo.urls", "site_seo"), namespace="site_seo")),
+    path("cookies/", include("cookie_consent.urls")),
      
 ]
-
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,11 +1,10 @@
 #apps/properties/models/property.py
+import re
 import uuid
+from urllib.parse import urlparse, quote_plus
 from django.db import models
 from django.utils.html import format_html
 from apps.properties.models.mixins import AvailabilityMixin
-
-
-
 from django.urls import reverse
 from apps.core_images.mixins import ImageOptimizationMixin
 
@@ -33,7 +32,8 @@ class Property(AvailabilityMixin,models.Model):
     list_details = models.JSONField(max_length=1044, blank=True, default=list, help_text="Detaily pre zobrazenie v zozname")
     summary = models.CharField(max_length=255, blank=True, help_text="Krátky popis")
     location = models.CharField(max_length=255, blank=True)
-    iframe = models.TextField(blank=True, help_text="HTML iframe  Google Maps")
+    map_embed_url = models.URLField(blank=True, help_text="Plný URL na Google Maps embed (bez HTML)")
+    iframe = models.TextField(blank=True, help_text="HTML iframe  Google Maps (legacy, už sa nepoužíva priamo)")
     created_at = models.DateTimeField(auto_now_add=True)
 
     
@@ -44,9 +44,48 @@ class Property(AvailabilityMixin,models.Model):
     
     
     def clean(self):
-        # Удаляем width и height из iframe
+        super().clean()
+
         if self.iframe:
             self.iframe = self.iframe.replace('width="600"', '').replace('height="450"', '')
+
+        if self.map_embed_url:
+            parsed = urlparse(self.map_embed_url)
+            if parsed.scheme not in ("http", "https") or parsed.netloc not in {"www.google.com", "google.com", "maps.google.com"}:
+                from django.core.exceptions import ValidationError
+                raise ValidationError({"map_embed_url": "Len Google Maps embed URL je povolené."})
+
+    @staticmethod
+    def _extract_iframe_src(raw_iframe: str) -> str | None:
+        """Return src value from stored iframe HTML if present."""
+        if not raw_iframe:
+            return None
+        match = re.search(r'src=["\\\']([^"\\\']+)["\\\']', raw_iframe)
+        return match.group(1) if match else None
+
+    @staticmethod
+    def _is_allowed_map_src(url: str) -> bool:
+        parsed = urlparse(url)
+        return parsed.scheme in {"http", "https"} and parsed.netloc in {"www.google.com", "google.com", "maps.google.com"}
+
+    @property
+    def embed_src(self) -> str:
+        """
+        Safe embed URL to use in templates. Prefers explicit embed URL,
+        falls back to extracted src from legacy iframe, then location search.
+        """
+        if self.map_embed_url:
+            return self.map_embed_url
+
+        legacy_src = self._extract_iframe_src(self.iframe or "")
+        if legacy_src and self._is_allowed_map_src(legacy_src):
+            return legacy_src
+
+        if self.location:
+            query = quote_plus(self.location)
+            return f"https://www.google.com/maps?q={query}&output=embed"
+
+        return ""
     
     
     def get_absolute_url(self):

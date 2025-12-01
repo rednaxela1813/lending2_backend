@@ -45,7 +45,7 @@ class PropertyAdmin(admin.ModelAdmin):
     list_filter = ("type", "availability")
     ordering = ("-created_at",)
     fieldsets = [
-        ("Основное", {"fields": ("name", "type", "summary", "description", "location", "iframe")}),
+        ("Основное", {"fields": ("name", "type", "summary", "description", "location", "map_embed_url")}),
         ("Цена и статус", {"fields": ("price", "currency", "availability", "busy_until")}),
     ]
 
