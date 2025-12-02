@@ -45,16 +45,30 @@ class PropertyAdmin(admin.ModelAdmin):
     list_filter = ("type", "availability")
     ordering = ("-created_at",)
     fieldsets = [
-        ("Основное", {"fields": ("name", "type", "summary", "description", "location", "iframe")}),
-        ("Цена и статус", {"fields": ("price", "currency", "availability", "busy_until")}),
+        (
+            "Основное",
+            {
+                "fields": (
+                    "name",
+                    "type",
+                    "summary",
+                    "description",
+                    "location",
+                    "map_embed_url",
+                    "iframe",
+                    "list_details",
+                )
+            },
+        ),
+        ("Статус", {"fields": ("availability",)}),
     ]
 
 
 @admin.register(PropertyType)
 class PropertyTypeAdmin(admin.ModelAdmin):
-    list_display = ("name", "slug")
-    prepopulated_fields = {"slug": ("name",)}
-    search_fields = ("name", "slug")
+    list_display = ("name",)
+    exclude = ("slug",)
+    search_fields = ("name",)
     ordering = ("name",)
 
 

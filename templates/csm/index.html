@@ -20,7 +20,7 @@
 {% include 'csm/components/HotDealsSection.html' %}
 
 
-<!-- {% include 'csm/components/ServicesSection.html' %} -->
+{% include 'csm/components/ServicesSection.html' %}
 
 <!-- Stats Section -->
 <!-- <section  class="py-16 bg-blue-600">
@@ -191,16 +191,26 @@
     {% regroup company_info.opening_hours.all by weekday as hours_by_day %}
     <ul class="mt-2 space-y-1 text-sm">
       {% for group in hours_by_day %}
-        <li class="flex justify-between">
-          <span class="text-gray-600">
-            {{ group.list.0.get_weekday_display }}
-          </span>
-          <span class="font-medium text-gray-900">
-            {% for oh in group.list %}
-              {{ oh.start_time|time:"H:i" }}–{{ oh.end_time|time:"H:i" }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-          </span>
-        </li>
+        {% with is_next_closed=next_closed_weekday|default:-1|add:0 %}
+          <li class="flex justify-between">
+            <span class="text-gray-600">
+              {{ group.list.0.get_weekday_display }}
+            </span>
+            <span class="font-medium text-gray-900">
+              {% if is_next_closed == group.list.0.weekday %}
+                Closed
+              {% else %}
+                {% for oh in group.list %}
+                  {% if oh.is_closed %}
+                    Closed
+                  {% else %}
+                    {{ oh.start_time|time:"H:i" }}–{{ oh.end_time|time:"H:i" }}{% if not forloop.last %}, {% endif %}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            </span>
+          </li>
+        {% endwith %}
       {% endfor %}
     </ul>
   {% else %}
@@ -212,7 +222,7 @@
   {% endif %}
 
   {% if company_info %}
-    {% with specials=upcoming_specials|default:company_info.special_openings.all %}
+    {% with specials=upcoming_specials %}
       {% if specials %}
         <div class="mt-4">
           <h5 class="text-sm font-semibold text-gray-900">Exceptions / Holidays</h5>

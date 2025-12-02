@@ -1,8 +1,10 @@
 {% load static %}
 <!-- Photo Carousel Component -->
+  {% if carousel_images %}
 <section class="relative bg-gray-900 overflow-hidden">
   <div class="relative h-96 md:h-[500px] lg:h-[600px]">
     <div class="js-carousel relative w-full h-full" data-autoplay="3000">
+     
       {% for img in carousel_images %}
         <div class="carousel__slide absolute inset-0 opacity-0 transition-opacity duration-700 ease-in-out" aria-hidden="true">
           <a href="{{ img.image.url }}" class="sr-only">View all carousel images</a>
@@ -23,6 +25,7 @@
           </div>
         </div>
       {% endfor %}
+      
 
       <!-- Dots -->
       <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-30">
@@ -43,6 +46,7 @@
     </div>
   </div>
 </section>
+{% endif %}
 
 <!-- shared carousel engine (guarded) -->
 <script>

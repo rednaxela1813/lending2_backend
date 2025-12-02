@@ -1,0 +1,100 @@
+{% extends "csm/base.html" %}
+{% load static %}
+
+{% block title %}Podmienky používania | {{ company_info.name|default:"RentSpace Pro" }}{% endblock title %}
+{% block meta_description %}Podmienky používania služieb {{ company_info.name|default:"RentSpace Pro" }} vrátane práv a povinností používateľov podľa práva SR.{% endblock meta_description %}
+{% block content_wrapper_class %}bg-gray-50 py-16{% endblock content_wrapper_class %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+  <div class="rounded-3xl bg-white shadow-xl overflow-hidden border border-gray-100">
+    <div class="bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 px-8 py-10 text-white">
+      <p class="text-sm uppercase tracking-[0.35em] text-white/80 font-semibold">Podmienky</p>
+      <h1 class="text-3xl md:text-4xl font-extrabold mt-2">Podmienky používania</h1>
+      <p class="mt-3 text-white/80 text-sm">
+        Verzia {{ terms_version|default:"v1" }} · Aktualizované {{ terms_updated|default:"2025-10-01" }}
+      </p>
+      <p class="mt-6 max-w-3xl text-white/90">
+        Tieto podmienky upravujú používanie webu a služieb {{ company_info.name|default:"RentSpace Pro" }} v súlade so slovenským právom a bežnou medzinárodnou praxou.
+      </p>
+    </div>
+
+    <div class="p-8 md:p-10 space-y-8">
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">1. Akceptácia podmienok</h2>
+        <p class="text-gray-700">Používaním webu alebo odoslaním dopytu vyjadrujete súhlas s týmito podmienkami. Ak nesúhlasíte, web ani služby nepoužívajte.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">2. Služby</h2>
+        <p class="text-gray-700">Poskytujeme informácie a ponuky súvisiace s prenájmom kancelárií, billboardov a službou sídla/registrovanej adresy. Informácie na webe majú orientačný charakter; záväznými sa stávajú až po písomnom potvrdení alebo podpise zmluvy.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">3. Zasielanie dopytov</h2>
+        <ul class="list-disc list-inside space-y-2 text-gray-700">
+          <li>Vaše údaje použijeme na prípravu ponuky a komunikáciu k dopytu.</li>
+          <li>Ste povinní uvádzať pravdivé a aktuálne informácie.</li>
+          <li>Odoslaním dopytu nevzniká právny nárok na uzavretie zmluvy.</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">4. Ponuky a ceny</h2>
+        <p class="text-gray-700">Ceny a dostupnosť sa môžu meniť. Záväzná je až ponuka potvrdená písomne (e-mail, zmluva, objednávka). Uvedené ceny môžu byť bez DPH, pokiaľ nie je uvedené inak.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">5. Povinnosti používateľa</h2>
+        <ul class="list-disc list-inside space-y-2 text-gray-700">
+          <li>Nepoužívať web spôsobom, ktorý porušuje zákony SR alebo práva tretích strán.</li>
+          <li>Nezasahovať do bezpečnosti, integrácie alebo prevádzky webu.</li>
+          <li>Rešpektovať autorské práva k textom, dizajnu a multimédiám na webe.</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">6. Zodpovednosť</h2>
+        <p class="text-gray-700">Web je poskytovaný „tak ako je“. Neposkytujeme záruku na úplnosť či aktuálnosť informácií. V maximálnom rozsahu povolenom zákonom nenesieme zodpovednosť za nepriame alebo následné škody vzniknuté používaním webu.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">7. Ochrana osobných údajov</h2>
+        <p class="text-gray-700">Spracúvanie osobných údajov sa riadi našimi <a class="text-blue-600 hover:text-blue-700 font-semibold" href="{% url 'privacy_policy' %}">Zásadami ochrany osobných údajov</a>. Súhlas so spracovaním môžete odvolať kedykoľvek.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">8. Ukončenie a zmeny</h2>
+        <p class="text-gray-700">Môžeme kedykoľvek upraviť alebo dočasne obmedziť web či ponuku služieb. Podmienky môžeme aktualizovať; rozhodujúca je verzia zverejnená na tejto stránke s uvedeným dátumom účinnosti.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">9. Rozhodné právo a riešenie sporov</h2>
+        <p class="text-gray-700">Tieto podmienky sa riadia právom Slovenskej republiky. Spory sa budeme snažiť riešiť zmierom; v prípade súdneho sporu je príslušný súd podľa právnych predpisov SR.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">10. Kontakt</h2>
+        <div class="bg-gray-50 border border-gray-100 rounded-2xl p-5 space-y-2 text-gray-800">
+          <p class="font-semibold">{{ company_info.name|default:"RentSpace Pro" }}</p>
+          {% if company_info.address %}
+            <p>{{ company_info.address }}</p>
+          {% endif %}
+          <p>Email: <a class="text-blue-600 hover:text-blue-700 font-semibold" href="mailto:{{ company_info.email|default:'info@example.com' }}">{{ company_info.email|default:"info@example.com" }}</a></p>
+          {% if company_info.phone %}
+            <p>Tel.: <a class="text-blue-600 hover:text-blue-700 font-semibold" href="tel:{{ company_info.phone }}">{{ company_info.phone }}</a></p>
+          {% endif %}
+        </div>
+      </section>
+
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4">
+        <p class="text-sm text-gray-500">Ak máte otázky k týmto podmienkam, kontaktujte nás.</p>
+        <div class="flex gap-3">
+          <a href="{% url 'csm:homepage' %}" class="inline-flex items-center px-4 py-2 rounded-lg border border-gray-200 text-gray-800 hover:bg-gray-50 transition">Späť na úvod</a>
+          <a href="{% url 'csm:homepage' %}#contact" class="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition">Kontaktovať nás</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

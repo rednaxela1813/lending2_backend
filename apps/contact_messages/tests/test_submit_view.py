@@ -1,5 +1,6 @@
 import hashlib
 import pytest
+from django.core import mail
 from django.urls import reverse
 from django.utils import timezone
 
@@ -14,6 +15,7 @@ def _hash(email: str) -> str:
 
 
 def test_submit_success_creates_message_and_redirects(client, settings):
+    client.cookies["cookie_consent"] = "accepted"
     url = reverse("contact_messages:submit")
     payload = {
         "first_name": "Alex",
@@ -53,7 +55,33 @@ def test_submit_success_creates_message_and_redirects(client, settings):
     assert obj.referrer == "https://example.com/page"
 
 
+def test_submit_sends_email_notification(client, settings):
+    settings.SITE_EMAIL_RECIPIENTS = ["owner@example.com"]
+    settings.DEFAULT_FROM_EMAIL = "noreply@example.com"
+
+    url = reverse("contact_messages:submit")
+    client.cookies["cookie_consent"] = "accepted"
+    payload = {
+        "first_name": "Alex",
+        "last_name": "Kiselev",
+        "email": "User@Example.Com",
+        "service": "office-space",
+        "message": "Hello",
+        "gdpr_consent": "on",
+    }
+
+    resp = client.post(url, data=payload)
+    assert resp.status_code == 302
+    assert len(mail.outbox) == 1
+
+    email = mail.outbox[0]
+    assert email.to == ["owner@example.com"]
+    assert "Alex Kiselev" in email.subject
+    assert "Hello" in email.body
+
+
 def test_submit_requires_gdpr_consent(client):
+    client.cookies["cookie_consent"] = "accepted"
     url = reverse("contact_messages:submit")
     resp = client.post(
         url,
@@ -72,6 +100,7 @@ def test_submit_requires_gdpr_consent(client):
 
 @pytest.mark.parametrize("missing_field", ["first_name", "last_name", "email", "service"])
 def test_submit_missing_required_fields(client, missing_field):
+    client.cookies["cookie_consent"] = "accepted"
     url = reverse("contact_messages:submit")
     base = {
         "first_name": "A",
@@ -87,6 +116,7 @@ def test_submit_missing_required_fields(client, missing_field):
 
 
 def test_ipv6_anonymization(client):
+    client.cookies["cookie_consent"] = "accepted"
     url = reverse("contact_messages:submit")
     resp = client.post(
         url,
@@ -103,3 +133,19 @@ def test_ipv6_anonymization(client):
     obj = ContactMessage.objects.latest("created_at")
     # ожидаем обрезку до /64 сети (например, 2001:db8:abcd:12::)
     assert obj.client_ip.startswith("2001:db8:abcd:12:")
+
+
+def test_submit_requires_cookie_consent(client):
+    url = reverse("contact_messages:submit")
+    payload = {
+        "first_name": "Alex",
+        "last_name": "Kiselev",
+        "email": "user@example.com",
+        "service": "office-space",
+        "message": "Hello",
+        "gdpr_consent": "on",
+    }
+    resp = client.post(url, data=payload)
+    assert resp.status_code == 403
+    assert b"Cookie consent" in resp.content
+    assert ContactMessage.objects.count() == 0

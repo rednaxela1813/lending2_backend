@@ -8,6 +8,10 @@ from django.contrib.auth.views import LogoutView
 
 from accounting.views import ResolvingLoginView
 from apps.company.views import about_us_view
+from csm.views_cookie_consent import (
+    AcceptIncludingRequiredView,
+    DeclineOptionalKeepRequiredView,
+)
 
 
 urlpatterns = [
@@ -45,10 +49,12 @@ urlpatterns = [
     ),
     #path("", include("apps.hotdeal.urls", namespace="hotdeal")),
     path("hot-deals/", include(("apps.hotdeal.urls", "hotdeal"), namespace="hotdeal")),
+    path("", include(("apps.site_seo.urls", "site_seo"), namespace="site_seo")),
+    path("cookies/accept/", AcceptIncludingRequiredView.as_view(), name="cookie_consent_accept_all"),
+    path("cookies/decline/", DeclineOptionalKeepRequiredView.as_view(), name="cookie_consent_decline_all"),
+    path("cookies/", include("cookie_consent.urls")),
      
 ]
-
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

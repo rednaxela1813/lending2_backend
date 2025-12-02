@@ -16,15 +16,16 @@ from .models import (
     ServiceSection, CarouselImage, Icon, BottomCTASection,
 )
 from apps.properties.models import Property, PropertyType
-from apps.hotdeal.context import build_hot_deal_items   # ← наш билдер
-from apps.hotdeal.models import HotDealItem, HotDealSection  # ← правильный импорт из apps.hotdeal
-# импорт модели из contact_form
+from apps.hotdeal.context import build_hot_deal_items   # hot deal card builder
+from apps.hotdeal.models import HotDealItem, HotDealSection  # correct import from apps.hotdeal
+# contact_form model import
 from contact_form.models import EmailSettings
 from contact_form.forms import ContactForm
 from contact_form.utils import send_contact_email
 
 
 def is_working_hours():
+    """Return True if current Bratislava time is within weekday business hours."""
     tz = pytz.timezone('Europe/Bratislava')
     now = datetime.now(tz)
     return now.weekday() < 5 and 9 <= now.hour < 17
@@ -32,14 +33,11 @@ def is_working_hours():
 
 def _assign_missing_icons_round_robin():
     """
-    (Опционально) Раздаём иконки для карточек HotDeals,
-    НО: в текущей модели HotDealItem НЕТ поля icon.
-    Если хочешь — добавь в apps/hotdeal/models.py:
-        icon = models.ForeignKey(Icon, null=True, blank=True, on_delete=models.SET_NULL)
-    и миграцию. Пока — просто выходим.
+    (Optional) Assign icons to HotDeals cards in a round-robin manner.
+    The current HotDealItem model does not have an icon field; add it and a migration to use this.
     """
     return
-    # --- Пример, если добавишь поле icon у HotDealItem ---
+    # Example if an icon field is added to HotDealItem
     icon_ids = list(Icon.objects.order_by('key').values_list('id', flat=True))
     if not icon_ids:
         return
@@ -47,7 +45,7 @@ def _assign_missing_icons_round_robin():
     to_update = []
     for obj in (HotDealItem.objects
                 .filter(is_active=True, icon__isnull=True)
-                .order_by('order', 'id')):  # было sort_order/updated_at — их нет
+                .order_by('order', 'id')):  # legacy sort fields removed
         obj.icon_id = next(pool)
         to_update.append(obj)
     if to_update:
@@ -55,18 +53,19 @@ def _assign_missing_icons_round_robin():
 
 
 class HotDealsPageView(TemplateView):
-    template_name = "csm/sections/HotDealsSection.html"
+    """Render the Hot Deals landing page."""
+    template_name = "csm/hot_deals.html"
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        # Горячие предложения готовим билдером → получаем список словарей под шаблон
         ctx["hot_deal_items"] = build_hot_deal_items()
-        # Один объект заголовка секции (если используешь отдельную модель заголовка)
-        ctx["hot_deal_section"] = HotDealSection.objects.filter(is_active=True).order_by("order", "id").first()
+        # HotDealSection currently lacks is_active/order; take the first record
+        ctx["hot_deal_section"] = HotDealSection.objects.order_by("id").first()
         return ctx
 
 
 def homepage(request):
+    """Render the homepage with hero, services, carousel, hot deals, and contact form handling."""
     hero_section = HeroSection.objects.first()
     header_section = HeaderSection.objects.first()
     footer_info = FooterInfo.objects.select_related('company').first()
@@ -76,10 +75,11 @@ def homepage(request):
     phone_number = company_info.phone if company_info else None
     carousel_images = CarouselImage.objects.all()
 
+    # Use the same slugs across the site (plural) to avoid mismatches with list views/filters
     services = {
-        'office':   Property.objects.filter(type__slug='office').first(),
-        'address':  Property.objects.filter(type__slug='address').first(),
-        'billboard':Property.objects.filter(type__slug='billboard').first(),
+        "office": Property.objects.filter(type__slug="offices").first(),
+        "address": Property.objects.filter(type__slug="addresses").first(),
+        "billboard": Property.objects.filter(type__slug="billboards").first(),
     }
     total_services = sum(1 for s in services.values() if s)
 
@@ -97,18 +97,28 @@ def homepage(request):
             messages.error(request, "Email nie je nakonfigurovaný.")
         return redirect("csm:homepage")
 
-    # Если иконки для HotDeals нужны — см. комментарий в функции; сейчас noop
+    # Icon assignment for HotDeals is disabled; see helper function for notes.
     _assign_missing_icons_round_robin()
 
-    # Заголовок секции (один объект)
     hot_deal_section = HotDealSection.objects.first()
 
-    # КАРТОЧКИ: используем билдер, чтобы структура соответствовала шаблону
     hot_deal_items = build_hot_deal_items()
 
     bottom_cta_section = BottomCTASection.objects.first()
 
     
+
+    today = timezone.localdate()
+    upcoming_specials = (
+        company_info.special_openings.filter(date__gte=today).order_by("date")
+        if company_info
+        else None
+    )
+    next_closed = (
+        upcoming_specials.filter(is_closed=True).first()
+        if upcoming_specials is not None
+        else None
+    )
 
     context = {
         'hero_section': hero_section,
@@ -124,15 +134,18 @@ def homepage(request):
         'form': form,
         'phone_number': phone_number,
         'carousel_images': carousel_images,
+        'upcoming_specials': upcoming_specials,
+        'next_closed_weekday': next_closed.date.weekday() if next_closed else None,
 
-        'hot_deal_section': hot_deal_section,   # один объект
-        'hot_deal_items': hot_deal_items,       # уже готовые словари
+        'hot_deal_section': hot_deal_section,
+        'hot_deal_items': hot_deal_items,
         'bottom_cta_section': bottom_cta_section,
     }
     return render(request, 'csm/index.html', context)
 
 
 class ServicesListView(ListView):
+    """List services filtered by property type slug."""
     model = Property
     template_name = 'csm/components/ServiceSection.html'
     context_object_name = 'services'
@@ -143,12 +156,13 @@ class ServicesListView(ListView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        # если где-то ещё нужно hot-deals внутри этой страницы
+        # Include hot deals on pages where services are listed.
         ctx["hot_deal_items"] = build_hot_deal_items()
         return ctx
 
 
 class ServiceDetailView(DetailView):
+    """Display a specific service with related property imagery."""
     model = ServiceSection
     template_name = "csm/service_detail.html"
     context_object_name = "service"
@@ -164,7 +178,7 @@ class ServiceDetailView(DetailView):
         ctx = super().get_context_data(**kwargs)
         images_pool = []
 
-        # если есть связанный property_type, собираем изображения из Property с этим типом
+        # Gather images from properties of the same type for background use.
         if self.object and self.object.property_type:
             props = (
                 Property.objects.filter(type=self.object.property_type)
@@ -174,12 +188,13 @@ class ServiceDetailView(DetailView):
                 for img in prop.images.all():
                     images_pool.append(img.image.url)
 
-        # фон только из фото соответствующего типа; если их нет — остаётся белый фон
+        # Only use backgrounds from matching property types; fall back to none if empty.
         ctx["random_bg_image"] = random.choice(images_pool) if images_pool else None
         return ctx
 
 
 class ServiceOffersListView(ListView):
+    """List concrete property offers for a given service type slug."""
     model = Property
     template_name = "csm/services_list.html"
     context_object_name = "items"
@@ -216,7 +231,7 @@ class ServiceOffersListView(ListView):
 
 # class ServicesListView2(ListView):
 #     model = Property
-#     template_name = "csm/services_list.html"   # <- один конкретный шаблон
+#     template_name = "csm/services_list.html"   # single template variant
 #     context_object_name = "items"
 
 #     def get_queryset(self):
@@ -230,3 +245,16 @@ class ServiceOffersListView(ListView):
 #         ctx = super().get_context_data(**kwargs)
 #         ctx["active_service_type"] = self.kwargs.get("service_type") or self.request.GET.get("service_type")
 #         return ctx
+
+
+def footer_section(request):
+    """Render footer component with company info and services."""
+    footer_info = FooterInfo.objects.select_related('company').first()
+    company_info = CompanyInfo.objects.first()
+    services = ServiceSection.objects.all()
+    context = {
+        'footer_info': footer_info,
+        'company_info': company_info,
+        'services': services,
+    }
+    return render(request, 'csm/components/FooterSection.html', context)

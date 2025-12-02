@@ -6,13 +6,13 @@ from datetime import time
 # Константа дней недели
 # --------------------------------------------
 WEEKDAYS = [
-    (0, "Понедельник"),
-    (1, "Вторник"),
-    (2, "Среда"),
-    (3, "Четверг"),
-    (4, "Пятница"),
-    (5, "Суббота"),
-    (6, "Воскресенье"),
+    (0, "Ponedelok"),
+    (1, "Utorok"),
+    (2, "Streda"),
+    (3, "Četvrtok"),
+    (4, "Piatok"),
+    (5, "Sobota"),
+    (6, "Nedeľa"),
 ]
 
 
@@ -26,6 +26,11 @@ class CompanyInfo(models.Model):
     address = models.CharField(max_length=255)
     phone = models.CharField(max_length=30)
     email = models.EmailField()
+    facebook_url = models.URLField(blank=True, null=True, default="facebook.com")
+    instagram_url = models.URLField(blank=True, null=True, default="instagram.com")
+    linkedin_url = models.URLField(blank=True, null=True, default="linkedin.com")
+    x_url = models.URLField(blank=True, null=True, default="x.com")
+    tiktok_url = models.URLField(blank=True, null=True, default="tiktok.com")
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -46,7 +51,7 @@ class FooterInfo(models.Model):
         "CompanyInfo",
         on_delete=models.CASCADE,
         related_name="footer_info",
-        verbose_name="Компания",
+        verbose_name="Company",
     )
 
     about_title = models.CharField(max_length=100, default="Agentúra Závodský")
@@ -61,8 +66,8 @@ class FooterInfo(models.Model):
 
     class Meta:
         db_table = "csm_footerinfo"
-        verbose_name = "Настройки подвала"
-        verbose_name_plural = "Настройки подвала"
+        verbose_name = "footer settings"
+        verbose_name_plural = "footer settings"
 
     def __str__(self):
         return f"Footer: {self.company.name}"
@@ -78,8 +83,13 @@ class OpeningHour(models.Model):
         related_name="opening_hours",
     )
     weekday = models.IntegerField(choices=WEEKDAYS)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    is_closed = models.BooleanField(default=False, help_text="Zakázané v tento deň")
+    if is_closed:
+        start_time = models.TimeField(null=True, blank=True)
+        end_time = models.TimeField(null=True, blank=True)
+    else:
+        start_time = models.TimeField()
+        end_time = models.TimeField()
 
     class Meta:
         db_table = "csm_openinghour"
@@ -106,8 +116,8 @@ class SpecialOpening(models.Model):
         on_delete=models.CASCADE,
         related_name="special_openings",
     )
-    date = models.DateField(help_text="Конкретная дата исключения")
-    is_closed = models.BooleanField(default=False, help_text="Закрыто весь день")
+    date = models.DateField(help_text="Konkrétny dátum výnimky")
+    is_closed = models.BooleanField(default=False, help_text="Zakázané v tento deň")
     start_time = models.TimeField(blank=True, null=True)
     end_time = models.TimeField(blank=True, null=True)
     note = models.CharField(max_length=255, blank=True)

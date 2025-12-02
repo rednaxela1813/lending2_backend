@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
 from django.conf import settings
+from apps.company.models import CompanyInfo
 
 
 class CustomUserManager(BaseUserManager):
@@ -38,30 +39,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-
-
-class Company(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
-    ico = models.CharField(max_length=20, blank=True)
-    dic = models.CharField(max_length=20, blank=True)
-    ic_dph = models.CharField(max_length=20, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ("name", "id")
-
-    def __str__(self):
-        return self.name
-    
-    
-
 class ManagerProfile(models.Model):
     ROLE_CHOICES = [("manager", "Content Manager"), ("admin", "Company Admin")]
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="manager_profile"
     )
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="managers")
+    company = models.ForeignKey(CompanyInfo, on_delete=models.CASCADE, related_name="managers")
     role = models.CharField(max_length=30, choices=ROLE_CHOICES, default="manager")
     is_active = models.BooleanField(default=True)
 

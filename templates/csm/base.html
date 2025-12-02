@@ -1,5 +1,5 @@
 <!--csm/base.html-->
-{% load static tailwind_tags %}
+{% load static tailwind_tags cookie_consent_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,13 +8,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
   <title>{% block title %}RentSpace Pro - Office Space, Billboards & Legal Addresses{% endblock title %}</title>
+  {% if SITE_URL %}
+    <link rel="canonical" href="{{ SITE_URL }}{{ request.path }}" />
+  {% endif %}
 
   {# Tailwind (собранный) #}
   {% if DEBUG %}
-  {% tailwind_css %}
-{% else %}
-  <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
-{% endif %}
+    {% tailwind_css %}
+  {% else %}
+    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+  {% endif %}
 
   {# Дополнительные стили страниц #}
   {% block extra_css %}{% endblock extra_css %}
@@ -22,15 +25,40 @@
   <meta name="description" content="{% block meta_description %}Professional office spaces, billboard advertising, and legal addresses for rent. Premium locations at competitive rates.{% endblock meta_description %}">
   <meta name="keywords" content="{% block meta_keywords %}office space rental, billboard advertising, legal address, coworking space, commercial real estate{% endblock meta_keywords %}">
 
+  {# Open Graph / Twitter #}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{% block og_title %}RentSpace Pro - Office Space, Billboards & Legal Addresses{% endblock og_title %}">
+  <meta property="og:description" content="{% block og_description %}Professional office spaces, billboard advertising, and legal addresses for rent. Premium locations at competitive rates.{% endblock og_description %}">
+  {% if SITE_URL %}<meta property="og:url" content="{{ SITE_URL }}{{ request.path }}">{% endif %}
+  {% if SITE_OG_IMAGE %}<meta property="og:image" content="{{ SITE_OG_IMAGE }}">{% endif %}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{% block twitter_title %}RentSpace Pro - Office Space, Billboards & Legal Addresses{% endblock twitter_title %}">
+  <meta name="twitter:description" content="{% block twitter_description %}Professional office spaces, billboard advertising, and legal addresses for rent. Premium locations at competitive rates.{% endblock twitter_description %}">
+  {% if SITE_OG_IMAGE %}<meta name="twitter:image" content="{{ SITE_OG_IMAGE }}">{% endif %}
+
+  {% if company_info %}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "{{ company_info.name|default:COMPANY_NAME|escapejs }}",
+        "url": "{{ SITE_URL }}",
+        "email": "{{ company_info.email|escapejs }}",
+        "telephone": "{{ company_info.phone|escapejs }}",
+        "address": "{{ company_info.address|escapejs }}",
+        "logo": "{% if company_info.logo %}{{ company_info.logo.url }}{% endif %}"
+      }
+    </script>
+  {% endif %}
+
   {% block favicon %}
     <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
   {% endblock favicon %}
 
-  {# Локальный HTMX из /static/vendor/htmx.min.js #}
+  {# Локальный HTMX #}
   <script src="{% static 'vendor/htmx.min.js' %}" defer></script>
 
   <style>
-    /* плавные анимации htmx */
     .htmx-added { opacity: 0; animation: fadeIn .3s ease-out forwards; }
     .htmx-swapping { opacity: 1; animation: fadeOut .3s ease-in forwards; }
     @keyframes fadeIn { to { opacity: 1; } }
@@ -39,7 +67,7 @@
 </head>
 
 <body class="{% block body_class %}bg-gray-50 text-gray-900 font-sans leading-normal tracking-normal{% endblock body_class %}">
-  {# Header #}
+  
   {% block header %}
     {% include 'csm/components/HeaderSection.html' %}
   {% endblock header %}
@@ -56,17 +84,11 @@
           <div class="flex">
             <div class="flex-shrink-0">
               {% if message.tags == 'error' %}
-                <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                </svg>
+                <svg class="h-5 w-5 text-red-400" ...></svg>
               {% elif message.tags == 'success' %}
-                <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                </svg>
+                <svg class="h-5 w-5 text-green-400" ...></svg>
               {% else %}
-                <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-                </svg>
+                <svg class="h-5 w-5 text-blue-400" ...></svg>
               {% endif %}
             </div>
             <div class="ml-3">
@@ -89,11 +111,9 @@
     {% include 'csm/components/FooterSection.html' %}
   {% endblock footer %}
 
-  {# Дополнительные скрипты страниц #}
   {% block extra_js %}{% endblock extra_js %}
 
   <script>
-    // mobile menu toggle
     document.addEventListener('DOMContentLoaded', function () {
       const btn = document.querySelector('[aria-controls="mobile-menu"]');
       const menu = document.getElementById('mobile-menu');
@@ -106,5 +126,12 @@
       }
     });
   </script>
+
+  {# Cookie banner — показываем, если есть непринятые/неотклонённые группы #}
+  {% not_accepted_or_declined_cookie_groups request as cookie_groups %}
+  {% if cookie_groups %}
+    {% include "cookie/banner.html" %}
+  {% endif %}
+
 </body>
 </html>

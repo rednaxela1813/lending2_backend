@@ -1,37 +1,31 @@
 """
-Глобальные фикстуры для pytest.
+Global fixtures for pytest.
 
-Этот файл находится в корне проекта (rootdir = /app).
-Здесь можно подключить плагины и определить фикстуры,
-которые будут доступны во всех тестах.
+This file lives at the project root (rootdir = /app).
+Add plugins and fixtures here to make them available to all tests.
 """
 
 import pytest
 
-# ✅ Подключаем плагины на глобальном уровне
-# если у тебя были плагины в dashboard/tests/conftest.py — перенеси сюда
-# пример:
-# pytest_plugins = ["dashboard.tests.fixtures"]
+# Enable plugins globally here if needed.
+# Example: pytest_plugins = ["dashboard.tests.fixtures"]
 
-#pytest_plugins = []  # оставь пустым, если нет своих плагинов
+# pytest_plugins = []  # leave empty if no plugins are required
 
 
-# 🔹 Пример глобальной фикстуры: APIClient
-# можно использовать client в любом тесте без импорта
+# Example of a global fixture: APIClient available in any test
 from rest_framework.test import APIClient
 
 
 @pytest.fixture
 def client():
-    """Упрощённый доступ к DRF APIClient"""
+    """Convenience fixture for DRF APIClient."""
     return APIClient()
 
 
-# 🔹 Пример фикстуры с настройками
 @pytest.fixture(autouse=True)
 def enable_db_access_for_all_tests(db):
     """
-    Автоматически даём доступ к базе всем тестам.
-    Убирает необходимость писать @pytest.mark.django_db каждый раз.
+    Automatically provide DB access to all tests to avoid repeating @pytest.mark.django_db.
     """
     pass

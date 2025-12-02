@@ -5,6 +5,8 @@ from apps.core_images.mixins import ImageOptimizationMixin
 from .property import Property
 from .mixins import AvailabilityMixin
 
+
+
 class LegalAddressUnit(AvailabilityMixin, models.Model):
     public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='legal_addresses')

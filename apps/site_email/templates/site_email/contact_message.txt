@@ -1,0 +1,19 @@
+New contact message on {{ site_name }}.
+
+Name: {{ message.first_name }} {{ message.last_name }}
+Email: {{ message.email }}
+Service: {{ service_label }}
+
+Message:
+{% if message.message %}{{ message.message }}{% else %}(empty){% endif %}
+
+Meta:
+- GDPR consent: {% if message.gdpr_consent %}yes{% else %}no{% endif %}
+- Submitted at: {{ message.created_at|default_if_none:"" }}
+- Source path: {{ message.source_path|default_if_none:"-" }}
+- Referrer: {{ message.referrer|default_if_none:"-" }}
+- Client IP (anonymized): {{ message.client_ip|default_if_none:"-" }}
+- User-Agent: {{ message.user_agent|default_if_none:"-" }}
+
+You can reply directly to this email to reach the user.
+

@@ -21,29 +21,41 @@ import logging
 
 
 class HeroSectionView(APIView):
+    """Return the first hero section for the landing page."""
+
     def get(self, request):
+        """Fetch hero section content."""
         hero = HeroSection.objects.first()
         serializer = HeroSectionSerializer(hero)
         return Response(serializer.data)
 
 
 class HeaderSectionView(RetrieveAPIView):
+    """Retrieve the current header content."""
+
     queryset = HeaderSection.objects.all()
     serializer_class = HeaderSectionSerializer
 
     def get_object(self):
+        """Return the first header configuration."""
         return HeaderSection.objects.first()
     
 
 class FooterInfoView(APIView):
+    """Return footer info for the site."""
+
     def get(self, request):
+        """Fetch footer block content."""
         footer = FooterInfo.objects.last()
         serializer = FooterInfoSerializer(footer)
         return Response(serializer.data)
 
 
 class CompanyInfoView(APIView):
+    """Expose company info content."""
+
     def get(self, request):
+        """Fetch company information."""
         info = CompanyInfo.objects.first()
         serializer = CompanyInfoSerializer(info)
         return Response(serializer.data)
@@ -59,7 +71,7 @@ class CompanyInfoView(APIView):
 #         if not name or not contact:
 #             return Response({"error": "Missing required fields"}, status=400)
 
-#         text = f"📩 <b>Новая заявка</b>\n\n👤 Имя: {name}\n📞 Контакт: {contact}\n💬 Сообщение: {message or '-'}"
+#         text = f"📩 <b>New inquiry</b>\n\n👤 Name: {name}\n📞 Contact: {contact}\n💬 Message: {message or '-'}"
 
 #         success = send_telegram_message(text)
 
@@ -84,9 +96,11 @@ ALLOWED_ORIGINS = settings.ALLOWED_ORIGINS
 
 @method_decorator(ratelimit(key='ip', rate='5/m', block=True), name='dispatch')
 class ContactRequestView(APIView):
+    """Handle validated contact form submissions with simple anti-abuse checks."""
     permission_classes = [AllowAny]
 
     def post(self, request):
+        """Validate contact request, guard against spam, and forward to Telegram."""
         origin = request.META.get("HTTP_ORIGIN", "")
         if origin not in ALLOWED_ORIGINS:
             logger.warning(f"Blocked origin: {origin}")
@@ -134,7 +148,10 @@ class ContactRequestView(APIView):
 
 
 class ActiveThemeAPIView(APIView):
+    """Return the currently active SiteTheme if present."""
+
     def get(self, request):
+        """Fetch active theme config."""
         theme = SiteTheme.objects.filter(is_active=True).first()
         if theme:
             return Response(SiteThemeSerializer(theme).data)
@@ -145,4 +162,3 @@ class ActiveThemeAPIView(APIView):
 #     def get(self, request):
 #         carousel_images = CarouselImage.objects.all()
 #         return Response(carousel_images.values('id', 'image', 'description'))
-

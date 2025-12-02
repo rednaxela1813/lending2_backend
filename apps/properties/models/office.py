@@ -1,9 +1,8 @@
 #apps/properties/models/office.py
+import builtins
 import uuid
 from django.db import models
 from django.utils.html import format_html
-import os
-from PIL import Image
 from django.urls import reverse
 from apps.core_images.mixins import ImageOptimizationMixin
 from .property import Property
@@ -14,19 +13,21 @@ from apps.properties.models.mixins import AvailabilityMixin
 class OfficeUnit(AvailabilityMixin, models.Model):
 
     public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    property = models.ForeignKey(
-    Property,
-    on_delete=models.CASCADE,
-    related_name='office_units',
-)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='office_units')
+
     floor = models.IntegerField(help_text="Číslo poschodia (napr. 0 = prízemie, 1 = prvé poschodie)")
     unit_number = models.CharField(max_length=50, help_text="Číslo kancelárie alebo identifikátor")
     area_sqm = models.FloatField(help_text="Rozloha v m²")
     price_per_month = models.DecimalField(max_digits=10, decimal_places=2, help_text="Cena za mesiac (€)")
-    
+
     description = models.TextField(blank=True)
     
-    iframe = models.TextField(blank=True, help_text="HTML iframe z Google Maps pre túto jednotku")
+    map_embed_url = models.URLField(
+        max_length=1024,
+        blank=True,
+        help_text="Plný URL na Google Maps embed (bez HTML)",
+    )
+    iframe = models.TextField(blank=True, help_text="HTML iframe z Google Maps pre túto jednotku (legacy)")
 
     class Meta:
         unique_together = ('property', 'floor', 'unit_number')
@@ -34,6 +35,24 @@ class OfficeUnit(AvailabilityMixin, models.Model):
 
     def __str__(self):
         return f"{self.property.name} – Poschodie {self.floor}, Kancelária {self.unit_number}"
+
+    @builtins.property
+    def embed_src(self) -> str:
+        """
+        Safe embed URL for templates. Prefers own embed URL,
+        then legacy iframe src if allowed, then property's embed.
+        """
+        if self.map_embed_url:
+            return self.map_embed_url
+
+        legacy_src = Property._extract_iframe_src(self.iframe or "")
+        if legacy_src and Property._is_allowed_map_src(legacy_src):
+            return legacy_src
+
+        if self.property:
+            return self.property.embed_src
+
+        return ""
 
 
 
@@ -63,6 +82,3 @@ class OfficeUnitImage(ImageOptimizationMixin, models.Model):
             )
         return "(нет изображения)"
     preview.short_description = "Preview"
-
-
-

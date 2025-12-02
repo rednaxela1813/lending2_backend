@@ -14,7 +14,7 @@
         </div>
 
         <img
-          src="{% static 'images/Logo3_light_theme.png' %}"
+          src="{% static 'images/logo_black.png' %}"
           alt="Zavodsky s.r.o."
           class="block h-10 md:h-12 w-auto object-contain"
         />
@@ -43,7 +43,7 @@
                    opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
                    transition-all duration-200 z-50">
             <div class="py-2">
-              <a href="#services"
+              <a href="{% url 'csm:homepage' %}#services"
                  class="flex items-center gap-3 px-4 py-2.5 text-gray-800 hover:bg-blue-50 hover:text-blue-700">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -52,7 +52,7 @@
                 {{ nas_sluzby.0.title|default:"Office Spaces" }}
               </a>
 
-              <a href="#services"
+              <a href="{% url 'csm:homepage' %}#services"
                  class="flex items-center gap-3 px-4 py-2.5 text-gray-800 hover:bg-blue-50 hover:text-blue-700">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -61,7 +61,7 @@
                 {{ nas_sluzby.1.title|default:"Billboard Advertising" }}
               </a>
 
-              <a href="#services"
+              <a href="{% url 'csm:homepage' %}#services"
                  class="flex items-center gap-3 px-4 py-2.5 text-gray-800 hover:bg-blue-50 hover:text-blue-700">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -78,7 +78,7 @@
           {{ header_section.nav_about|default:"About" }}
         </a>
 
-        <a href="#contact"
+        <a href="{% url 'csm:homepage' %}#contact"
            class="px-2 py-2 text-gray-800 hover:text-blue-600 transition-colors">
           {{ header_section.nav_contact|default:"Contact" }}
         </a>
@@ -90,7 +90,7 @@
            class="text-[15px] font-semibold text-blue-600 hover:text-blue-700">
           {{ company_info.phone|default:"(123) 456-7890" }}
         </a>
-        <a href="#contact"
+        <a href="{% url 'csm:homepage' %}#contact"
            class="rounded-xl bg-blue-600 px-4 py-2.5 text-[14px] font-semibold text-white hover:bg-blue-700 transition-colors">
           {{ header_section.button_text|default:"Get Quote" }}
         </a>
@@ -121,7 +121,7 @@
         Home
       </a>
 
-      <a href="#services"
+      <a href="{% url 'csm:homepage' %}#services"
          class="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100">
         {{ header_section.nav_services|default:"Services" }}
       </a>
@@ -131,12 +131,12 @@
         {{ header_section.nav_about|default:"About" }}
       </a>
 
-      <a href="#contact"
+      <a href="{% url 'csm:homepage' %}#contact"
          class="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100">
         {{ header_section.nav_contact|default:"Contact" }}
       </a>
 
-      <a href="#quote"
+      <a href="{% url 'csm:homepage' %}#contact"
          class="mt-2 block rounded-lg bg-blue-600 px-4 py-2.5 text-base font-semibold text-white text-center hover:bg-blue-700">
         {{ header_section.button_text|default:"Get Quote" }}
       </a>

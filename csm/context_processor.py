@@ -1,4 +1,4 @@
-from apps.company.models import CompanyInfo
+from apps.company.models import CompanyInfo, FooterInfo
 from .models import HeaderSection, ServiceSection
 
 def company_info(request):
@@ -6,6 +6,8 @@ def company_info(request):
         company = CompanyInfo.objects.first()
     except CompanyInfo.DoesNotExist:
         company = None
+
+    footer = FooterInfo.objects.select_related("company").first()
 
     # Fetch header/navigation content from DB so all pages share the same translations/content
     header_section = HeaderSection.objects.first()
@@ -21,4 +23,6 @@ def company_info(request):
         "company_info": company,
         "header_section": header_section,
         "nas_sluzby": nas_sluzby,
+        "footer_info": footer,
+        "address_line_2": footer.contact_address if footer and footer.contact_address else "",
     }

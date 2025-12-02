@@ -12,7 +12,7 @@ def test_service_section_get_list_url_when_type_set():
 
     url = s.get_list_url()
 
-    # ожидаем fallback: /offices/?type=office
+    # Expect fallback to /offices/?type=office
     assert url == f"{reverse('property_list')}?type=office"
 
 def test_service_section_get_list_url_when_type_none():

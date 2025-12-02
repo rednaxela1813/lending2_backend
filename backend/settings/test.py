@@ -23,3 +23,7 @@ MEDIA_ROOT = BASE_DIR / "test_media"
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+from apps.site_logging.config import get_logging_config
+
+LOGGING = get_logging_config(debug=DEBUG)

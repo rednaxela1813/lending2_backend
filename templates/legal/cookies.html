@@ -1,0 +1,96 @@
+{% extends "csm/base.html" %}
+{% load static %}
+
+{% block title %}Zásady používania cookies | {{ company_info.name|default:"RentSpace Pro" }}{% endblock title %}
+{% block meta_description %}Informácie o tom, ako {{ company_info.name|default:"RentSpace Pro" }} používa súbory cookie, prečo ich používame a ako môžete spravovať svoje nastavenia.{% endblock meta_description %}
+{% block content_wrapper_class %}bg-gray-50 py-16{% endblock content_wrapper_class %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+  <div class="rounded-3xl bg-white shadow-xl overflow-hidden border border-gray-100">
+    <div class="bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 px-8 py-10 text-white">
+      <p class="text-sm uppercase tracking-[0.35em] text-white/80 font-semibold">Cookies</p>
+      <h1 class="text-3xl md:text-4xl font-extrabold mt-2">Zásady používania súborov cookie</h1>
+      <p class="mt-3 text-white/80 text-sm">
+        Verzia {{ cookies_version|default:"v1" }} · Aktualizované {{ cookies_updated|default:"2025-10-01" }}
+      </p>
+      <p class="mt-6 max-w-3xl text-white/90">
+        Tieto zásady vysvetľujú, ako {{ company_info.name|default:"RentSpace Pro" }} používa súbory cookie a podobné technológie v súlade s právom Slovenskej republiky a bežnou medzinárodnou praxou.
+      </p>
+    </div>
+
+    <div class="p-8 md:p-10 space-y-8">
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">1. Čo sú cookies</h2>
+        <p class="text-gray-700">Súbory cookie sú malé textové súbory uložené vo vašom prehliadači, ktoré pomáhajú webu fungovať, zapamätať si vaše voľby a zlepšiť používateľský zážitok.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">2. Typy cookies, ktoré používame</h2>
+        <ul class="list-disc list-inside space-y-2 text-gray-700">
+          <li><span class="font-semibold">Nevyhnutné:</span> zabezpečenie základných funkcií webu (napr. formuláre, navigácia).</li>
+          <li><span class="font-semibold">Funkčné:</span> zapamätanie preferencií (jazyk, región) pre pohodlnejšie používanie.</li>
+          <li><span class="font-semibold">Výkonnostné a analytické:</span> anonymné údaje o tom, ako návštevníci používajú web, aby sme ho mohli zlepšovať.</li>
+          <li><span class="font-semibold">Marketingové:</span> personalizácia obsahu alebo meranie kampaní (ak sú povolené).</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">3. Ako cookies používame</h2>
+        <ul class="list-disc list-inside space-y-2 text-gray-700">
+          <li>Zabezpečenie správneho fungovania webu a formulárov.</li>
+          <li>Meranie výkonu a zlepšovanie obsahu na základe anonymizovaných údajov.</li>
+          <li>Voliteľne marketing/remarketing, iba ak udelíte súhlas.</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">4. Tretie strany</h2>
+        <p class="text-gray-700">Môžeme používať služby tretích strán (napr. analytické nástroje), ktoré nastavia vlastné cookies. Tieto sú riadené zásadami ochrany osobných údajov príslušných poskytovateľov.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">5. Ako spravovať alebo vypnúť cookies</h2>
+        <p class="text-gray-700">Cookies môžete spravovať priamo vo svojom prehliadači – povoliť, blokovať alebo vymazať. Vypnutie nevyhnutných cookies môže ovplyvniť funkčnosť webu; vypnutie analytických/marketingových nemá vplyv na základné fungovanie.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">6. Uchovávanie</h2>
+        <p class="text-gray-700">Doba uchovávania závisí od typu cookie. Relačné cookies sa vymažú po zatvorení prehliadača; trvalé cookies uchovávame len tak dlho, ako je potrebné na uvedené účely.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">7. Právne základy</h2>
+        <p class="text-gray-700">Nevyhnutné cookies spracúvame na základe oprávneného záujmu na bezpečnej a funkčnej prevádzke webu. Analytické a marketingové cookies používame iba na základe vášho súhlasu, ktorý môžete kedykoľvek odvolať.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">8. Zmeny zásad</h2>
+        <p class="text-gray-700">Zásady môžeme aktualizovať; platí verzia zverejnená na tejto stránke s uvedeným dátumom účinnosti.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">9. Kontakt</h2>
+        <div class="bg-gray-50 border border-gray-100 rounded-2xl p-5 space-y-2 text-gray-800">
+          <p class="font-semibold">{{ company_info.name|default:"RentSpace Pro" }}</p>
+          {% if company_info.address %}
+            <p>{{ company_info.address }}</p>
+          {% endif %}
+          <p>Email: <a class="text-blue-600 hover:text-blue-700 font-semibold" href="mailto:{{ company_info.email|default:'info@example.com' }}">{{ company_info.email|default:"info@example.com" }}</a></p>
+          {% if company_info.phone %}
+            <p>Tel.: <a class="text-blue-600 hover:text-blue-700 font-semibold" href="tel:{{ company_info.phone }}">{{ company_info.phone }}</a></p>
+          {% endif %}
+        </div>
+      </section>
+
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4">
+        <p class="text-sm text-gray-500">Nastavenia cookies môžete kedykoľvek upraviť vo svojom prehliadači.</p>
+        <div class="flex gap-3">
+          <a href="{% url 'csm:homepage' %}" class="inline-flex items-center px-4 py-2 rounded-lg border border-gray-200 text-gray-800 hover:bg-gray-50 transition">Späť na úvod</a>
+          <a href="{% url 'csm:homepage' %}#contact" class="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition">Kontaktovať nás</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -1,12 +1,20 @@
 import pytest
 from django.contrib.auth import get_user_model
-from accounting.models import Company, ManagerProfile
+from accounting.models import ManagerProfile
+from apps.company.models import CompanyInfo
 
 pytestmark = pytest.mark.django_db
 User = get_user_model()
 
 def test_create_company_and_manager_profile():
-    c = Company.objects.create(name="Zavodsky s.r.o.", slug="zavodsky")
+    c = CompanyInfo.objects.create(
+        name="Zavodsky s.r.o.",
+        ico="",
+        dic="",
+        address="Addr",
+        phone="123",
+        email="info@example.com",
+    )
     u = User.objects.create_user(email="mgr@example.com", password="pass123")
     p = ManagerProfile.objects.create(user=u, company=c, role="manager")
 
@@ -17,7 +25,14 @@ def test_create_company_and_manager_profile():
     assert str(p) == "mgr@example.com (Zavodsky s.r.o.)"
 
 def test_is_admin_property():
-    c = Company.objects.create(name="A", slug="a")
+    c = CompanyInfo.objects.create(
+        name="A",
+        ico="",
+        dic="",
+        address="Addr",
+        phone="123",
+        email="a@example.com",
+    )
     u = User.objects.create_user(email="admin@example.com", password="x")
     p = ManagerProfile.objects.create(user=u, company=c, role="admin")
     assert p.is_admin is True
