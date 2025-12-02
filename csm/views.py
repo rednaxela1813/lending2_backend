@@ -108,6 +108,18 @@ def homepage(request):
 
     
 
+    today = timezone.localdate()
+    upcoming_specials = (
+        company_info.special_openings.filter(date__gte=today).order_by("date")
+        if company_info
+        else None
+    )
+    next_closed = (
+        upcoming_specials.filter(is_closed=True).first()
+        if upcoming_specials is not None
+        else None
+    )
+
     context = {
         'hero_section': hero_section,
         'header_section': header_section,
@@ -122,6 +134,8 @@ def homepage(request):
         'form': form,
         'phone_number': phone_number,
         'carousel_images': carousel_images,
+        'upcoming_specials': upcoming_specials,
+        'next_closed_weekday': next_closed.date.weekday() if next_closed else None,
 
         'hot_deal_section': hot_deal_section,
         'hot_deal_items': hot_deal_items,

@@ -2,11 +2,14 @@
 import re
 import uuid
 from urllib.parse import urlparse, quote_plus
+
 from django.db import models
-from django.utils.html import format_html
-from apps.properties.models.mixins import AvailabilityMixin
 from django.urls import reverse
+from django.utils.html import format_html
+from django.utils.text import slugify
+
 from apps.core_images.mixins import ImageOptimizationMixin
+from apps.properties.models.mixins import AvailabilityMixin
 
 
 
@@ -20,6 +23,20 @@ class PropertyType(models.Model):
 
     def __str__(self):
         return self.name
+
+    def _generate_unique_slug(self) -> str:
+        base = slugify(self.name) or "type"
+        candidate = base
+        suffix = 1
+        while PropertyType.objects.filter(slug=candidate).exclude(pk=self.pk).exists():
+            suffix += 1
+            candidate = f"{base}-{suffix}"
+        return candidate
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self._generate_unique_slug()
+        super().save(*args, **kwargs)
     
 
 
@@ -32,7 +49,11 @@ class Property(AvailabilityMixin,models.Model):
     list_details = models.JSONField(max_length=1044, blank=True, default=list, help_text="Detaily pre zobrazenie v zozname")
     summary = models.CharField(max_length=255, blank=True, help_text="Krátky popis")
     location = models.CharField(max_length=255, blank=True)
-    map_embed_url = models.URLField(blank=True, help_text="Plný URL na Google Maps embed (bez HTML)")
+    map_embed_url = models.URLField(
+        max_length=1024,
+        blank=True,
+        help_text="Plný URL na Google Maps embed (bez HTML)",
+    )
     iframe = models.TextField(blank=True, help_text="HTML iframe  Google Maps (legacy, už sa nepoužíva priamo)")
     created_at = models.DateTimeField(auto_now_add=True)
 

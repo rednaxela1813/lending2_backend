@@ -60,6 +60,7 @@ def test_submit_sends_email_notification(client, settings):
     settings.DEFAULT_FROM_EMAIL = "noreply@example.com"
 
     url = reverse("contact_messages:submit")
+    client.cookies["cookie_consent"] = "accepted"
     payload = {
         "first_name": "Alex",
         "last_name": "Kiselev",

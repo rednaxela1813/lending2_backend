@@ -22,7 +22,11 @@ class OfficeUnit(AvailabilityMixin, models.Model):
 
     description = models.TextField(blank=True)
     
-    map_embed_url = models.URLField(blank=True, help_text="Plný URL na Google Maps embed (bez HTML)")
+    map_embed_url = models.URLField(
+        max_length=1024,
+        blank=True,
+        help_text="Plný URL na Google Maps embed (bez HTML)",
+    )
     iframe = models.TextField(blank=True, help_text="HTML iframe z Google Maps pre túto jednotku (legacy)")
 
     class Meta:
