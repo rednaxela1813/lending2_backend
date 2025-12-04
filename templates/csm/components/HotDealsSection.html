@@ -105,20 +105,37 @@
                 ⏰ {% if item.expires_in_days != None %}Expires in {{ item.expires_in_days }} days{% else %}Limited time{% endif %}
               </div>
 
-              <button
-                type="button"
-                hx-get="{% url 'hotdeal:partial' item.public_id %}"
-                hx-target="#hotdeal-detail-area"
-                hx-swap="innerHTML show:0.2s"
-                hx-vals='{"scroll":"1"}'
-                hx-indicator="#hotdeal-indicator"
-                hx-on="htmx:afterSwap: if (event.detail.target && event.detail.target.id==='hotdeal-detail-area') { event.detail.target.scrollIntoView({behavior:'smooth', block:'start'}); }"
-                class="block w-full text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200
-                       {% if item.color_theme %}bg-{{ item.color_theme }}{% else %}bg-red-600 hover:bg-red-700{% endif %}">
-                {{ item.button_text|default:"View Details" }}
-              </button>
+              <div class="space-y-3">
+                {# Mobile: inject details directly under the clicked card #}
+                <button
+                  type="button"
+                  class="block w-full text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 md:hidden
+                         {% if item.color_theme %}bg-{{ item.color_theme }}{% else %}bg-red-600 hover:bg-red-700{% endif %}"
+                  hx-get="{% url 'hotdeal:partial' item.public_id %}"
+                  hx-target="#hotdeal-mobile-slot-{{ item.public_id }}"
+                  hx-swap="innerHTML show:0.2s"
+                  hx-vals='{"scroll":"1"}'
+                  hx-indicator="#hotdeal-indicator-{{ item.public_id }}"
+                  hx-on="htmx:afterSwap: if (event.detail.target && event.detail.target.id==='hotdeal-mobile-slot-{{ item.public_id }}') { event.detail.target.scrollIntoView({behavior:'smooth', block:'start'}); }">
+                  {{ item.button_text|default:"View Details" }}
+                </button>
 
-              <div id="hotdeal-indicator" class="htmx-indicator absolute left-1/2 -translate-x-1/2 mt-2 text-gray-500 text-sm">
+                {# Desktop: keep existing behavior (detail area below the grid) #}
+                <button
+                  type="button"
+                  class="hidden md:block w-full text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200
+                         {% if item.color_theme %}bg-{{ item.color_theme }}{% else %}bg-red-600 hover:bg-red-700{% endif %}"
+                  hx-get="{% url 'hotdeal:partial' item.public_id %}"
+                  hx-target="#hotdeal-detail-area"
+                  hx-swap="innerHTML show:0.2s"
+                  hx-vals='{"scroll":"1"}'
+                  hx-indicator="#hotdeal-indicator-{{ item.public_id }}"
+                  hx-on="htmx:afterSwap: if (event.detail.target && event.detail.target.id==='hotdeal-detail-area') { event.detail.target.scrollIntoView({behavior:'smooth', block:'start'}); }">
+                  {{ item.button_text|default:"View Details" }}
+                </button>
+              </div>
+
+              <div id="hotdeal-indicator-{{ item.public_id }}" class="htmx-indicator absolute left-1/2 -translate-x-1/2 mt-2 text-gray-500 text-sm">
                 <svg class="inline w-5 h-5 animate-spin mr-2" viewBox="0 0 24 24" fill="none">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" fill="currentColor"></path>
@@ -127,6 +144,9 @@
               </div>
             </div>
           </div>
+
+          <!-- Mobile detail mount point: only used on small screens -->
+          <div id="hotdeal-mobile-slot-{{ item.public_id }}" class="md:hidden mt-6"></div>
 
           <!-- sale badge -->
           <div class="absolute -top-4 -right-4 z-10 text-white rounded-full w-20 h-20 flex items-center justify-center transform rotate-12
