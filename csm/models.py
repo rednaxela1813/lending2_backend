@@ -1,3 +1,4 @@
+# csm/models.py
 from django.db import models
 from django.urls import reverse
 from apps.properties.models import PropertyType
@@ -139,7 +140,7 @@ class Icon(ImageOptimizationMixin, models.Model):
     """Reusable icon assets for cards and services."""
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    key = models.SlugField(max_length=100, unique=True)        # 'office', 'billboard', 'legal', ...
+   # key = models.SlugField(max_length=100, unique=True)        # 'office', 'billboard', 'legal', ...
     label = models.CharField(max_length=100, blank=True)
     svg_inline = models.TextField(blank=True)                  # Inline <svg> markup
     image = models.ImageField(upload_to="icons/", blank=True, null=True)

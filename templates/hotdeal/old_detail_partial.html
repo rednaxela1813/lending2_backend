@@ -143,6 +143,24 @@
     </div>
   {% endif %}
 
+  <!-- FEATURES -->
+   <p>  мы вообще где? </p>
+  {% if deal.office_unit %}
+  {% with features=deal.office_unit.features.all %}
+    {% if features %}
+      <div class="mt-10 rounded-2xl border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">Office features</h3>
+        <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
+          {% for feature in features %}
+            <li>{{ feature.name }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  {% endwith %}
+{% endif %}
+
+
   <!-- MAP -->
   {% if deal.property and deal.property.embed_src %}
     <div class="mt-10">

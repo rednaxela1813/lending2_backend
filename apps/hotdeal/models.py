@@ -114,6 +114,8 @@ class HotDealItem(models.Model):
         """Собирает непустые promo_X в список."""
         return [p for p in (self.promo_1, self.promo_2, self.promo_3, self.promo_4) if p]
     
+    
+    
     def get_absolute_url(self):
         return reverse("hotdeal:detail", args=[self.public_id])
     

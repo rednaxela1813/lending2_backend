@@ -93,14 +93,66 @@
     {% endif %}
   </div>
 
-  {% if map_embed_src %}
-  
+   <!-- FEATURES -->
+ <p>мы вообще где?</p>
+
+{% if unit %}
+  {% with features=unit.features.all %}
+    {% if features %}
+      <div class="mt-10 rounded-2xl border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">Office features</h3>
+        <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
+          {% for feature in features %}
+            <li>{{ feature.name }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  {% endwith %}
+{% endif %}
+
+    {% if map_embed_src %}
     <div class="w-full aspect-video rounded-xl overflow-hidden">
-      <iframe src="{{ map_embed_src }}" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" class="w-full h-full border-0"></iframe>
+      <iframe src="{{ map_embed_src }}"
+              loading="lazy"
+              allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade"
+              class="w-full h-full border-0"></iframe>
+    </div>
+
+    <div class="mt-4 flex flex-col sm:flex-row gap-3 justify-between">
+      {# Проложить маршрут #}
+      {% if unit and unit.property and unit.property.location %}
+        <a href="https://www.google.com/maps/dir/?api=1&destination={{ unit.property.location|urlencode }}"
+           target="_blank"
+           rel="noopener"
+           class="inline-flex items-center justify-center px-5 py-3 rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+          Проложить маршрут
+        </a>
+      {% else %}
+        <a href="{{ map_embed_src }}"
+           target="_blank"
+           rel="noopener"
+           class="inline-flex items-center justify-center px-5 py-3 rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+          Проложить маршрут
+        </a>
+      {% endif %}
+
+      {# Свернуть подробности #}
+      <button
+        type="button"
+        hx-get="{% url 'hotdeal:partial_empty' %}"
+        hx-target="#hotdeal-detail-area"
+        hx-swap="innerHTML"
+        class="inline-flex items-center justify-center px-5 py-3 rounded-lg text-sm font-semibold border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+        Свернуть подробности
+      </button>
     </div>
   {% endif %}
-</div>
-{% endwith %}
+
+</div>  {# закрываем <div id="{{ ROOT_ID }}"> #}
+{% endwith %}  {# закрываем {% with ROOT_ID=... %} #}
+
 
 <!-- движок (guarded) + мгновенная инициализация текущего блока -->
 <script>
