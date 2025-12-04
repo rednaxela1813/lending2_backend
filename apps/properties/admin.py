@@ -2,10 +2,16 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import (
     Property, PropertyImage, PropertyType,
-    OfficeUnit, OfficeUnitImage,
+    OfficeUnit, OfficeUnitImage, OfficeFeature,
     BillboardUnit, BillboardUnitImage,
     LegalAddressUnit, LegalAddressUnitImage,
 )
+
+
+
+@admin.register(OfficeFeature)
+class OfficeFeatureAdmin(admin.ModelAdmin):
+    search_fields = ("name",)
 
 # ───────────────────────────
 # Общие inline для фото
@@ -90,6 +96,7 @@ class OfficeUnitAdmin(admin.ModelAdmin):
     search_fields = ("unit_number", "property__name")
     ordering = ("property", "floor", "unit_number")
     readonly_fields = ("public_id",)
+    autocomplete_fields = ("features",)
 
 
 # ───────────────────────────
