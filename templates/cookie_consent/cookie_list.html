@@ -1,0 +1,138 @@
+{% extends "csm/base.html" %}
+{% load cookie_consent_tags %}
+
+{% block title %}Cookies | RentSpace Pro{% endblock title %}
+
+{% block content %}
+<section class="bg-gray-50 py-12">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      Nastavenia súborov cookies
+    </h1>
+
+    <p class="text-gray-600 text-sm md:text-base mb-6">
+      Na tejto stránke nájdete prehľad kategórií súborov cookies, ktoré používame,
+      a dôvody, prečo ich používame. Môžete povoliť iba technicky nevyhnutné
+      cookies alebo prijať aj voliteľné (analytické, marketingové a pod.).
+    </p>
+
+    <div class="flex flex-col sm:flex-row gap-3 mb-10">
+      <form method="post" action="{% url 'cookie_consent_decline_all' %}" class="w-full sm:w-auto">
+        {% csrf_token %}
+        <button
+          type="submit"
+          class="w-full sm:w-auto inline-flex justify-center items-center rounded-xl border border-gray-300
+                 px-4 py-2 text-xs md:text-sm font-medium text-gray-700 hover:bg-gray-50"
+        >
+          Povoliť iba nevyhnutné cookies
+        </button>
+      </form>
+
+      <form method="post" action="{% url 'cookie_consent_accept_all' %}" class="w-full sm:w-auto">
+        {% csrf_token %}
+        <button
+          type="submit"
+          class="w-full sm:w-auto inline-flex justify-center items-center rounded-xl bg-blue-600
+                 px-4 py-2 text-xs md:text-sm font-semibold text-white hover:bg-blue-700"
+        >
+          Prijať všetky cookies
+        </button>
+      </form>
+
+      <a
+        href="{% url 'privacy_policy' %}"
+        class="w-full sm:w-auto inline-flex justify-center items-center rounded-xl px-4 py-2
+               text-xs md:text-sm font-medium text-blue-700 hover:text-blue-800"
+      >
+        Zásady ochrany súkromia
+      </a>
+    </div>
+
+    <div class="space-y-6">
+      {% for group in object_list %}
+        <div class="bg-white border border-gray-200 rounded-2xl p-5 md:p-6 shadow-sm">
+          <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <h2 class="text-lg md:text-xl font-semibold text-gray-900">
+                  {{ group.name }}
+                </h2>
+                {% if group.is_required %}
+                  <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5
+                               text-xs font-medium text-green-800">
+                    Technicky nevyhnutné (vždy povolené)
+                  </span>
+                {% endif %}
+              </div>
+
+              {% if group.description %}
+                <p class="text-sm text-gray-600">
+                  {{ group.description }}
+                </p>
+              {% endif %}
+
+              <p class="mt-2 text-xs text-gray-500">
+                Identifikátor skupiny: <span class="font-mono">{{ group.varname }}</span>
+              </p>
+
+              <p class="mt-2 text-xs">
+                {% if request|cookie_group_accepted:group.varname %}
+                  <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5
+                               text-[11px] font-medium text-green-700">
+                    Aktuálny stav: povolené
+                  </span>
+                {% elif request|cookie_group_declined:group.varname %}
+                  <span class="inline-flex items-center rounded-full bg-red-50 px-2 py-0.5
+                               text-[11px] font-medium text-red-700">
+                    Aktuálny stav: zakázané
+                  </span>
+                {% else %}
+                  <span class="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5
+                               text-[11px] font-medium text-gray-700">
+                    Aktuálny stav: čaká na rozhodnutie
+                  </span>
+                {% endif %}
+              </p>
+            </div>
+
+          </div>
+
+          {% with cookies=group.cookie_set.all %}
+            {% if cookies %}
+              <div class="mt-4">
+                <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+                  Cookies v tejto skupine
+                </h3>
+                <div class="grid gap-2 md:grid-cols-2">
+                  {% for cookie in cookies %}
+                    <div class="border border-gray-100 rounded-lg p-3 text-xs text-gray-700">
+                      <div class="font-medium text-gray-900">
+                        {{ cookie.name }}
+                      </div>
+                      {% if cookie.description %}
+                        <p class="mt-1 text-gray-600">
+                          {{ cookie.description }}
+                        </p>
+                      {% endif %}
+                      <p class="mt-1 text-[11px] text-gray-500">
+                        Path: {{ cookie.path|default:"/" }}
+                        {% if cookie.domain %}
+                          · Domain: {{ cookie.domain }}
+                        {% endif %}
+                      </p>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+          {% endwith %}
+        </div>
+      {% empty %}
+        <p class="text-sm text-gray-600">
+          Zatiaľ nie sú nakonfigurované žiadne skupiny cookies.
+        </p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock content %}

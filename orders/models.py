@@ -6,7 +6,6 @@ class LegalAddressOrder(models.Model):
     public_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     full_name = models.CharField(max_length=255)
     email = models.EmailField()
-    address_choice = models.CharField(max_length=255)
     phone = models.CharField(max_length=20)
     company_name = models.CharField(max_length=255, blank=True, null=True)
     note = models.TextField(blank=True, null=True)

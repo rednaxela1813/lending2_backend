@@ -29,15 +29,16 @@
       >
         {{ hero_section.title|default:"Premium Spaces for" }}
         <span
-          class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300"
+          class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400"
         >
           {{ hero_section.subtitle|default:"Your Business" }}
+          <p>uu</p>
         </span>
       </h1>
 
       <!-- Subheading -->
       <p
-        class="text-xl md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 mb-8 max-w-4xl mx-auto leading-relaxed"
+        class="text-xl md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 mb-8 max-w-4xl mx-auto leading-relaxed"
       >
         {{ hero_section.description|default:"Discover our premium office spaces, billboard advertising, and legal address services designed to elevate your business presence." }}
 
@@ -67,15 +68,23 @@
         <div
           class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300"
         >
-          <div
-            class="w-16 h-16 bg-{{ sluzba.color_icon }} rounded-lg flex items-center justify-center mx-auto mb-4"
-          >
-            {% if sluzba.icon_svg and sluzba.icon_svg.svg_inline %}
-            <div class="w-8 h-8 text-white">
-              {{ sluzba.icon_svg.svg_inline|safe }}
-            </div>
-            {% endif %}
-          </div>
+          {% with color=sluzba.color_icon %}
+<div
+  class="w-16 h-16 rounded-lg flex items-center justify-center mx-auto mb-4
+  {% if color == 'green' %} bg-green-500
+  {% elif color == 'blue' %} bg-blue-500
+  {% elif color == 'red' %} bg-red-500
+  {% else %} bg-slate-500
+  {% endif %}"
+>
+  {% if sluzba.icon_svg and sluzba.icon_svg.svg_inline %}
+    <div class="w-8 h-8 text-white">
+      {{ sluzba.icon_svg.svg_inline|safe }}
+    </div>
+  {% endif %}
+</div>
+{% endwith %}
+
           <h3 class="text-xl font-semibold text-white mb-3">
             {{ sluzba.title }}
           </h3>

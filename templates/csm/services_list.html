@@ -1,0 +1,118 @@
+{# templates/csm/services_list.html #}
+{% extends "csm/base.html" %}
+{% load static %}
+
+{% block title %}
+  Ponuky{% if service_type_obj %} — {{ service_type_obj.name }}{% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="relative py-16 overflow-hidden">
+  <div class="absolute inset-0">
+    <div class="h-full w-full bg-cover bg-center"
+         style="background-image: url('{% if random_bg_image %}{{ random_bg_image }}{% else %}{% static 'images/default-office.jpg' %}{% endif %}');">
+    </div>
+    <div class="absolute inset-0 bg-white/50 backdrop-blur-sm"></div>
+  </div>
+
+  <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
+      <div>
+        <p class="text-sm uppercase tracking-wide text-gray-500">Ponuky</p>
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
+          {{ service_type_obj.name|default:"Dostupné ponuky" }}
+        </h1>
+        {% if service_type_obj.description %}
+          <p class="mt-2 text-gray-600 max-w-3xl">{{ service_type_obj.description }}</p>
+        {% endif %}
+      </div>
+
+      {% if service_types %}
+        <div class="flex flex-wrap gap-2">
+          {% for slug,name in service_types %}
+            <a href="{% url 'csm:service_offers' slug %}"
+               class="px-3 py-2 rounded-lg border {% if active_service_type == slug %}bg-blue-600 text-white border-blue-600{% else %}bg-white text-gray-800 hover:border-blue-200{% endif %}">
+              {{ name }}
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    {% if items %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for it in items %}
+          <article class="border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition bg-white overflow-hidden">
+            <div class="relative h-48 bg-gray-100">
+              {% if it.random_image %}
+                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ it.random_image }}');"></div>
+              {% else %}
+                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{% static 'images/default-office.jpg' %}');"></div>
+              {% endif %}
+              <div class="absolute inset-0 bg-gradient-to-t from-black/25 via-black/10 to-transparent"></div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-semibold text-gray-900">
+                {{ it.name|default:it }}
+              </h3>
+              {% if it.location %}
+                <p class="text-sm text-gray-500 mt-1">{{ it.location }}</p>
+              {% endif %}
+              {% if it.summary %}
+                <p class="mt-3 text-gray-700">{{ it.summary }}</p>
+              {% elif it.description %}
+                <p class="mt-3 text-gray-700">{{ it.description|truncatechars:180 }}</p>
+              {% endif %}
+
+              {% if it.price %}
+                <div class="mt-4 text-lg font-semibold text-blue-700">
+                  Od {{ it.price }} {{ it.currency|default:"EUR" }}
+                </div>
+              {% endif %}
+
+              {% if it.list_details %}
+                <ul class="mt-4 space-y-2 text-sm text-gray-600">
+                  {% for detail in it.list_details %}
+                    <li class="flex items-start">
+                      <span class="mt-1 mr-2 text-green-500">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                      </span>
+                      <span>{{ detail }}</span>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+
+              <div class="mt-6 flex gap-3">
+                <a href="{{ it.get_absolute_url }}"
+                   class="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700">
+                  Detail ponuky
+                </a>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+
+      {% if is_paginated %}
+        <div class="mt-10 flex items-center justify-center gap-3">
+          {% if page_obj.has_previous %}
+            <a class="px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50"
+               href="?page={{ page_obj.previous_page_number }}">← Predchádzajúca</a>
+          {% endif %}
+          <span class="px-3 py-2 text-gray-600">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+          {% if page_obj.has_next %}
+            <a class="px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50"
+               href="?page={{ page_obj.next_page_number }}">Ďalšia →</a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+    {% else %}
+      <div class="text-center py-16">
+        <p class="text-gray-600 text-lg">Momentálne nemáme dostupné ponuky pre túto kategóriu.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

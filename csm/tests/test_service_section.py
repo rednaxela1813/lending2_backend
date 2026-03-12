@@ -2,7 +2,7 @@
 import pytest
 from django.urls import reverse
 from csm.models import ServiceSection
-from properties.models import PropertyType
+from apps.properties.models import PropertyType
 
 pytestmark = pytest.mark.django_db
 
@@ -12,7 +12,7 @@ def test_service_section_get_list_url_when_type_set():
 
     url = s.get_list_url()
 
-    # ожидаем fallback: /offices/?type=office
+    # Expect fallback to /offices/?type=office
     assert url == f"{reverse('property_list')}?type=office"
 
 def test_service_section_get_list_url_when_type_none():

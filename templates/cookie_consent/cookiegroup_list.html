@@ -1,0 +1,160 @@
+{# templates/cookie_consent/cookiegroup_list.html #}
+{% extends "csm/base.html" %}
+{% load cookie_consent_tags %}
+
+{% block title %}Nastavenie súborov cookies | RentSpace Pro{% endblock %}
+{% block meta_description %}
+Nastavenie a vysvetlenie jednotlivých skupín cookies používaných na tejto stránke.
+{% endblock %}
+
+{% block content_wrapper_class %}bg-gray-50 py-12{% endblock %}
+
+{% block content %}
+<section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+  <header class="mb-8">
+    <p class="text-sm uppercase tracking-wide text-blue-600">Ochrana súkromia</p>
+    <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
+      Nastavenie súborov cookies
+    </h1>
+    <p class="mt-3 text-sm md:text-base text-gray-600">
+      Tu nájdete prehľad všetkých skupín cookies, ktoré môžeme používať na tejto stránke.
+      Niektoré cookies sú technicky nevyhnutné, iné sú voliteľné (analytické, marketingové).
+    </p>
+    <p class="mt-2 text-sm text-gray-600">
+      Podrobné informácie o spracúvaní osobných údajov nájdete v&nbsp;
+      <a href="{% url 'privacy_policy' %}" class="text-blue-600 hover:text-blue-700 underline">
+        zásadách ochrany osobných údajov
+      </a>.
+    </p>
+  </header>
+
+  {# ГЛАВНЫЕ КНОПКИ УПРАВЛЕНИЯ СОГЛАСИЕМ #}
+  <div class="mb-10 flex flex-col sm:flex-row gap-3">
+    {# Только необходимые cookies (по сути – отказ от всех необязательных) #}
+    <form method="post" action="{% url 'cookie_consent_decline_all' %}" class="w-full sm:w-auto">
+      {% csrf_token %}
+      <button
+        type="submit"
+        class="w-full sm:w-auto inline-flex justify-center items-center rounded-xl border border-gray-300
+               px-4 py-2 text-xs md:text-sm font-medium text-gray-700 hover:bg-gray-50"
+      >
+        Povoliť iba nevyhnutné cookies
+      </button>
+    </form>
+
+    {# Принять все группы cookies #}
+    <form method="post" action="{% url 'cookie_consent_accept_all' %}" class="w-full sm:w-auto">
+      {% csrf_token %}
+      <button
+        type="submit"
+        class="w-full sm:w-auto inline-flex justify-center items-center rounded-xl bg-blue-600
+               px-4 py-2 text-xs md:text-sm font-semibold text-white hover:bg-blue-700"
+      >
+        Prijať všetky cookies
+      </button>
+    </form>
+  </div>
+
+  {# СПИСОК ГРУПП COOKIES #}
+  {% if object_list %}
+    <div class="space-y-6">
+      {% for group in object_list %}
+        <article class="rounded-2xl bg-white shadow border border-gray-100 p-5 md:p-6">
+          <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+            <div>
+              <h2 class="text-lg md:text-xl font-semibold text-gray-900">
+                {{ group.name }}
+              </h2>
+
+              <p class="mt-1 text-xs uppercase tracking-wide
+                        {% if group.is_required %}text-emerald-600{% else %}text-gray-500{% endif %}">
+                {% if group.is_required %}
+                  Nevyhnutné cookies – vždy povolené
+                {% else %}
+                  Voliteľná skupina cookies
+                {% endif %}
+              </p>
+
+              {% if group.description %}
+                <p class="mt-3 text-sm text-gray-700">
+                  {{ group.description }}
+                </p>
+              {% endif %}
+            </div>
+
+            <div class="md:text-right md:min-w-[220px]">
+              <p class="text-xs font-mono text-gray-400">
+                ID skupiny:
+                <span class="font-semibold text-gray-500">{{ group.varname }}</span>
+              </p>
+
+              <div class="mt-3 space-y-1 text-xs">
+                {% if request|cookie_group_accepted:group.varname %}
+                  <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5
+                               font-medium text-green-700">
+                    Aktuálny stav: povolené
+                  </span>
+                {% elif request|cookie_group_declined:group.varname %}
+                  <span class="inline-flex items-center rounded-full bg-red-50 px-2 py-0.5
+                               font-medium text-red-700">
+                    Aktuálny stav: zakázané
+                  </span>
+                {% else %}
+                  <span class="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5
+                               font-medium text-gray-700">
+                    Aktuálny stav: čaká na rozhodnutie
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          {% with cookies=group.cookie_set.all %}
+            {% if cookies %}
+              <div class="mt-4">
+                <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+                  Cookies v tejto skupine
+                </h3>
+                <div class="grid gap-2 md:grid-cols-2">
+                  {% for cookie in cookies %}
+                    <div class="border border-gray-100 rounded-lg p-3 text-xs text-gray-700">
+                      <div class="font-medium text-gray-900">
+                        {{ cookie.name }}
+                      </div>
+                      {% if cookie.description %}
+                        <p class="mt-1 text-gray-600">
+                          {{ cookie.description }}
+                        </p>
+                      {% endif %}
+                      <p class="mt-1 text-[11px] text-gray-500">
+                        Path: {{ cookie.path|default:"/" }}
+                        {% if cookie.domain %}
+                          · Domain: {{ cookie.domain }}
+                        {% endif %}
+                      </p>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+          {% endwith %}
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-sm text-gray-600">
+      Momentálne nie sú definované žiadne skupiny cookies.
+    </p>
+  {% endif %}
+  {# Кнопка "назад" внизу страницы #}
+  <div class="mt-10">
+    <a
+      href="{% url 'csm:homepage' %}"
+      class="inline-flex bg-blue-500 items-center rounded-xl border border-gray-300 px-4 py-2
+             text-xs md:text-sm font-medium text-white hover:bg-blue-600"
+    >
+      ← Späť na predchádzajúcu stránku
+    </a>
+  </div>
+</section>
+{% endblock %}

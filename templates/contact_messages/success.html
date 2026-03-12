@@ -1,16 +1,81 @@
+{# templates/contact_messages/success.html #}
+{% extends "csm/base.html" %}
 {% load static %}
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Thank you</title>
-    <meta name="robots" content="noindex">
-  </head>
-  <body class="min-h-screen flex items-center justify-center bg-gray-50">
-    <div class="bg-white p-8 rounded-xl shadow max-w-md text-center">
-      <h1 class="text-2xl font-bold mb-3">Thank you!</h1>
-      <p class="text-gray-600">Your message has been sent. We’ll get back to you shortly.</p>
-      <a class="inline-block mt-6 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700" href="/">Back to home</a>
+
+{% block title %}Thank you — {{ company_info.name|default:"Zavodský" }}{% endblock %}
+
+{% block content %}
+<section class="relative py-24 bg-gradient-to-b from-blue-50 to-white">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+    <!-- Card -->
+    <div class="mx-auto max-w-xl bg-white rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,.08)] overflow-hidden">
+      <!-- Top stripe -->
+      <div class="h-1 w-full bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400"></div>
+
+      <div class="p-8 md:p-10 text-center">
+        <!-- Success badge -->
+        <div class="mx-auto mb-6 h-16 w-16 rounded-2xl bg-blue-100 flex items-center justify-center">
+          <svg class="h-8 w-8 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+          </svg>
+        </div>
+
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Ďakujeme! / Thank you!</h1>
+        <p class="mt-3 text-gray-600">
+          Your message has been sent. Our team will get back to you shortly.
+        </p>
+
+        <!-- Small info line with phone/email if есть в контексте -->
+        <div class="mt-4 text-sm text-gray-500">
+          Need something urgent?
+          {% if company_info.phone %}
+            <a href="tel:{{ company_info.phone }}" class="text-blue-600 hover:text-blue-700 font-medium">
+              {{ company_info.phone }}
+            </a>
+          {% endif %}
+          {% if company_info.email %}
+            · <a href="mailto:{{ company_info.email }}" class="text-blue-600 hover:text-blue-700 font-medium">
+              {{ company_info.email }}
+            </a>
+          {% endif %}
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="{% url 'csm:homepage' %}"
+             class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition">
+            Back to Home
+          </a>
+          <a href="{% url 'csm:homepage' %}#stats"
+             class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 transition">
+            View Services
+          </a>
+        </div>
+
+        <!-- Auto-redirect notice -->
+        <p class="mt-6 text-xs text-gray-400">
+          You’ll be redirected to the homepage in <span id="sec">5</span> seconds.
+        </p>
+      </div>
     </div>
-  </body>
-</html>
+
+  </div>
+
+  <!-- Decorative blobs -->
+  <div class="pointer-events-none absolute -top-10 -right-10 h-48 w-48 rounded-full bg-blue-100 blur-2xl opacity-60"></div>
+  <div class="pointer-events-none absolute -bottom-8 -left-8 h-40 w-40 rounded-full bg-blue-100 blur-2xl opacity-50"></div>
+</section>
+
+<script>
+  // Smooth countdown + redirect
+  (function () {
+    var n = 5, el = document.getElementById('sec');
+    var t = setInterval(function () {
+      n -= 1; if (el) el.textContent = n;
+      if (n <= 0) { clearInterval(t); window.location.href = "{% url 'csm:homepage' %}"; }
+    }, 1000);
+  })();
+</script>
+{% endblock %}

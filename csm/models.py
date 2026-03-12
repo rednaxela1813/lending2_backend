@@ -1,75 +1,53 @@
+# csm/models.py
 from django.db import models
 from django.urls import reverse
-from properties.models import PropertyType
+from apps.properties.models import PropertyType
 import uuid
 from django.urls import NoReverseMatch
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 from django.utils import timezone
+from apps.core_images.mixins import ImageOptimizationMixin
 
 
 
-class HeroSection(models.Model):
-    title = models.CharField(max_length=255) #TODO add uuid for all models
+class HeroSection(ImageOptimizationMixin, models.Model):
+    """Content for the hero section on the homepage."""
+
+    title = models.CharField(max_length=255)  # TODO add uuid for all models
     subtitle = models.TextField(blank=True)
     description = models.TextField(blank=True, null=True, default='Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste.')
     button_text = models.CharField(max_length=50, default="Оставить заявку")
     right_colon_text = models.CharField(max_length=50, default="Zanechajte žiadosť", blank=True, null=True)   
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to='hero_images/', blank=True, null=True)
+    IMAGE_FIELDS = ("image",)
 
     def __str__(self):
         return "Hero Section Content"
 
 
 class HeaderSection(models.Model):
+    """Header navigation labels and CTA text."""
+
     logo_text = models.CharField(max_length=100, default='Agentúra Závodský s.r.o.')
     nav_services = models.CharField(max_length=50, default='Služby')
     nav_why = models.CharField(max_length=50, default='Prečo práve my?')
+    nav_about = models.CharField(max_length=50, default='O nás')
     nav_contact = models.CharField(max_length=50, default='Kontakt')
     button_text = models.CharField(max_length=50, default='Zanechajte žiadosť')
     updated_at = models.DateTimeField(auto_now=True)
-    images = models.ImageField(upload_to='logo/')
+   # images = models.ImageField(upload_to='logo/')
 
     def __str__(self):
         return "Header Content"
-
-
-class FooterInfo(models.Model):
-    about_title = models.CharField(max_length=100, default="Agentúra Závodský")
-    about_description = models.TextField()
-    contact_email = models.EmailField()
-    contact_phone = models.CharField(max_length=30)
-    contact_address = models.CharField(max_length=255)
-
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return "Footer Info"
-    
-
-class CompanyInfo(models.Model):
-    name = models.CharField(max_length=255)
-    ico = models.CharField("IČO", max_length=20, blank=True)
-    dic = models.CharField("DIČ", max_length=20, blank=True)
-    address = models.CharField(max_length=255)
-    phone = models.CharField(max_length=30)
-    email = models.EmailField()
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = "Informácie o firme"
-        verbose_name_plural = "Informácie o firme"
-
-    def __str__(self):
-        return self.name
-    
     
 
 
 
 class ContactRequest(models.Model):
+    """Stored contact form submissions."""
+
     name = models.CharField(max_length=255)
     contact = models.CharField(max_length=255)
     message = models.TextField()
@@ -79,12 +57,15 @@ class ContactRequest(models.Model):
         return f"{self.name} ({self.contact})"
     
     
-class CarouselImage(models.Model):
+class CarouselImage(ImageOptimizationMixin, models.Model):
+    """Images and captions for the homepage carousel."""
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255, blank=True)
     image = models.ImageField(upload_to='carousel_images/')
     description = models.CharField(max_length=255, blank=True)
     button_text = models.CharField(max_length=50, default="Explore Offices", blank=True, null=True)
+    IMAGE_FIELDS = ("image",)
 
     def __str__(self):
         return f"Carousel Image {self.id}"
@@ -96,27 +77,27 @@ class CarouselImage(models.Model):
 
 
 class ServiceSection(models.Model):
+    """Homepage service tiles tied to a property type for filtering."""
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255, default="Naše služby")
     description = models.TextField(blank=True, null=True, default="Kancelárske priestory, právne adresy a billboardy – všetko na jednom mieste."    )
     icon_svg = models.ForeignKey('Icon', blank=True, null=True, on_delete=models.SET_NULL)
     color_icon = models.CharField(max_length=20, default="#2563eb", help_text="Hex color code for the icon")
-    property_type = models.ForeignKey(PropertyType, on_delete=models.SET_NULL, null=True, blank=True)  # 🔥 теперь есть
+    property_type = models.ForeignKey(PropertyType, on_delete=models.SET_NULL, null=True, blank=True)  # property type relation enabled
     updated_at = models.DateTimeField(auto_now=True)
     
-    
-    
     def get_list_url(self):
-        if self.property_type:
-            slug = self.property_type.slug
-            try:
-                # если есть роут с параметром
-                return reverse('property_list', kwargs={'type': slug})
-            except NoReverseMatch:
-                # fallback: базовый путь + ?type=slug
-                base = reverse('property_list')
-                return f"{base}?type={slug}"
-        return None
+        """
+        Link to the general property list filtered by this service type.
+        Falls back to None if the route is not configured.
+        """
+        if not self.property_type:
+            return None
+        try:
+            return f"{reverse('property_list')}?type={self.property_type.slug}"
+        except NoReverseMatch:
+            return None
 
 
     def __str__(self):
@@ -125,26 +106,28 @@ class ServiceSection(models.Model):
 
 
 class FrontendTheme(models.Model):
+    """Color settings applied across the frontend."""
+
     name = models.CharField(max_length=100, default="Default")
 
-    # Фон
+    # Background colors
     navbar_background = models.CharField(max_length=20, default="#ffffff")
     body_background = models.CharField(max_length=20, default="#f9fafb")
     footer_background = models.CharField(max_length=20, default="#f1f5f9")
 
-    # Текст
+    # Text colors
     text_color = models.CharField(max_length=20, default="#111827")
     text_hover_color = models.CharField(max_length=20, default="#1e40af")
 
-    # Границы
+    # Border colors
     border_color = models.CharField(max_length=20, default="#d1d5db")
     border_hover_color = models.CharField(max_length=20, default="#9ca3af")
 
-    # Основной цвет (например, для кнопок)
+    # Primary colors (e.g., buttons)
     primary_color = models.CharField(max_length=20, default="#2563eb")
     primary_hover_color = models.CharField(max_length=20, default="#1d4ed8")
 
-    # Активация
+    # Activation
     is_active = models.BooleanField(default=False)
 
     def __str__(self):
@@ -153,98 +136,27 @@ class FrontendTheme(models.Model):
 
 
 
-class Icon(models.Model):
+class Icon(ImageOptimizationMixin, models.Model):
+    """Reusable icon assets for cards and services."""
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    key = models.SlugField(max_length=100, unique=True)        # 'office', 'billboard', 'legal', ...
+   # key = models.SlugField(max_length=100, unique=True)        # 'office', 'billboard', 'legal', ...
     label = models.CharField(max_length=100, blank=True)
-    svg_inline = models.TextField(blank=True)                  # <svg>...</svg> — удобнее и быстрее
+    svg_inline = models.TextField(blank=True)                  # Inline <svg> markup
     image = models.ImageField(upload_to="icons/", blank=True, null=True)
-    css_class = models.CharField(max_length=120, blank=True)   # если хочешь использовать icon-font
+    css_class = models.CharField(max_length=120, blank=True)   # Optional icon-font class name
+    IMAGE_FIELDS = ("image",)
 
     def __str__(self):
         return self.label or self.key
     
     
     
-class HotDealItem(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)   
-    
-    icon = models.ForeignKey(Icon, null=True, blank=True, on_delete=models.SET_NULL)
-    
-    
-    # Текст/цены для карточки (можно переопределить независимо от Property)
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    old_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    new_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
-    additional_description = models.TextField(blank=True, null=True)
-    promo_1 = models.TextField(blank=True, null=True)
-    promo_2 = models.TextField(blank=True, null=True)
-    promo_3 = models.TextField(blank=True, null=True)
-    promo_4 = models.TextField(blank=True, null=True)
-
-    badge_text = models.CharField(max_length=50, default="Zľava", help_text="текст в круглом бейдже")
-    badge_percent = models.PositiveIntegerField(default=20)
-    date_expiry = models.DateField(blank=True, null=True)
-    button_text = models.CharField(max_length=50, default="Zanechajte žiadosť")
-    
-    color_theme = models.CharField(max_length=50, blank=True, null=True)
-    
-    # управление порядком вывода
-    sort_order = models.PositiveIntegerField(default=0)
-    is_active = models.BooleanField(default=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = [ "-updated_at"]
-
-    def __str__(self):
-        return f"HotDealItem - {self.title}"
-
-    @property
-    def expires_in_days(self):
-        if not self.date_expiry:
-            return None
-        return (self.date_expiry - timezone.now().date()).days
-
-    def resolve_url(self):
-        """
-        Возвращаем URL карточки:
-        - если у Property есть get_absolute_url — используем его,
-        - иначе — '#contact' как запасной вариант.
-        """
-        try:
-            if self.property and hasattr(self.property, "get_absolute_url"):
-                return self.property.get_absolute_url()
-        except Exception:
-            pass
-        return "#contact"
-    
-    @property
-    def promo_list(self):
-        return [p for p in (self.promo_1, self.promo_2, self.promo_3, self.promo_4) if p]
-    
-   
-class HotDealSection(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=255, default="Hot Deals")
-    additional_description = models.TextField(blank=True, null=True, name="additional_description")
-    description = models.TextField(blank=True, null=True)
-    is_active = models.BooleanField(default=True)
-    updated_at = models.DateTimeField(auto_now=True)
-   # items = models.ManyToManyField(HotDealItem, blank=True)
-        
-    class Meta:
-        verbose_name = "Hot Deal Section"
-        verbose_name_plural = "Hot Deal Sections"
-        
-    def __str__(self):
-        return f"HotDealSection - {self.title}"
-    
-    
     
 class BottomCTASection(models.Model):
+    """CTA block displayed at the bottom of marketing pages."""
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255, default="Máte otázky?")
     subtitle = models.TextField(blank=True, null=True, default="Kontaktujte nás ešte dnes a získajte viac informácií o našich službách a ponukách.")

@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cookie consent required</title>
+  <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <div class="min-h-screen flex items-center justify-center px-4">
+    <div class="max-w-xl w-full bg-white shadow-xl rounded-2xl border border-gray-200 p-8 space-y-6 text-center">
+      <div class="flex justify-center">
+        <div class="h-12 w-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg">ℹ️</div>
+      </div>
+      <h1 class="text-2xl font-semibold">Cookie consent is required</h1>
+      <p class="text-sm text-gray-600">
+        Pred odoslaním formulára prosím potvrďte nastavenia cookies. Môžete povoliť iba nevyhnutné cookies,
+        prijať všetky alebo otvoriť detailné nastavenia.
+      </p>
+
+      <div class="grid gap-3 sm:grid-cols-2">
+        <form method="post" action="{% url 'cookie_consent_accept_all' %}">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{% url 'csm:homepage' %}">
+          <button type="submit" class="w-full inline-flex justify-center items-center rounded-lg bg-blue-600 px-4 py-2 text-white font-semibold hover:bg-blue-700">
+            Prijať všetky cookies
+          </button>
+        </form>
+        <form method="post" action="{% url 'cookie_consent_decline_all' %}">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{% url 'csm:homepage' %}">
+          <button type="submit" class="w-full inline-flex justify-center items-center rounded-lg border border-gray-300 px-4 py-2 text-gray-800 font-semibold hover:bg-gray-50">
+            Povoliť iba nevyhnutné
+          </button>
+        </form>
+      </div>
+
+      <div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
+        <a href="{% url 'csm:cookies' %}" class="inline-flex justify-center items-center rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+          Otvoriť nastavenia cookies
+        </a>
+        <a href="{% url 'csm:homepage' %}" class="inline-flex justify-center items-center rounded-lg px-4 py-2 text-sm font-medium text-blue-700 hover:text-blue-800">
+          Späť na hlavnú stránku
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+{% extends "dashboard/base/layout.html" %}
+{% block title %}Texts{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <h1 class="text-2xl font-bold">Texts</h1>
+  <a href="{% url 'dashboard:text_create' %}" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Create</a>
+</div>
+
+<form method="get" class="mb-4 flex gap-2">
+  <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search…" class="border rounded-lg px-3 py-2 w-full">
+  <select name="lang" class="border rounded-lg px-3 py-2">
+    <option value="">All languages</option>
+    <option value="sk" {% if request.GET.lang == "sk" %}selected{% endif %}>sk</option>
+    <option value="en" {% if request.GET.lang == "en" %}selected{% endif %}>en</option>
+    <option value="ru" {% if request.GET.lang == "ru" %}selected{% endif %}>ru</option>
+  </select>
+  <button class="px-4 py-2 bg-gray-800 text-white rounded-lg">Filter</button>
+</form>
+
+<div class="bg-white rounded-xl shadow overflow-x-auto">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="text-left px-4 py-2">Key</th>
+        <th class="text-left px-4 py-2">Lang</th>
+        <th class="text-left px-4 py-2">Title</th>
+        <th class="text-left px-4 py-2">Updated</th>
+        <th class="px-4 py-2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for obj in object_list %}
+      <tr class="border-t">
+        <td class="px-4 py-2 font-mono">{{ obj.key }}</td>
+        <td class="px-4 py-2">{{ obj.language }}</td>
+        <td class="px-4 py-2">{{ obj.title|default:"—" }}</td>
+        <td class="px-4 py-2">{{ obj.updated_at|date:"Y-m-d H:i" }}</td>
+        <td class="px-4 py-2 text-right">
+          <a class="text-blue-600 hover:underline mr-3" href="{% url 'dashboard:text_update' obj.pk %}">Edit</a>
+          <a class="text-red-600 hover:underline" href="{% url 'dashboard:text_delete' obj.pk %}">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td class="px-4 py-6 text-center text-gray-500" colspan="5">No items</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if is_paginated %}
+<div class="mt-4 flex gap-2">
+  {% if page_obj.has_previous %}
+    <a class="px-3 py-1 border rounded" href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&lang={{ request.GET.lang }}">Prev</a>
+  {% endif %}
+  <span class="px-3 py-1">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}
+    <a class="px-3 py-1 border rounded" href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&lang={{ request.GET.lang }}">Next</a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

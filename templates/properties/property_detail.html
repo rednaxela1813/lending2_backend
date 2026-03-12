@@ -1,0 +1,98 @@
+{% extends "csm/base.html" %}
+{% load static %}
+
+{% block title %}{{ property.name }} | Ponuka{% endblock %}
+{% block meta_description %}Detail ponuky {{ property.name }}{% endblock %}
+
+{% block content %}
+<section class="bg-gray-50 py-12">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <div class="mb-8">
+      <p class="text-sm uppercase tracking-wide text-blue-600">{{ property.type.name|default:"Ponuka" }}</p>
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900">{{ property.name }}</h1>
+      {% if property.location %}
+        <p class="mt-2 text-gray-600">{{ property.location }}</p>
+      {% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div class="lg:col-span-2 space-y-8">
+        <div class="rounded-2xl overflow-hidden shadow">
+          <img src="{% if property.images.all|length %}{{ property.images.first.image.url }}{% else %}{% static 'images/default-office.jpg' %}{% endif %}"
+               alt="{{ property.name }}"
+               class="w-full h-96 object-cover">
+        </div>
+
+        {% if property.description %}
+          <div class="bg-blue-50 border border-gray-200 rounded-2xl p-6 shadow-sm">
+            <h2 class="text-xl font-semibold text-gray-900 mb-3">Popis</h2>
+            <p class="text-gray-700 whitespace-pre-line">{{ property.description }}</p>
+          </div>
+        {% endif %}
+
+        {% if property.list_details %}
+          <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+            <h2 class="text-xl font-semibold text-gray-900 mb-3">Detaily</h2>
+            <ul class="space-y-2 text-gray-700">
+              {% for item in property.list_details %}
+                <li class="flex items-start">
+                  <span class="mt-1 mr-2 text-green-500">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                  </span>
+                  <span>{{ item }}</span>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        {% if property.embed_src %}
+          <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+            <h2 class="text-xl font-semibold text-gray-900 mb-3">Kde nás nájdete</h2>
+            <div class="relative map-embed">
+              <iframe src="{{ property.embed_src }}" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" class="w-full h-full"></iframe>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <aside class="space-y-4">
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+          {% if property.price %}
+            <p class="text-sm text-gray-500">Cena od</p>
+            <div class="text-3xl font-bold text-blue-700 mb-2">{{ property.price }} {{ property.currency|default:"EUR" }}</div>
+          {% endif %}
+          {% if property.summary %}
+            <p class="text-gray-700">{{ property.summary }}</p>
+          {% endif %}
+          <div class="mt-4 space-y-2">
+            <a href="{% url 'csm:homepage' %}#contact"
+               class="block text-center w-full px-4 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition">
+              Kontaktovať
+            </a>
+            {% if property.location %}
+              <a href="https://www.google.com/maps/dir/?api=1&destination={{ property.location|urlencode }}"
+                 target="_blank"
+                 class="block text-center w-full px-4 py-3 rounded-lg border border-gray-200 text-gray-800 hover:bg-gray-50 transition">
+                Trasa v Mapách
+              </a>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if property.images.count > 1 %}
+          <div class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm grid grid-cols-2 gap-3">
+            {% for img in property.images.all|slice:":6" %}
+              <img src="{{ img.image.url }}" alt="{{ img.description|default:property.name }}" class="w-full h-24 object-cover rounded-lg">
+            {% endfor %}
+          </div>
+        {% endif %}
+      </aside>
+    </div>
+  </div>
+</section>
+<style>
+  .map-embed { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 1rem; }
+  .map-embed iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+</style>
+{% endblock %}

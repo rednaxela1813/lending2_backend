@@ -3,21 +3,21 @@
 <section id="services" class="py-20 bg-gray-50">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Our Services</h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">We provide comprehensive business solutions to help your company establish a professional presence and maximize growth opportunities.</p>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Naše služby</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">Poskytujeme komplexné obchodné riešenia, ktoré pomôžu vašej spoločnosti vybudovať si profesionálnu prítomnosť a maximalizovať príležitosti na rast.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {% for service in services %}
+            {% for service in nas_sluzby %}
             <!-- Office Spaces -->
             <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
-                <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                <div class="w-16 h-16 bg-{{ service.color_icon }}-100 rounded-lg flex items-center justify-center mb-6">
                     <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                     </svg>
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 mb-4">{{ service.title }}</h3>
-                <p class="text-gray-600 mb-6 leading-relaxed">{{ service.description }}a?</p>
+                <p class="text-gray-600 mb-6 leading-relaxed">{{ service.description| default:"No description available." }}</p>
                 <ul class="space-y-2 mb-6">
                     {% for feature in service.features.all %}
                     <li class="flex items-center text-gray-600">
@@ -40,7 +40,7 @@
                     </li>
                     {% endfor %}
                 </ul>
-                <a href="#contact" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold">
+                <a href="{% url 'csm:service_detail' service.id %}" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold">
                     Learn More
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -48,7 +48,7 @@
                 </a>
             </div>
             {% endfor %}
-            <!-- Billboard Advertising -->
+            {% comment %} <!-- Billboard Advertising -->
             <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
                 <div class="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
                     <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,9 +83,9 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </a>
-            </div>
+            </div> {% endcomment %}
 
-            <!-- Legal Addresses -->
+            {% comment %} <!-- Legal Addresses -->
             <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
                 <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center mb-6">
                     <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,7 +120,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </a>
-            </div>
+            </div> {% endcomment %}
         </div>
     </div>
 </section>

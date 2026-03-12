@@ -62,19 +62,9 @@ TELEGRAM_BOT_TOKEN = config("TELEGRAM_BOT_TOKEN")
 
 TELEGRAM_CHAT_ID = config("TELEGRAM_CHAT_ID")
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-        },
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": "INFO",
-    },
-}
+from apps.site_logging.config import get_logging_config
+
+LOGGING = get_logging_config(debug=DEBUG)
 
 # settings.py
 
@@ -91,7 +81,6 @@ CACHES = {
 
 
 RATELIMIT_USE_CACHE = 'cache-for-ratelimiting'
-
 
 
 

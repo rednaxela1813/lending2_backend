@@ -1,0 +1,48 @@
+{% extends "dashboard/base/layout.html" %}
+{% block title %}Text{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">
+  {% if object %}Edit Text{% else %}Create Text{% endif %}
+</h1>
+
+<form method="post" class="bg-white rounded-xl shadow p-6 space-y-4">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+
+  <div>
+    <label class="block text-sm font-medium">Key</label>
+    {{ form.key }}
+    {{ form.key.errors }}
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-sm font-medium">Language</label>
+      {{ form.language }}
+      {{ form.language.errors }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium">Title</label>
+      {{ form.title }}
+      {{ form.title.errors }}
+    </div>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium">Text / HTML</label>
+    {{ form.text }}
+    <p class="text-xs text-gray-500 mt-1">HTML поддерживается (будет вставлен как safe).</p>
+    {{ form.text.errors }}
+  </div>
+
+  <div class="flex items-center gap-2">
+    {{ form.is_active }}
+    <label>Active</label>
+  </div>
+
+  <div class="flex gap-3">
+    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg">Save</button>
+    <a href="{% url 'dashboard:text_list' %}" class="px-4 py-2 border rounded-lg">Cancel</a>
+  </div>
+</form>
+{% endblock %}

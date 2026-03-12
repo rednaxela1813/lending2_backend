@@ -1,39 +1,98 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Privacy Policy — Zavodsky</title>
-  <meta name="robots" content="noindex"> <!-- скрываем черновик от поисковиков -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="{{ STATIC_URL }}css/tailwind.css" rel="stylesheet">
-</head>
-<body class="bg-gray-50 text-gray-900">
-  <main class="max-w-3xl mx-auto p-6">
-    <h1 class="text-3xl font-bold mb-2">Privacy Policy</h1>
-    <p class="text-sm text-gray-500 mb-8">
-      Version: {{ policy_version }} · Updated: {{ policy_updated }}
-    </p>
+{% extends "csm/base.html" %}
+{% load static %}
 
-    <section class="prose max-w-none">
-      <p>This is a placeholder. We collect and process personal data solely to respond to your inquiry submitted via the contact form.</p>
-      <h2>What we collect</h2>
-      <ul>
-        <li>First name, last name, email</li>
-        <li>Service interest and message</li>
-        <li>Consent timestamp, policy version</li>
-        <li>Technical metadata (IP may be anonymized, user agent, referrer)</li>
-      </ul>
-      <h2>Why we process</h2>
-      <p>To contact you regarding your inquiry and provide requested services.</p>
-      <h2>Retention</h2>
-      <p>We keep messages for up to 24 months unless you request deletion earlier.</p>
-      <h2>Your rights</h2>
-      <p>You may request access, correction, deletion, or withdrawal of consent at any time.</p>
-      <h2>Contact</h2>
-      <p>Email: info@zavodsky.example</p>
-    </section>
+{% block title %}Privacy Policy | {{ company_info.name|default:"RentSpace Pro" }}{% endblock title %}
+{% block meta_description %}Privacy notice for {{ company_info.name|default:"RentSpace Pro" }} describing what data we collect, why, and how to exercise your rights.{% endblock meta_description %}
+{% block content_wrapper_class %}bg-gray-50 py-16{% endblock content_wrapper_class %}
 
-    <a href="/" class="inline-block mt-10 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Back to Home</a>
-  </main>
-</body>
-</html>
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+  <div class="rounded-3xl bg-white shadow-xl overflow-hidden border border-gray-100">
+    <div class="bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 px-8 py-10 text-white">
+      <p class="text-sm uppercase tracking-[0.35em] text-white/80 font-semibold">Privacy</p>
+      <h1 class="text-3xl md:text-4xl font-extrabold mt-2">Privacy Policy</h1>
+      <p class="mt-3 text-white/80 text-sm">
+        Version {{ policy_version }} · Updated {{ policy_updated }}
+      </p>
+      <p class="mt-6 max-w-3xl text-white/90">
+        This notice explains how {{ company_info.name|default:"RentSpace Pro" }} collects, uses, and protects your personal data when you contact us or use our services.
+      </p>
+    </div>
+
+    <div class="p-8 md:p-10 space-y-10">
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">1. What we collect</h2>
+        <p class="text-gray-700">We collect only what we need to respond to your inquiries and deliver our services:</p>
+        <ul class="list-disc list-inside space-y-2 text-gray-700">
+          <li>Name and contact details (email and/or phone)</li>
+          <li>Your message and service interest (e.g., offices, billboards, legal address)</li>
+          <li>Consent metadata (timestamp, policy version accepted)</li>
+          <li>Technical metadata such as user agent and referrer; IP may be anonymized</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">2. Why we process your data</h2>
+        <ul class="list-disc list-inside space-y-2 text-gray-700">
+          <li>To contact you about your inquiry and provide requested information</li>
+          <li>To prepare offers and fulfill contractual obligations</li>
+          <li>To improve service quality and security (aggregated, non-identifying analytics)</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">3. Legal basis</h2>
+        <p class="text-gray-700">We process personal data based on your consent and, when applicable, for the performance of a contract or legitimate interests related to providing our services.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">4. Retention</h2>
+        <p class="text-gray-700">We retain inquiries for up to 24 months unless a longer period is required to fulfill a contract or comply with legal obligations. You can request earlier deletion at any time.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">5. Sharing</h2>
+        <p class="text-gray-700">We do not sell your data. We may share it with trusted processors (e.g., hosting or email providers) strictly for service delivery and only under appropriate data protection agreements.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">6. Your rights</h2>
+        <ul class="list-disc list-inside space-y-2 text-gray-700">
+          <li>Access, rectification, or deletion of your personal data</li>
+          <li>Restriction or objection to processing where applicable</li>
+          <li>Withdrawal of consent without affecting prior lawful processing</li>
+          <li>Portability of data you provided to us, where technically feasible</li>
+          <li>Right to lodge a complaint with your supervisory authority</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">7. Security</h2>
+        <p class="text-gray-700">We apply reasonable technical and organizational measures to protect your data against loss, misuse, or unauthorized access.</p>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold text-gray-900">8. Contact</h2>
+        <div class="bg-gray-50 border border-gray-100 rounded-2xl p-5 space-y-2 text-gray-800">
+          <p class="font-semibold">{{ company_info.name|default:"RentSpace Pro" }}</p>
+          {% if company_info.address %}
+            <p>{{ company_info.address }}</p>
+          {% endif %}
+          <p>Email: <a class="text-blue-600 hover:text-blue-700 font-semibold" href="mailto:{{ company_info.email|default:'info@example.com' }}">{{ company_info.email|default:"info@example.com" }}</a></p>
+          {% if company_info.phone %}
+            <p>Phone: <a class="text-blue-600 hover:text-blue-700 font-semibold" href="tel:{{ company_info.phone }}">{{ company_info.phone }}</a></p>
+          {% endif %}
+        </div>
+      </section>
+
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4">
+        <p class="text-sm text-gray-500">If you have questions or wish to exercise your rights, contact us anytime.</p>
+        <div class="flex gap-3">
+          <a href="{% url 'csm:homepage' %}" class="inline-flex items-center px-4 py-2 rounded-lg border border-gray-200 text-gray-800 hover:bg-gray-50 transition">Back to Home</a>
+          <a href="{% url 'csm:homepage' %}#contact" class="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

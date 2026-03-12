@@ -1,0 +1,146 @@
+{% extends "csm/base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if company %}O nás | {{ company.name }}{% else %}O nás{% endif %}
+{% endblock title %}
+
+{% block content_wrapper_class %}py-12 bg-gray-50{% endblock content_wrapper_class %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+    <section class="bg-white rounded-3xl shadow-xl overflow-hidden">
+        <div class="grid md:grid-cols-2 gap-0">
+            <div class="p-8 md:p-12 flex flex-col justify-center space-y-6">
+                <p class="text-sm uppercase tracking-[0.3em] text-blue-500 font-semibold">Naša misia</p>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
+                    {% if company %}
+                        Staviame na dôvere a službách, ktoré posúvajú biznis vpred.
+                    {% else %}
+                        Informácie o spoločnosti sa pripravujú.
+                    {% endif %}
+                </h1>
+                <p class="text-lg text-gray-600">
+                    {% if about_us_page and about_us_page.content %}
+                        {{ about_us_page.content|linebreaks }}
+                    {% else %}
+                        Pracujeme na tom, aby sme vám čoskoro predstavili detailné informácie o našej spoločnosti, hodnotách a
+                        tíme. Sledujte nás prosím neskôr.
+                    {% endif %}
+                </p>
+                {% if company %}
+                <div class="flex flex-wrap gap-4">
+                    <div class="px-5 py-3 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold">
+                        {% if company.is_open_now %}Sme otvorení{% else %}Momentálne zatvorené{% endif %}
+                    </div>
+                    <div class="px-5 py-3 bg-gray-100 text-gray-700 rounded-full text-sm font-semibold">
+                        {{ company.address }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="relative min-h-[260px] bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600">
+                <div class="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.6),_transparent_45%)]"></div>
+                <div class="relative h-full flex items-center justify-center p-10">
+                    <div class="grid grid-cols-2 gap-6 text-white">
+                        <div>
+                            <p class="text-sm uppercase tracking-wide text-white/70">Rokov skúseností</p>
+                            <p class="text-4xl font-black mt-1">15+</p>
+                        </div>
+                        <div>
+                            <p class="text-sm uppercase tracking-wide text-white/70">Aktívnych klientov</p>
+                            <p class="text-4xl font-black mt-1">120+</p>
+                        </div>
+                        <div>
+                            <p class="text-sm uppercase tracking-wide text-white/70">Projektov ročne</p>
+                            <p class="text-4xl font-black mt-1">80+</p>
+                        </div>
+                        <div>
+                            <p class="text-sm uppercase tracking-wide text-white/70">Skóre spokojnosti</p>
+                            <p class="text-4xl font-black mt-1">4.9/5</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if company %}
+    <section class="grid md:grid-cols-2 gap-8">
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <p class="text-sm uppercase tracking-[0.4em] text-blue-600 font-semibold">Dostupnosť</p>
+                    <h2 class="text-2xl font-bold text-gray-900 mt-2">Otváracie hodiny</h2>
+                </div>
+                <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold {% if company.is_open_now %}bg-green-50 text-green-700{% else %}bg-red-50 text-red-600{% endif %}">
+                    {% if company.is_open_now %}Práve otvorené{% else %}Práve zatvorené{% endif %}
+                </span>
+            </div>
+
+            <dl class="space-y-4">
+                {% if opening_hours %}
+                    {% for slot in opening_hours %}
+                        <div class="flex items-center justify-between border border-gray-100 rounded-xl px-4 py-3">
+                            <dt class="text-gray-700 font-medium">{{ slot.get_weekday_display }}</dt>
+                            <dd class="text-gray-900 font-semibold tracking-wide">
+                                {{ slot.start_time|time:"H:i" }} – {{ slot.end_time|time:"H:i" }}
+                            </dd>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-gray-500 text-sm">Otváracie hodiny ešte neboli zadané.</p>
+                {% endif %}
+            </dl>
+
+            {% if special_openings %}
+            <div class="mt-6 pt-6 border-t border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">Špeciálne dni</h3>
+                <ul class="space-y-2 text-sm">
+                    {% for exception in special_openings %}
+                        <li class="flex items-center justify-between text-gray-700">
+                            <span>{{ exception.date|date:"j. F Y" }}</span>
+                            <span class="font-semibold">
+                                {% if exception.is_closed %}Zatvorené{% else %}{{ exception.start_time|time:"H:i" }} – {{ exception.end_time|time:"H:i" }}{% endif %}
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white rounded-2xl shadow-2xl p-6 md:p-8 space-y-6">
+            <p class="text-sm uppercase tracking-[0.4em] text-white/60 font-semibold">Kontaktujte nás</p>
+            <h2 class="text-3xl font-bold">Zostaňme v spojení</h2>
+            <p class="text-white/80">
+                Zavolajte nám, napíšte alebo sa zastavte osobne. Radi vás prevedieme našimi priestormi, službami a nájdeme riešenie presne pre váš biznis.
+            </p>
+            <div class="space-y-4">
+                {% if company.phone %}
+                <a href="tel:{{ company.phone }}" class="flex items-center gap-3 bg-white/10 border border-white/20 rounded-2xl px-5 py-3 hover:bg-white/20 transition">
+                    <span class="text-sm font-medium text-white/70">Telefón</span>
+                    <span class="text-lg font-semibold">{{ company.phone }}</span>
+                </a>
+                {% endif %}
+                {% if company.email %}
+                <a href="mailto:{{ company.email }}" class="flex items-center gap-3 bg-white/10 border border-white/20 rounded-2xl px-5 py-3 hover:bg-white/20 transition">
+                    <span class="text-sm font-medium text-white/70">E-mail</span>
+                    <span class="text-lg font-semibold break-all">{{ company.email }}</span>
+                </a>
+                {% endif %}
+                {% if company.address %}
+                <div class="bg-white text-gray-900 rounded-2xl px-5 py-4">
+                    <p class="text-sm uppercase tracking-[0.3em] text-gray-500 font-semibold mb-1">Adresa</p>
+                    <p class="text-lg font-bold">{{ company.address }}</p>
+                </div>
+                {% endif %}
+            </div>
+            <div class="pt-4 border-t border-white/10">
+                <a href="#contact" class="inline-flex items-center justify-center px-6 py-3 bg-white text-gray-900 rounded-full font-semibold hover:bg-blue-100 transition">Naplánovať stretnutie</a>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock content %}

@@ -1,0 +1,9 @@
+{% extends "csm/base.html" %}
+
+{% block title %}Hot Deals | {{ company_info.name|default:"RentSpace Pro" }}{% endblock title %}
+{% block meta_description %}Aktuálne zvýhodnené ponuky od {{ company_info.name|default:"RentSpace Pro" }}.{% endblock meta_description %}
+{% block content_wrapper_class %}bg-gray-50{% endblock content_wrapper_class %}
+
+{% block content %}
+  {% include "csm/components/HotDealsSection.html" %}
+{% endblock content %}
